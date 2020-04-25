@@ -1,7 +1,6 @@
 # refinedELLEWebPortal
-Repo to get the latest updates on the refined ELLE website
 
-###Module Page Functions 
+### Module Page Functions 
 - searchModules()
 - searchCards()
 - addModule() : all fields must be filled out otherwise highlight the field that is not filled out 
@@ -15,8 +14,8 @@ Repo to get the latest updates on the refined ELLE website
 
 Super tiny fix: include module name next to the search bar on the card list side 
 
-###Stat Page Functions
+### Stat Page Functions
 - TBD 
 
-###UserList Page Functions
+### UserList Page Functions
 - TBD 
