@@ -9,7 +9,7 @@ import '../stylesheets/style.css';
 import '../lib/bootstrap/css/bootstrap.min.css';
 import '../lib/ionicons/css/ionicons.min.css';
 
-export default class Signup extends React.Component {
+export default class Register extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -17,6 +17,7 @@ export default class Signup extends React.Component {
       age: '',
       sex: '',
       password: '',
+      passowrd_confirm: '',
       motivation: '',
       permission: 'User',
       message: '',
@@ -33,12 +34,49 @@ export default class Signup extends React.Component {
   }
 
   change(e) {
-    this.setState({
-      [e.target.name]: e.target.value
-    })
-  }
+    let passwordCheck = false;
+    if(e.target.name == "password"){
+      passwordCheck = true;
+    }
 
+    if(passwordCheck){
+      this.setState({
+        [e.target.name]: e.target.value,
+        password_confirm: e.target.value
+      })
+    } else {
+      
+      this.setState({
+        [e.target.name]: e.target.value
+      })
+    }
+
+  }
+  /* THiS VERSION IS FOR THE CURRENT DATABASE
   submit(e) {
+    console.log(this.state.username);
+    console.log(this.state.sex);
+    e.preventDefault();
+    axios.post(this.props.serviceIP + '/register', {
+      username: this.state.username,
+      password: this.state.password,
+      password_confirm: this.state.password,
+      groupID: 1,
+      groupPassword: "",
+      age: this.state.age,
+      sex: this.state.sex,
+      motivation: this.state.motivation
+    }).then(res => {
+      console.log("WE DID IT");
+      localStorage.setItem('jwt', res.data);
+      this.props.history.push('/login');
+    }).catch(error => {
+      console.log("ERROR REGISTERING: ", error);
+    });
+  }
+  */
+
+    submit(e) {
     console.log(this.state.username);
     console.log(this.state.sex);
     e.preventDefault();
@@ -53,7 +91,6 @@ export default class Signup extends React.Component {
       this.props.history.push('/login');
     });
   }
-
   render() {
   return (
   <Container>

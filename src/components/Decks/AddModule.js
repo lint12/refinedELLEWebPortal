@@ -3,6 +3,8 @@ import { Button, Form, FormGroup, Label, Input, Row, FormText, Col, Alert} from 
 import axios from 'axios';
 
 class AddModule extends React.Component {
+
+    //TODO: create submit function compatible with current database
     render () {
         return (
             <div>
@@ -11,41 +13,50 @@ class AddModule extends React.Component {
                 <Row>
 			        <Col>
                         <FormGroup>
-							<Label for="moduleName">Module Name:</Label>
-							<Input type="text" placeholder="Deck Name"/>
+							
+                            <Label for="moduleName">Module Name:</Label>
+							<Input type="text" placeholder="Module Name"/>
 						</FormGroup>
                     </Col>
                 </Row>
+
                 <Row>
 			        <Col>
                         <FormGroup>
+
 							<Label for="moduleLang">Language:</Label>
 							<Input type="text" placeholder="Language"/>
 						</FormGroup>
                     </Col>
                 </Row>
+
                 <Row>
 			        <Col>
-                    <FormGroup tag="fieldset">
-                        <Label for="type">Type:</Label>
-                        <FormGroup check>
-                            <Label check>
-                                <Input type="radio" name="type" />{' '}
-                                Term 
-                            </Label>
-                        </FormGroup>
-                        <FormGroup check>
-                            <Label check>
-                                <Input type="radio" name="type" />{' '}
-                                Phrase
-                            </Label>
-                        </FormGroup>
-                        <FormGroup check>
-                            <Label check>
-                                <Input type="radio" name="type" />{' '}
-                                Question/Answer
-                            </Label>
-                        </FormGroup>
+                        <FormGroup tag="fieldset">
+
+                            <Label for="type">Type:</Label>
+
+                            <FormGroup check>
+                                <Label check>
+                                    <Input type="radio" name="type" />{' '}
+                                    Term 
+                                </Label>
+                            </FormGroup>
+
+                            <FormGroup check>
+                                <Label check>
+                                    <Input type="radio" name="type" />{' '}
+                                    Phrase
+                                </Label>
+                            </FormGroup>
+
+                            <FormGroup check>
+                                <Label check>
+                                    <Input type="radio" name="type" />{' '}
+                                    Question/Answer
+                                </Label>
+                            </FormGroup>
+
                     </FormGroup>
                     </Col>
                 </Row>

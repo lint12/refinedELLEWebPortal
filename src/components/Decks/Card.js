@@ -1,6 +1,7 @@
-import React from 'react'
-import { Button, ButtonGroup } from 'reactstrap';
+import React, {Fragment} from 'react'
+import { Button, ButtonGroup, Form, FormGroup, Input, Collapse} from 'reactstrap';
 
+import TagList from './TagList';
 
 class Card extends React.Component {
   constructor(props){
@@ -8,21 +9,62 @@ class Card extends React.Component {
     this.deleteCard = this.deleteCard.bind(this);
     this.downloadImg = this.downloadImg.bind(this);
     this.downloadAudio = this.downloadAudio.bind(this);
+    
+    this.submitEdit = this.submitEdit.bind(this);
+    
+    this.editFront = this.editFront.bind(this);
+    this.editBack = this.editBack.bind(this);
 
     this.state = {
-      card: this.props.card
+      card: this.props.card,
+      tags: ["noun", "food", "yellow", "fruit"],
+
+      collapseTags: false,
+
+      editMode: false,
+      editedFront: this.props.card.front,
+      editedBack: this.props.card.back,
+      uploadedImage: null,
+      uploadedAudio: null,
     }
 
   }
 
   deleteCard = (id) => {
-    console.log(id)
+    console.log("clicked on delete button, id: ", id);
+  }
+
+  toggleCollapsedTags = () => {
+    this.setState({collapseTags: !this.state.collapseTags});
   }
 
   editCard(id) {
-    console.log('clicked on edit btn')
+    this.setState({editMode: true})
+    console.log('clicked on edit btn');
   }
 
+  editFront = (event) => {
+    this.setState({editedFront: event.target.value});
+  }
+
+  editBack = (event) => {
+    this.setState({editedBack: event.target.value});
+  }
+
+  uploadImage = (imgFile) => {
+    this.setState({uploadedImage: imgFile});
+  }
+
+  uploadAudio = (audioFile) => {
+    this.setState({uploadedAudio: audioFile});
+  }
+
+
+  submitEdit = (event) => {
+    this.setState({editMode: false})
+    console.log("clicked on submit edit");
+    console.log("editedFront: ", this.state.editedFront, "editedBack: ", this.state.editedBack);
+  }
   downloadImg(id){
     //console.log(this.state.cards.imageLocation);
   }
@@ -32,21 +74,55 @@ class Card extends React.Component {
   }
 
   render() {
-    return (
-      <tr>
-  			<td>{this.state.card.front}</td>
-  			<td>{this.state.card.back}</td>
-        <td><Button style={{backgroundColor: 'white', width: '100%'}} onClick={this.downloadImg(this.state.card.cardID)}><img src={"./../../../image.png"} alt="image icon" style={{width: '25px', height: '25px'}}/></Button></td>
-        <td><Button style={{backgroundColor: 'white', width: '100%'}} onClick={this.downloadAudio(this.state.card.cardID)}><img src={"./../../../headphones.png"} alt="headphones icon" style={{width: '25px', height: '25px'}}/></Button></td>
-        <td>{this.state.card.cardID}</td>
-        <td>
-          <ButtonGroup>
-          <Button style={{backgroundColor: 'lightcyan'}} onClick={this.editCard(this.state.card.cardID)}><img src={"./../../../tools.png"} alt="edit icon" style={{width: '25px', height: '25px'}}/></Button>
-          <Button style={{backgroundColor: 'lightcoral'}} onClick={this.deleteCard(this.state.card.cardID)}><img src={"./../../../delete.png"} alt="trash can icon" style={{width: '25px', height: '25px'}}/></Button>
-          </ButtonGroup>
-        </td>
-      </tr>
-    );
+    let {front, back, cardID} = this.state.card;
+
+    if(this.state.editMode == false){
+      console.log("rendering normal Card!");
+      return (
+        <Fragment>
+        <tr onClick={this.toggleCollapsedTags}>
+    			<td>{front}</td>
+    			<td>{back}</td>
+          <td><Button style={{backgroundColor: 'white', width: '100%'}} onClick={this.downloadImg(cardID)}><img src={"./../../../image.png"} alt="image icon" style={{width: '25px', height: '25px'}}/></Button></td>
+          <td><Button style={{backgroundColor: 'white', width: '100%'}} onClick={this.downloadAudio(cardID)}><img src={"./../../../headphones.png"} alt="headphones icon" style={{width: '25px', height: '25px'}}/></Button></td>
+          <td>{cardID}</td>
+          <td>
+            <ButtonGroup>
+            <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.editCard(cardID)}><img src={"./../../../tools.png"} alt="edit icon" style={{width: '25px', height: '25px'}}/></Button>
+            <Button style={{backgroundColor: 'lightcoral'}} onClick={() => this.deleteCard(cardID)}><img src={"./../../../delete.png"} alt="trash can icon" style={{width: '25px', height: '25px'}}/></Button>
+            </ButtonGroup>
+          </td>
+        </tr>
+        <Collapse isOpen={this.state.collapseTags}>
+          <tr>
+              
+              <td colspan="3" style={{border:"none"}}><TagList style={{border:"none"}} tags={this.state.tags} /></td>
+            
+
+            
+          
+          </tr>
+        </Collapse>
+        </Fragment>
+
+      );
+    } else{
+      console.log("rendering editable card!");
+      return (
+        <tr>
+          <td><Input type="value" onChange={this.editFront} value={this.state.editedFront} /></td>
+          <td><Input type="value" onChange={this.editBack} value={this.state.editedBack} /></td>
+          <td><Button style={{backgroundColor: 'white', width: '100%'}} onClick={this.downloadImg(cardID)}><img src={"./../../../image.png"} alt="image icon" style={{width: '25px', height: '25px'}}/></Button></td>
+          <td><Button style={{backgroundColor: 'white', width: '100%'}} onClick={this.downloadAudio(cardID)}><img src={"./../../../headphones.png"} alt="headphones icon" style={{width: '25px', height: '25px'}}/></Button></td>
+          <td>{cardID}</td>
+          <td>
+            <ButtonGroup>
+              <Button style={{backgroundColor: 'lightcyan', width: '100%', height: '100%', color: 'black'}} onClick = {this.submitEdit}> Submit </Button>
+            </ButtonGroup>
+          </td>
+        </tr>
+      );
+    }
   }
 }
 

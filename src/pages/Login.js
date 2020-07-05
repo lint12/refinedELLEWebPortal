@@ -69,10 +69,10 @@ export default class Login extends Component {
             <Button color="primary" type="submit" className="btn-block">Submit</Button>
           </Form>
           <br></br>
-					<p>
-						Don't have an account? &nbsp;
-						<Link to ='/signup' style={{color: 'white', textDecoration: 'underline'}}>Create one.</Link>
-					</p>
+          <p>
+            Don't have an account? &nbsp;
+            <Link to ='/signup' style={{color: 'white', textDecoration: 'underline'}}>Create one.</Link>
+          </p>
         </div>
       </div>
     </Container>
