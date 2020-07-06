@@ -74,7 +74,7 @@ const CardList = (props) => {
             {props.cards.map((card) => {
               return (
                 <Card
-                  key={card.cardID}
+                  key={card.termID}
                   card={card}/>
               )
             })}

@@ -15,13 +15,13 @@ import '../lib/font-awesome/css/font-awesome.min.css';
 import '../lib/owlcarousel/assets/owl.carousel.min.css';
 import '../lib/ionicons/css/ionicons.min.css';
 
-export default class Decks extends Component {
+class Modules extends Component {
   constructor(props) {
     super(props);
     this.toggleNewModule = this.toggleNewModule.bind(this);
     this.toggleNewCard = this.toggleNewCard.bind(this);
     this.change = this.change.bind(this);
-    this.deleteDeck = this.deleteDeck.bind(this);
+    //this.deleteDeck = this.deleteDeck.bind(this);
     this.updateSearch = this.updateSearch.bind(this);
 
     this.dRef = React.createRef(); //ref for updating current deck to selected deck
@@ -63,19 +63,15 @@ export default class Decks extends Component {
 
   componentDidMount() {
 
-      axios.get(this.props.serviceIP + '/decks', {
+      axios.get(this.props.serviceIP + '/modules', {
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
       }).then(res => {
-        let decks = res.data['ids'].map((id, i)=>{
-          return {id: id, name: res.data['names'][i]};
-        });
-        console.log("DECKS: ", decks);
-        this.setState({
-          decks : decks,
-          dynamicDecks: decks
-        });
-      }).catch(function (error) {
-        console.log("Decks.componentDidMount: " error);
+        let decks = res.data; 
+        this.setState({ decks : decks, 
+                        dynamicDecks: decks});
+        })
+      .catch(function (error) {
+        console.log("Decks.componentDidMount: ", error);
       });
     }
   // deleteDeck(e) {
@@ -96,6 +92,7 @@ export default class Decks extends Component {
 
   //TODO: make work with current database
   //function for deleting a deck
+  /*
   deleteDeck(id) {
     var data = {
       moduleID: id
@@ -112,7 +109,7 @@ export default class Decks extends Component {
       console.log(error);
     });
   }
-
+*/
   //TODO: make work with current database
   //Submits deck created by the add deck form
   submitDeck(e) {
@@ -181,6 +178,7 @@ export default class Decks extends Component {
   //name: name of deck. curDeck: object of {id: id, name: name}
   SplitDeckBtn = ({curDeck}) => {
     const [dropdownOpen, setOpen] = useState(false);
+    console.log("CURDECK: ", curDeck);
   
     const toggle = () => setOpen(!dropdownOpen);
     return (
@@ -192,7 +190,7 @@ export default class Decks extends Component {
           style={{display: "flex", justifyContent: "space-between", alignItems: "flex-start"}} 
           id="deckButton" onClick={ () => {
             this.dRef.current.updateDeck({ deck: curDeck })
-            this.setState({ deckID: curDeck.id,
+            this.setState({ deckID: curDeck.moduleID,
                             currentDeckName: curDeck.name})
           }}> {curDeck.name} </Button>
 
@@ -203,10 +201,12 @@ export default class Decks extends Component {
             <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightcyan', color: 'black', outline: 'none'}}>
               <img src={"./../../../tools.png"} alt="edit icon" style={{width: '18px', height: '18px'}}/> Edit</DropdownItem>
             <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightcoral', color: 'black', outline: 'none'}}>
-              <Button onClick = {this.deleteDeck(curDeck.id)}>
+              {/*
+              <Button onClick = {this.deleteDeck(curDeck.moduleID)}>
                 <img src={"./../../../delete.png"} alt="trash can icon" style={{width: '18px', height: '20px'}}/>
                 Delete
               </Button>
+              */}
             </DropdownItem>
         </DropdownMenu>
 
@@ -323,3 +323,5 @@ export default class Decks extends Component {
     )
   }
 }
+
+export default Modules;

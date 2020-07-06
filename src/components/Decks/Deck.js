@@ -17,6 +17,7 @@ class Deck extends React.Component {
     this.willlRenderSearchBar = this.willRenderSearchBar.bind(this);
     this.renderSearchBar = this.renderSearchBar.bind(this);
     this.renderInputForm = this.renderInputForm.bind(this);
+    //this.willRenderCardList = this.willRenderCardList.bind(this);
 
     this.state = {
       deck: this.props.deck, //object of the deck we're looking at, formatted: {id: id, name: name}
@@ -27,6 +28,7 @@ class Deck extends React.Component {
       //list of cards in the deck we're looking at, properties: {audioLocation, back, cardID,
       //cardName, deckID, difficulty, front, gifLocation, imageLocation, tag
       cards: [],
+      termCards: [],
 
       dynamicCards: [],
 
@@ -67,21 +69,30 @@ class Deck extends React.Component {
   //THIS VERSION IS FOR THE OLD DATABASE
   updateDeck(e) {
     console.log("tttt");
-    axios.get(this.props.serviceIP + '/deck/' + e.deck.id, {
-      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+    console.log("E.DECK.MODULEID: ", e.deck.moduleID);
+    console.log("E.DECK: ", e.deck);
+
+    axios.post(this.props.serviceIP + '/modulequestions', { moduleID: e.deck.moduleID,
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then( res => {
-      console.log(res.data);
+      console.log("updateDeck RES.DATA: ", res.data);
       let cards = res.data;
+      console.log("CARDS OBJECT: ", cards);
       this.setState({
-        id: e.deck.id,
+        id: e.deck.moduleID,
         deck:e.deck,
         cards: cards,
-        dynamicCards: cards
+        dynamicCards: cards,
+        termCards: cards.filter((card) => card.type === "MATCH").map((card, i) => {return card.answers[0]})
       });
-    }).catch(function (error) {
-      console.log(error);
-    });
+    console.log("ID: ", this.state.id);
+    console.log("DECK_updateDeck: ", this.state.deck);
     console.log("CARDS: ", this.state.cards);
+    console.log("TERM CARDS: ", this.state.termCards);
+    }).catch(function (error) {
+      console.log("ERROR: ", error);
+    });
+
   }
 
   //function is no longer used
@@ -286,6 +297,17 @@ class Deck extends React.Component {
                   dynamicCards: newCards})
   }
 
+  willRenderCardList = ({cards}) => {
+    console.log("cards in willRenderCardList: ", cards);
+    if(cards != undefined && cards != null){
+      return(<CardList
+          type = {this.willRenderSearchBar() ? this.state.deck.type : ""}
+          cards = {this.state.termCards}
+          />);
+    } else{
+      return;
+    }
+  }
 
   render () {
       return (
@@ -333,10 +355,7 @@ class Deck extends React.Component {
 
 
           {/*Renders the list of cards in the deck, based on type of deck we're using.*/}
-          <CardList
-          type = {this.willRenderSearchBar() ? this.state.deck.type : ""}
-          cards = {this.state.dynamicCards}
-          />
+          {this.willRenderCardList(this.state.termCards)}
 
           {/* <Row>
             <Col>

@@ -37,7 +37,7 @@ export default class Login extends Component {
       console.log(res.data.permissions);
       localStorage.setItem('jwt', res.data.access_token);
       localStorage.setItem('per', res.data.permissions);
-      this.props.history.push('/decks');
+      this.props.history.push('/modules');
     });
   }
 
@@ -71,7 +71,7 @@ export default class Login extends Component {
           <br></br>
           <p>
             Don't have an account? &nbsp;
-            <Link to ='/signup' style={{color: 'white', textDecoration: 'underline'}}>Create one.</Link>
+            <Link to ='/register' style={{color: 'white', textDecoration: 'underline'}}>Create one.</Link>
           </p>
         </div>
       </div>

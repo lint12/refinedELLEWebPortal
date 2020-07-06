@@ -74,7 +74,7 @@ class Card extends React.Component {
   }
 
   render() {
-    let {front, back, cardID} = this.state.card;
+    let {front, back, termID} = this.state.card;
 
     if(this.state.editMode == false){
       console.log("rendering normal Card!");
@@ -83,13 +83,13 @@ class Card extends React.Component {
         <tr onClick={this.toggleCollapsedTags}>
     			<td>{front}</td>
     			<td>{back}</td>
-          <td><Button style={{backgroundColor: 'white', width: '100%'}} onClick={this.downloadImg(cardID)}><img src={"./../../../image.png"} alt="image icon" style={{width: '25px', height: '25px'}}/></Button></td>
-          <td><Button style={{backgroundColor: 'white', width: '100%'}} onClick={this.downloadAudio(cardID)}><img src={"./../../../headphones.png"} alt="headphones icon" style={{width: '25px', height: '25px'}}/></Button></td>
-          <td>{cardID}</td>
+          <td><Button style={{backgroundColor: 'white', width: '100%'}} onClick={this.downloadImg(termID)}><img src={"./../../../image.png"} alt="image icon" style={{width: '25px', height: '25px'}}/></Button></td>
+          <td><Button style={{backgroundColor: 'white', width: '100%'}} onClick={this.downloadAudio(termID)}><img src={"./../../../headphones.png"} alt="headphones icon" style={{width: '25px', height: '25px'}}/></Button></td>
+          <td>{termID}</td>
           <td>
             <ButtonGroup>
-            <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.editCard(cardID)}><img src={"./../../../tools.png"} alt="edit icon" style={{width: '25px', height: '25px'}}/></Button>
-            <Button style={{backgroundColor: 'lightcoral'}} onClick={() => this.deleteCard(cardID)}><img src={"./../../../delete.png"} alt="trash can icon" style={{width: '25px', height: '25px'}}/></Button>
+            <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.editCard(termID)}><img src={"./../../../tools.png"} alt="edit icon" style={{width: '25px', height: '25px'}}/></Button>
+            <Button style={{backgroundColor: 'lightcoral'}} onClick={() => this.deleteCard(termID)}><img src={"./../../../delete.png"} alt="trash can icon" style={{width: '25px', height: '25px'}}/></Button>
             </ButtonGroup>
           </td>
         </tr>
@@ -112,9 +112,9 @@ class Card extends React.Component {
         <tr>
           <td><Input type="value" onChange={this.editFront} value={this.state.editedFront} /></td>
           <td><Input type="value" onChange={this.editBack} value={this.state.editedBack} /></td>
-          <td><Button style={{backgroundColor: 'white', width: '100%'}} onClick={this.downloadImg(cardID)}><img src={"./../../../image.png"} alt="image icon" style={{width: '25px', height: '25px'}}/></Button></td>
-          <td><Button style={{backgroundColor: 'white', width: '100%'}} onClick={this.downloadAudio(cardID)}><img src={"./../../../headphones.png"} alt="headphones icon" style={{width: '25px', height: '25px'}}/></Button></td>
-          <td>{cardID}</td>
+          <td><Button style={{backgroundColor: 'white', width: '100%'}} onClick={this.downloadImg(termID)}><img src={"./../../../image.png"} alt="image icon" style={{width: '25px', height: '25px'}}/></Button></td>
+          <td><Button style={{backgroundColor: 'white', width: '100%'}} onClick={this.downloadAudio(termID)}><img src={"./../../../headphones.png"} alt="headphones icon" style={{width: '25px', height: '25px'}}/></Button></td>
+          <td>{termID}</td>
           <td>
             <ButtonGroup>
               <Button style={{backgroundColor: 'lightcyan', width: '100%', height: '100%', color: 'black'}} onClick = {this.submitEdit}> Submit </Button>
