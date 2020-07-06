@@ -1,42 +1,72 @@
 import React from 'react'
-import { Container, Row, Col, Media } from 'reactstrap';
+import { Container, Row, Col, Input, InputGroup, InputGroupAddon, InputGroupText, Button, Collapse } from 'reactstrap';
 import CardList from './CardList'
 import axios from 'axios';
+
+import AddCard from './AddCard';
 
 class Deck extends React.Component {
   constructor(props) {
     super(props);
     this.change = this.change.bind(this);
     this.submit = this.submit.bind(this);
+    this.toggleNewCard = this.toggleNewCard.bind(this);
     this.state = {
-      cardID: '',
       id: this.props.id,
       deck: this.props.deck,
-
-      deckName: '',
+      deckName: this.props.deckName,
+      language: "",
       ttype: "",
 
-      cards: [],//{front: "Select a", back: "deck!", cardID: "1"}],
+      cards: [],
+      cardID: '',
+      searchCard: '',
+      collapseNewCard: false,
     };
 
   }
 
+  componentDidMount() {
+    console.log("component did mount " + this.state.id);
+    console.log(this.props.serviceIP);
+
+    axios.post(this.props.serviceIP + '/modulequestions', {  moduleID: this.state.id ,
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+    }).then(res => {
+        console.log(res.data);
+        this.setState({cards: res.data});
+      }).catch(function (error) {
+        console.log(error);
+      });
+  }
+
   updateDeck(e) {
-    console.log("tttt");
-    axios.get(this.props.serviceIP + '/deck/' + e.deck.id, {
-      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+    console.log("Updating the deck...");
+    console.log(e.deck.moduleID);
+    console.log(e.deck);
+    axios.post(this.props.serviceIP + '/modulequestions', { moduleID: e.deck.moduleID, 
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then( res => {
       console.log(res.data);
       let cards = res.data;
       this.setState({
-        id: e.deck.id,
-        deck:e.deck,
+        id: e.deck.termID,
+        deck: e.deck,
+        deckName: e.deck.name,
         cards: cards
       });
+      this.ncRef.updateDeckID(e.deck.termID); 
     }).catch(function (error) {
       console.log(error);
     });
-    console.log(this.state.deck);
+  }
+
+  updateSearchCard(e) {
+    this.setState({ searchCard: e.target.value.substr(0,20) });
+  }
+
+  toggleNewCard() {
+    this.setState({ collapseNewCard: !this.state.collapseNewCard });
   }
 
   change(e) {
@@ -61,46 +91,43 @@ class Deck extends React.Component {
       });
   }
 
-  componentDidMount() {
-      /*axios.get(this.props.serviceIP + '/deck/' +this.state.id, {
-        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
-      }).then(res => {
-          console.log(res.data);
-          this.setState({
-            cards : res.data });
-        }).catch(function (error) {
-          console.log(error);
-        });
-        console.log(this.state.deck);*/
-  }
-
   render () {
+      console.log("rendering the deck")
+      console.log("deckName: " + this.state.deckName);
+      console.log("deck id: " + this.state.id);
+      console.log("deck array: " + this.state.deck);
+      console.log("cards array: " + this.state.cards);
+
+      let terms = this.state.cards.filter(card => card.type === "MATCH").map((card, i) => {return card.answers[0]});
+      
+      console.log(terms);
+
+      let filteredCards = terms.filter(
+          (card) => { 
+            if (card) 
+              return card.front.toLowerCase().indexOf(this.state.searchCard.toLowerCase()) !== -1;
+          }
+      );
       return (
         <Container className='Deck'>
-          <Row className='Header'>
+          <Row className='Header' style={{marginBottom: '25px'}}>
+            <InputGroup style={{borderRadius: '12px'}}>
+              <InputGroupAddon addonType="prepend"><InputGroupText>{this.state.deckName}</InputGroupText></InputGroupAddon>
+              <Input type="text" placeholder="Search" value={this.state.searchCard} onChange={this.updateSearchCard.bind(this)}/>
+              <InputGroupAddon addonType="append"><Button style={{backgroundColor:'#3e6184'}} onClick={this.toggleNewCard}>Add Card</Button></InputGroupAddon>
+            </InputGroup>
             <Col>
-              <Media body>
-                <Media heading>
-                </Media>
-              </Media>
+            <Collapse isOpen={this.state.collapseNewCard}>
+              <AddCard
+                ref={ncRef => {this.ncRef = ncRef;}}
+                id={this.state.id}
+                type={0}
+                serviceIP={this.props.serviceIP}>
+              </AddCard>
+            </Collapse>
             </Col>
           </Row>
-            <CardList
-            cards = {this.state.cards}
-            />
-          {/* <Row>
-            <Col>
-              <Form inline onSubmit={e => this.submit(e)}>
-                <Label for="cardID" className="mr-sm-2">Card ID:</Label>
-                <Input type="text" name="cardID"
-                onChange={e => this.change(e)}
-                value={this.state.cardID}
-                id="username" placeholder="Username"
-                style={{width: '75%', marginRight: '8px'}}/>
-                <Button color="danger" type="submit">Delete Card</Button>
-              </Form>
-            </Col>
-          </Row> */}
+            <CardList cards = {filteredCards} serviceIP={this.props.serviceIP}/>
           <Row>
             <br/>
           </Row>

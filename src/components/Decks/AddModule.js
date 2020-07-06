@@ -1,12 +1,12 @@
 import React from 'react';
-import { Button, Form, FormGroup, Label, Input, Row, FormText, Col, Alert} from 'reactstrap';
-import axios from 'axios';
+import { Button, Form, FormGroup, Label, Input, Row, Col, Alert} from 'reactstrap';
+//import axios from 'axios';
 
 class AddModule extends React.Component {
     render () {
         return (
             <div>
-            <Alert style={{color: '#004085', backgroundColor: 'deepskyblue'}}>
+            <Alert color="none" style={{color: '#004085', backgroundColor: 'aliceblue'}}>
             <Form> 
                 <Row>
 			        <Col>

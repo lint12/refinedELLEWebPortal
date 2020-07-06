@@ -14,9 +14,8 @@ import UserList from './pages/UserList';
 import AuthUser from './components/Auth/AuthUser';
 import AuthAdmin from './components/Auth/AuthAdmin';
 
-let flaskIP = 'https://10.171.204.206';
-flaskIP = 'https://endlesslearner.com';
-//flaskIP = 'http://localhost:5000';
+let flaskIP = 'https://endlesslearner.com';
+flaskIP = 'http://34.239.123.94:3000'; 
 
 class App extends Component {
   constructor() {
@@ -36,11 +35,11 @@ class App extends Component {
             <Route path="/downloads" component={Downloads} />
             <Route path="/logout" render={(props)=><Logout {...props} serviceIP={flaskIP}/>}/>
             <Route path="/login" render={(props)=><Login {...props} serviceIP={flaskIP}/>}/>
-            <Route path="/signup" render={(props)=><Signup {...props} serviceIP={flaskIP}/>}/>
+            <Route path="/register" render={(props)=><Signup {...props} serviceIP={flaskIP}/>}/>
             <AuthUser>
               <Route exact path="/" component={Template} />
               <Route path="/groups" render={(props)=><Groups {...props} serviceIP={flaskIP}/>}/>
-              <Route path="/decks" render={(props)=><Decks {...props} serviceIP={flaskIP}/>}/>
+              <Route path="/modules" render={(props)=><Decks {...props} serviceIP={flaskIP}/>}/>
               <Route path="/profile" render={(props)=><Profile {...props} serviceIP={flaskIP}/>}/>
               <Route path="/sessions" render={(props)=><Sessions {...props} serviceIP={flaskIP}/>}/>
               <AuthAdmin>

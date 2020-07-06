@@ -13,15 +13,16 @@ const CardList = (props) => {
               <th style={{width: '12%'}}>Picture</th>
               <th style={{width: '12%'}}>Audio</th>
 							<th style={{width: '12%'}}>ID</th>
-              <th style={{width: '32%'}}> </th>
+              <th style={{width: '32%'}}> </th> 
             </tr>
           </thead>
           <tbody>
             {props.cards.map((card) => {
               return (
                 <Card
-                  key={card.cardID}
-                  card={card}/>
+                  key={card.termID}
+                  card={card}
+                  serviceIP={props.serviceIP}/>
               )
             })}
           </tbody>

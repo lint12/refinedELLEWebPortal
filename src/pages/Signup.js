@@ -55,6 +55,7 @@ export default class Signup extends React.Component {
   }
 
   render() {
+    console.log("here here");
   return (
   <Container>
     <MainTemplate/>

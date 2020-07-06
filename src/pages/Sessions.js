@@ -20,6 +20,7 @@ export default class Sessions extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props.serviceIP)
     axios.get(this.props.serviceIP + '/session', {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then(res => {

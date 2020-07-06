@@ -55,7 +55,7 @@ const Home = (props) => {
 			<div className="container">
 				<div className="section-header">
 					<h2>What's possible with ELLE</h2>
-					<p><Link to='/signup'>Sign up</Link> for ELLE now and get a unique profile and tools to make the most of your ELLE experience.</p>
+					<p><Link to='/register'>Sign up</Link> for ELLE now and get a unique profile and tools to make the most of your ELLE experience.</p>
 				</div>
 				<div className="row">
 					<div className="col-lg-6">

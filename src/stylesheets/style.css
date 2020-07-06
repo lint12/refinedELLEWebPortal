@@ -873,7 +873,7 @@ Prevent double borders
 
 #deckButton { 
 	width: 100%;
-	background-color: initial;
+	background-color: #5faeb5;
 	color: white;
 	border: none;
 	text-align: center;
@@ -899,7 +899,7 @@ table.tableList td, table.tableList th {
   border: 1px solid #000000;
 }
 table.tableList thead {
-  background: #18a2b8;
+  background: #5faeb5;
 }
 table.tableList thead th {
   font-size: 17px;
