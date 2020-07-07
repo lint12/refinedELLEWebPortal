@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Label, Row, Col} from 'reactstrap';
+import {Label, Row } from 'reactstrap';
 
 import TagItem from './TagItem';
 
@@ -22,8 +22,7 @@ class TagList extends Component {
 
 
 		for(let i = 0; i < tags.length; i++){
-			
-			list.push(<TagItem tag={tags[i]} />);
+			list.push(<TagItem tag={tags[i]} key={i}/>);
 		}
 
 		console.log("Done with renderList, list: ", list);

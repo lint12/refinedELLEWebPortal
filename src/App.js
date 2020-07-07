@@ -4,7 +4,7 @@ import Home from './pages/Home';
 import Template from './pages/Template';
 import Downloads from './pages/Downloads';
 import Groups from './pages/Groups';
-import Decks from './pages/Decks';
+import Modules from './pages/Modules';
 import Profile from './pages/Profile';
 import Sessions from './pages/Sessions';
 import Login from './pages/Login'
@@ -39,7 +39,7 @@ class App extends Component {
             <AuthUser>
               <Route exact path="/" component={Template} />
               <Route path="/groups" render={(props)=><Groups {...props} serviceIP={flaskIP}/>}/>
-              <Route path="/modules" render={(props)=><Decks {...props} serviceIP={flaskIP}/>}/>
+              <Route path="/modules" render={(props)=><Modules {...props} serviceIP={flaskIP}/>}/>
               <Route path="/profile" render={(props)=><Profile {...props} serviceIP={flaskIP}/>}/>
               <Route path="/sessions" render={(props)=><Sessions {...props} serviceIP={flaskIP}/>}/>
               <AuthAdmin>

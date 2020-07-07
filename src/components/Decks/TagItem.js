@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, ButtonGroup } from 'reactstrap';
+import { Button } from 'reactstrap';
 
 
 class TagItem extends React.Component {
