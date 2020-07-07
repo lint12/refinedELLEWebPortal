@@ -25,7 +25,10 @@ export default class Decks extends Component {
       userID: "",
       username: "",
 
-      decks: [],
+      modules: [],
+
+      dynamicModules: [],
+
       audio: [],
       image: [],
 
@@ -37,7 +40,7 @@ export default class Decks extends Component {
 
       searchDeck: '',
       collapseNewModule: false,
-      emptyCollection: false, 
+      emptyCollection: false, //true when there are no modules, false otherwise
     };
   }
 
@@ -48,10 +51,11 @@ export default class Decks extends Component {
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
       }).then(res => {
         console.log(res.data);
-        let decks = res.data; 
-        this.setState({ decks : decks });
+        let modules = res.data; 
+        this.setState({ modules : modules,
+                        dynamicModules: modules });
 
-        if (this.state.decks.length === 0) {
+        if (this.state.modules.length === 0) {
           this.toggleEmptyCollectionAlert(); 
         }
       }).catch(function (error) {
@@ -99,7 +103,24 @@ export default class Decks extends Component {
   }
 
   updateSearchDeck(e) {
-    this.setState({ searchDeck: e.target.value.substr(0,20) });
+    //this.setState({ searchDeck: e.target.value.substr(0,20) });
+
+    let filterFunction = (module) => {
+      let moduleName = module.name;
+      let namePrefix = moduleName.substr(0,e.target.value.length);
+
+      if(namePrefix.toLowerCase() === e.target.value.toLowerCase()){
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    let newModuleList = this.state.modules.filter(filterFunction);
+
+    this.setState({ searchDeck: e.target.value.substr(0,20),
+                    dynamicModules: newModuleList 
+                  });
   }
 
   toggleNewModule() {
@@ -131,7 +152,7 @@ export default class Decks extends Component {
           <Col>
             <Card color="info" style={{overflow:"scroll", height:"65vh"}}>
               {
-                this.state.decks.map((deck, i)=> (
+                this.state.dynamicModules.map((deck, i)=> (
                   <SplitDeckBtn key={i} curDeck={deck} ref={this.dRef}></SplitDeckBtn>
                 ))
               }
@@ -142,12 +163,12 @@ export default class Decks extends Component {
       <Col className="Right Column">
         <Row>
           <Col>
-            {this.state.decks.length !== 0 ? 
+            {this.state.modules.length !== 0 ? 
             <Deck
               ref={this.dRef}
-              id={this.state.decks[0].moduleID}
-              deck={this.state.decks[0]}
-              deckName={this.state.decks[0].name}
+              id={this.state.modules[0].moduleID}
+              deck={this.state.modules[0]}
+              deckName={this.state.modules[0].name}
               serviceIP={this.props.serviceIP}>
             </Deck> : 
             <Alert isOpen={this.state.emptyCollection}>You have no modules, please create one by clicking on the Add Module Button to your left.</Alert>}

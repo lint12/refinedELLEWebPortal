@@ -3,7 +3,7 @@ import { Container, Row, Col, Input, InputGroup, InputGroupAddon, InputGroupText
 import CardList from './CardList'
 import axios from 'axios';
 
-import AddCard from './AddCard';
+import AddTerm from './AddTerm';
 
 class Deck extends React.Component {
   constructor(props) {
@@ -100,12 +100,12 @@ class Deck extends React.Component {
 
       let terms = this.state.cards.filter(card => card.type === "MATCH").map((card, i) => {return card.answers[0]});
       
-      console.log(terms);
+      console.log("terms: ", terms);
 
-      let filteredCards = terms.filter(
-          (card) => { 
-            if (card) 
-              return card.front.toLowerCase().indexOf(this.state.searchCard.toLowerCase()) !== -1;
+      let filteredTerms = terms.filter(
+          (term) => { 
+            if (term) 
+              return term.front.toLowerCase().indexOf(this.state.searchCard.toLowerCase()) !== -1;
           }
       );
       return (
@@ -118,16 +118,16 @@ class Deck extends React.Component {
             </InputGroup>
             <Col>
             <Collapse isOpen={this.state.collapseNewCard}>
-              <AddCard
+              <AddTerm
                 ref={ncRef => {this.ncRef = ncRef;}}
                 id={this.state.id}
                 type={0}
                 serviceIP={this.props.serviceIP}>
-              </AddCard>
+              </AddTerm>
             </Collapse>
             </Col>
           </Row>
-            <CardList cards = {filteredCards} serviceIP={this.props.serviceIP}/>
+            <CardList cards = {filteredTerms} serviceIP={this.props.serviceIP}/>
           <Row>
             <br/>
           </Row>
