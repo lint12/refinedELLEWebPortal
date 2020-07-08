@@ -9,17 +9,13 @@ class Deck extends React.Component {
   constructor(props) {
     super(props);
     this.toggleNewCard = this.toggleNewCard.bind(this);
-    this.getCurrentModuleContents = this.getCurrentModuleContents.bind(this);
 
     this.state = {
       id: this.props.id,
-      module: this.props.module,
       deckName: this.props.deckName,
       language: "",
-      ttype: "",
 
-      cards: this.props.cards,
-      cardID: '',
+
       searchCard: '',
       collapseNewCard: false,
     };
@@ -27,24 +23,9 @@ class Deck extends React.Component {
   }
 
   componentDidMount() {
-    console.log("deck.js componentDidMount. this.state.module: ",  this.state.module);
     console.log("deck.js serviceIP: ", this.props.serviceIP);
 
-    this.getCurrentModuleContents();
   }
-
-
-  getCurrentModuleContents = () => {
-    axios.post(this.props.serviceIP + '/modulequestions', {  moduleID: this.state.id ,
-      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-    }).then(res => {
-        console.log(res.data);
-        this.setState({cards: res.data});
-      }).catch(function (error) {
-        console.log(error);
-    });
-  }
-
 
   updateSearchCard(e) {
     this.setState({ searchCard: e.target.value.substr(0,20) });
@@ -55,10 +36,6 @@ class Deck extends React.Component {
   }
 
   render () {
-
-      console.log("rendering the module: ", this.state.module);
-      console.log("deck.js module prop: ", this.props.module);
-      console.log("deck.js, this.state.cards: ", this.state.cards, "this.props.cards: ", this.props.cards);
 
       let terms = this.props.cards.filter(card => card.type === "MATCH").map((card, i) => {return card.answers[0]});
       

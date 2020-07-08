@@ -220,7 +220,6 @@ export default class Modules extends Component {
             {this.state.modules.length !== 0 ? 
             <Deck
               id={this.state.currentModule.moduleID}
-              module={this.state.currentModule}
               deckName={this.state.currentModule.name}
               cards={this.state.cards}
               serviceIP={this.props.serviceIP}
