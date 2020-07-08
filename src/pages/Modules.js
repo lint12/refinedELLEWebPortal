@@ -20,18 +20,25 @@ export default class Modules extends Component {
     this.toggleNewModule = this.toggleNewModule.bind(this);
     this.change = this.change.bind(this);
     this.deleteDeck = this.deleteDeck.bind(this);
-    this.dRef = React.createRef();
-    this.mRef = React.createRef(); 
+    this.updateModuleList = this.updateModuleList.bind(this);
+    this.updateCurrentModule = this.updateCurrentModule.bind(this);
+    this.initializeModulesPage = this.initializeModulesPage.bind(this);
+
+
     this.state = {
       userID: "",
       username: "",
 
-      modules: [],
 
-      dynamicModules: [],
+      modules: [], //list of all modules in the database
+      dynamicModules: [], //list of modules filtered by search bar
 
       audio: [],
       image: [],
+
+      currentModule: [], //current module we're looking at
+
+      cards: [], //cards in the module we're looking ats
 
       //for deleting a deck
       deckID: "",
@@ -47,17 +54,49 @@ export default class Modules extends Component {
 
   componentDidMount() {
       console.log("Decks has mounted")
-      console.log(this.dRef);
-      this.updateModules(); 
+      this.initializeModulesPage();
   }
 
-  updateModules() {
-    console.log("updating Modules"); 
+
+  //populates the sidebar list of modules
+  //sets the current module we're looking at to the first module on the list
+  initializeModulesPage = () => {
+    console.log("initializing ModuleList on sidebar"); 
+    
     axios.get(this.props.serviceIP + '/modules', {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then(res => {
-      console.log(res.data);
+      
       let modules = res.data; 
+      console.log("initialized list, modules: ", modules);
+
+      this.setState({ currentModule: modules[0],
+                      modules : modules,
+                      dynamicModules: modules });
+
+      if (this.state.modules.length === 0) {
+        this.toggleEmptyCollectionAlert(); 
+      };
+
+      //setting the displayed module to currentModule
+      this.updateCurrentModule({module: this.state.currentModule});
+
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
+
+  //makes an API call to get the module list on sidebar, and updates it
+  //(it worked when it wasn't an arrow function, hasn't been tested since convered to arrow function)
+  updateModuleList = () => {
+    console.log("updating ModuleList on sidebar"); 
+    axios.get(this.props.serviceIP + '/modules', {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+    }).then(res => {
+      
+      let modules = res.data; 
+      console.log("updated list, modules: ", modules);
+
       this.setState({ modules : modules,
                       dynamicModules: modules });
 
@@ -66,6 +105,26 @@ export default class Modules extends Component {
       }
     }).catch(function (error) {
       console.log(error);
+    });
+  }
+
+  //makes an API call to get the list of cards in the current module, qhich will then be displayed
+  updateCurrentModule = (event) => {
+    console.log("Updating current module: ", event.module);
+    axios.post(this.props.serviceIP + '/modulequestions', { moduleID: event.module.moduleID, 
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+    }).then( res => {
+      console.log("updateCurrentModule, res.data: ", res.data);
+      let cards = res.data;
+      this.setState({
+        id: event.module.termID,
+        module: event.module,
+        deckName: event.module.name,
+        cards: cards,
+        currentModule: event.module
+      });
+    }).catch(function (error) {
+      console.log("updateCurrentModule error: ", error);
     });
   }
 
@@ -85,22 +144,6 @@ export default class Modules extends Component {
     });
   }
 
-  // submitDeck(e) {
-  //   e.preventDefault();
-  //   var data = {
-  //     deckName: this.state.deckName,
-  //     ttype: this.state.ttype,
-  //   }
-  //   var headers = {
-  //     'Authorization': 'Bearer ' + localStorage.getItem('jwt')
-  //   }
-  //   axios.post(this.props.serviceIP + '/deck', data, {headers:headers})
-  //   .then(res => {
-  //     console.log(res.data);
-  //   }).catch(function (error) {
-  //     console.log(error);
-  //   });
-  // }
 
   change(e) {
     this.setState({
@@ -109,7 +152,6 @@ export default class Modules extends Component {
   }
 
   updateSearchDeck(e) {
-    //this.setState({ searchDeck: e.target.value.substr(0,20) });
 
     let filterFunction = (module) => {
       let moduleName = module.name;
@@ -152,14 +194,20 @@ export default class Modules extends Component {
         </InputGroup>
         <br></br>
         <Collapse isOpen={this.state.collapseNewModule}>
-          <AddModule serviceIP={this.props.serviceIP} ref={this.mRef}></AddModule>
+          <AddModule  serviceIP={this.props.serviceIP} 
+                      updateModuleList={this.updateModuleList}>
+          </AddModule>
         </Collapse>
         <Row>
           <Col>
             <Card color="info" style={{overflow:"scroll", height:"65vh"}}>
               {
                 this.state.dynamicModules.map((deck, i)=> (
-                  <SplitDeckBtn key={i} curDeck={deck} ref={this.dRef}></SplitDeckBtn>
+                  <SplitDeckBtn 
+                    key={i} 
+                    curDeck={deck} 
+                    updateCurrentModule={this.updateCurrentModule}>
+                  </SplitDeckBtn>
                 ))
               }
             </Card>
@@ -171,11 +219,12 @@ export default class Modules extends Component {
           <Col>
             {this.state.modules.length !== 0 ? 
             <Deck
-              ref={this.dRef}
-              id={this.state.modules[0].moduleID}
-              deck={this.state.modules[0]}
-              deckName={this.state.modules[0].name}
-              serviceIP={this.props.serviceIP}>
+              id={this.state.currentModule.moduleID}
+              module={this.state.currentModule}
+              deckName={this.state.currentModule.name}
+              cards={this.state.cards}
+              serviceIP={this.props.serviceIP}
+              updateCurrentModule={this.updateCurrentModule}>
             </Deck> : 
             <Alert isOpen={this.state.emptyCollection}>You have no modules, please create one by clicking on the Add Module Button to your left.</Alert>}
             <br></br><br></br>

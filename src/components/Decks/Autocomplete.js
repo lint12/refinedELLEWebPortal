@@ -82,6 +82,8 @@ class Autocomplete extends Component {
         showSuggestions: false,
         userInput: filteredSuggestions[activeSuggestion]
       });
+
+      this.props.onEnter(this.state.userInput);
     }
     // User pressed the up arrow, decrement the index
     else if (e.keyCode === 38) {

@@ -26,6 +26,11 @@ class AddTerm extends React.Component {
 		};
 	}
 
+	componentDidMount(){
+		//TODO: populate this.state.allTags
+		//TODO: 
+	}
+
 	//updates the deck id to a new id
 	updateDeckID(newID) {
 		this.setState({
@@ -106,6 +111,27 @@ class AddTerm extends React.Component {
 		}
   }
 
+  addTag = (tag) => {
+  	console.log("Got into addTag, tag: ", tag);
+  	
+  	let temp = this.state.tags;
+
+  	temp.push(tag);
+
+  	this.setState({tags: temp});
+  }
+
+  deleteTag = (tag) => {
+  	//TODO: create function that delete a tag from the database, given the tag
+  	//And pass that function into autocomplete
+  }
+
+  createTag = (tag) => {
+  	//TODO: create function that creates a brand new tag from the user input,
+  	//adds that tag to the database, and associates that tag with the word being created
+  	//And pass that function into Autocomplete
+  }
+
 render () {
     return (
 		<div>
@@ -172,6 +198,7 @@ render () {
 							name={"tags"}
 							id={"tags"}
 							placeholder={"Tag"}
+							onEnter={this.addTag}
 
 							suggestions={[
 								"Noun",

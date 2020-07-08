@@ -32,6 +32,7 @@ class AddModule extends React.Component {
         {headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then(res => {
       console.log(res.data);
+      this.props.updateModuleList();
     }).catch(function (error) {
       console.log(error);
     });

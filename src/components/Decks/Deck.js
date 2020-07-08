@@ -8,17 +8,17 @@ import AddTerm from './AddTerm';
 class Deck extends React.Component {
   constructor(props) {
     super(props);
-    this.change = this.change.bind(this);
-    this.submit = this.submit.bind(this);
     this.toggleNewCard = this.toggleNewCard.bind(this);
+    this.getCurrentModuleContents = this.getCurrentModuleContents.bind(this);
+
     this.state = {
       id: this.props.id,
-      deck: this.props.deck,
+      module: this.props.module,
       deckName: this.props.deckName,
       language: "",
       ttype: "",
 
-      cards: [],
+      cards: this.props.cards,
       cardID: '',
       searchCard: '',
       collapseNewCard: false,
@@ -27,9 +27,14 @@ class Deck extends React.Component {
   }
 
   componentDidMount() {
-    console.log("component did mount " + this.state.id);
-    console.log(this.props.serviceIP);
+    console.log("deck.js componentDidMount. this.state.module: ",  this.state.module);
+    console.log("deck.js serviceIP: ", this.props.serviceIP);
 
+    this.getCurrentModuleContents();
+  }
+
+
+  getCurrentModuleContents = () => {
     axios.post(this.props.serviceIP + '/modulequestions', {  moduleID: this.state.id ,
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then(res => {
@@ -37,29 +42,9 @@ class Deck extends React.Component {
         this.setState({cards: res.data});
       }).catch(function (error) {
         console.log(error);
-      });
-  }
-
-  updateDeck(e) {
-    console.log("Updating the deck...");
-    console.log(e.deck.moduleID);
-    console.log(e.deck);
-    axios.post(this.props.serviceIP + '/modulequestions', { moduleID: e.deck.moduleID, 
-      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-    }).then( res => {
-      console.log(res.data);
-      let cards = res.data;
-      this.setState({
-        id: e.deck.termID,
-        deck: e.deck,
-        deckName: e.deck.name,
-        cards: cards
-      });
-      this.ncRef.updateDeckID(e.deck.termID); 
-    }).catch(function (error) {
-      console.log(error);
     });
   }
+
 
   updateSearchCard(e) {
     this.setState({ searchCard: e.target.value.substr(0,20) });
@@ -69,36 +54,13 @@ class Deck extends React.Component {
     this.setState({ collapseNewCard: !this.state.collapseNewCard });
   }
 
-  change(e) {
-    this.setState({
-      [e.target.name]: e.target.value
-    })
-  }
-
-  submit(e) {
-      e.preventDefault();
-      var data = {
-        cardID: this.state.cardID,
-      }
-      var headers = {
-        'Authorization': 'Bearer ' + localStorage.getItem('jwt')
-      }
-      axios.delete(this.props.serviceIP + '/card', data, {headers:headers
-      }).then(res => {
-        console.log(res.data);
-      }).catch(function (error) {
-        console.log(error);
-      });
-  }
-
   render () {
-      console.log("rendering the deck")
-      console.log("deckName: " + this.state.deckName);
-      console.log("deck id: " + this.state.id);
-      console.log("deck array: " + this.state.deck);
-      console.log("cards array: " + this.state.cards);
 
-      let terms = this.state.cards.filter(card => card.type === "MATCH").map((card, i) => {return card.answers[0]});
+      console.log("rendering the module: ", this.state.module);
+      console.log("deck.js module prop: ", this.props.module);
+      console.log("deck.js, this.state.cards: ", this.state.cards, "this.props.cards: ", this.props.cards);
+
+      let terms = this.props.cards.filter(card => card.type === "MATCH").map((card, i) => {return card.answers[0]});
       
       console.log("terms: ", terms);
 
@@ -108,6 +70,7 @@ class Deck extends React.Component {
               return term.front.toLowerCase().indexOf(this.state.searchCard.toLowerCase()) !== -1;
           }
       );
+
       return (
         <Container className='Deck'>
           <Row className='Header' style={{marginBottom: '25px'}}>
@@ -119,7 +82,6 @@ class Deck extends React.Component {
             <Col>
             <Collapse isOpen={this.state.collapseNewCard}>
               <AddTerm
-                ref={ncRef => {this.ncRef = ncRef;}}
                 id={this.state.id}
                 type={0}
                 serviceIP={this.props.serviceIP}>
