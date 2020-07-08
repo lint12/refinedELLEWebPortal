@@ -44,7 +44,8 @@ class Deck extends React.Component {
       let filteredTerms = terms.filter(
           (term) => { 
             if (term) 
-              return term.front.toLowerCase().indexOf(this.state.searchCard.toLowerCase()) !== -1;
+              return ((term.front.toLowerCase().indexOf(this.state.searchCard.toLowerCase()) !== -1) || 
+              (term.back.toLowerCase().indexOf(this.state.searchCard.toLowerCase()) !== -1));
           }
       );
 
