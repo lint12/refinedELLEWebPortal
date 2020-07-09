@@ -19,7 +19,7 @@ export default class Modules extends Component {
     super(props);
     this.toggleNewModule = this.toggleNewModule.bind(this);
     this.change = this.change.bind(this);
-    this.deleteDeck = this.deleteDeck.bind(this);
+    this.deleteModule = this.deleteModule.bind(this);
     this.updateModuleList = this.updateModuleList.bind(this);
     this.updateCurrentModule = this.updateCurrentModule.bind(this);
     this.initializeModulesPage = this.initializeModulesPage.bind(this);
@@ -108,7 +108,7 @@ export default class Modules extends Component {
     });
   }
 
-  //makes an API call to get the list of cards in the current module, qhich will then be displayed
+  //makes an API call to get the list of cards in the current module, which will then be displayed
   updateCurrentModule = (event) => {
     console.log("Updating current module: ", event.module);
     axios.post(this.props.serviceIP + '/modulequestions', { moduleID: event.module.moduleID, 
@@ -128,17 +128,14 @@ export default class Modules extends Component {
     });
   }
 
-  deleteDeck(e) {
-    e.preventDefault();
-    var data = {
-      deckID: this.state.deckID,
-    }
-    var headers = {
-      'Authorization': 'Bearer ' + localStorage.getItem('jwt')
-    }
-    axios.delete(this.props.serviceIP + '/deck', data, {headers:headers})
-    .then(res => {
+  deleteModule = (id) => {
+    console.log("Delete Module ID: ", id); 
+    console.log("serviceIP in modules: ", this.props.serviceIP); 
+    axios.delete(this.props.serviceIP + '/module', { data: {moduleID: id }, 
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+  }).then( res => {
       console.log(res.data);
+      this.updateModuleList(); 
     }).catch(function (error) {
       console.log(error);
     });
@@ -180,7 +177,7 @@ export default class Modules extends Component {
   }
 
   render() {
-    console.log("rendering Decks page");
+    console.log("rendering Modules page");
     return (
     <Container>
     <Template/>
@@ -204,9 +201,11 @@ export default class Modules extends Component {
               {
                 this.state.dynamicModules.map((deck, i)=> (
                   <SplitDeckBtn 
-                    key={i} 
+                    key={i}
+                    id={deck.moduleID} 
                     curDeck={deck} 
-                    updateCurrentModule={this.updateCurrentModule}>
+                    updateCurrentModule={this.updateCurrentModule}
+                    deleteModule={this.deleteModule}>
                   </SplitDeckBtn>
                 ))
               }

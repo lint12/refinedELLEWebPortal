@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Row, Col, Input, InputGroup, InputGroupAddon, InputGroupText, Button, Collapse } from 'reactstrap';
+import { Container, Row, Col, Input, InputGroup, InputGroupAddon, InputGroupText, Button, Collapse, Card, CardHeader } from 'reactstrap';
 import CardList from './CardList'
 import axios from 'axios';
 
@@ -9,15 +9,18 @@ class Deck extends React.Component {
   constructor(props) {
     super(props);
     this.toggleNewCard = this.toggleNewCard.bind(this);
+    this.toggleTab = this.toggleTab.bind(this); 
 
     this.state = {
       id: this.props.id,
-      deckName: this.props.deckName,
+      name: this.props.deckName,
       language: "",
 
-
-      searchCard: '',
+      searchCard: "",
       collapseNewCard: false,
+
+      collapseTab: false,
+      tabs: [0,1,2],
     };
 
   }
@@ -35,11 +38,19 @@ class Deck extends React.Component {
     this.setState({ collapseNewCard: !this.state.collapseNewCard });
   }
 
-  render () {
+  toggleTab(e) {
+    let event = e.target.dataset.event; 
+    this.setState({ collapseTab: this.state.collapseTab === Number(event) ? -1 : Number(event) })
+  }
 
+  render () {
       let terms = this.props.cards.filter(card => card.type === "MATCH").map((card, i) => {return card.answers[0]});
+      let phrases = this.props.cards.filter(card => card.type === "PHRASE").map((card, i) => {return card.answers[0]}); 
+      let questions = this.props.cards.filter(card => card.type === "LONGFORM").map((card, i) => {return card.answers}); 
       
       console.log("terms: ", terms);
+      console.log("phrases: ", phrases); 
+      console.log("questions: ", questions); 
 
       let filteredTerms = terms.filter(
           (term) => { 
@@ -49,11 +60,19 @@ class Deck extends React.Component {
           }
       );
 
+      let filteredPhrases = phrases.filter(
+        (phrase) => { 
+          if (phrase) 
+            return ((phrase.front.toLowerCase().indexOf(this.state.searchCard.toLowerCase()) !== -1) || 
+            (phrase.back.toLowerCase().indexOf(this.state.searchCard.toLowerCase()) !== -1));
+        }
+     );
+
       return (
         <Container className='Deck'>
           <Row className='Header' style={{marginBottom: '25px'}}>
             <InputGroup style={{borderRadius: '12px'}}>
-              <InputGroupAddon addonType="prepend"><InputGroupText>{this.state.deckName}</InputGroupText></InputGroupAddon>
+              <InputGroupAddon addonType="prepend"><InputGroupText>{this.props.deckName}</InputGroupText></InputGroupAddon>
               <Input type="text" placeholder="Search" value={this.state.searchCard} onChange={this.updateSearchCard.bind(this)}/>
               <InputGroupAddon addonType="append"><Button style={{backgroundColor:'#3e6184'}} onClick={this.toggleNewCard}>Add Card</Button></InputGroupAddon>
             </InputGroup>
@@ -67,7 +86,38 @@ class Deck extends React.Component {
             </Collapse>
             </Col>
           </Row>
-            <CardList cards = {filteredTerms} serviceIP={this.props.serviceIP}/>
+          {this.state.tabs.map(index => { 
+            if (index === 0) {
+              return (
+                <Card style={{ marginBottom: '1rem' }}>
+                  <CardHeader onClick={this.toggleTab} data-event={index}>Terms</CardHeader>
+                  <Collapse isOpen={this.state.collapseTab === index}>
+                    <CardList cards = {filteredTerms} serviceIP={this.props.serviceIP}/>
+                  </Collapse>
+                </Card>
+              )
+            }
+            else if (index === 1) {
+              return (
+                <Card style={{ marginBottom: '1rem' }}>
+                  <CardHeader onClick={this.toggleTab} data-event={index}>Phrases</CardHeader>
+                  <Collapse isOpen={this.state.collapseTab === index}>
+                    <CardList cards = {filteredPhrases} serviceIP={this.props.serviceIP}/>
+                  </Collapse>
+                </Card>
+              )
+            }
+            else {
+              return (
+                <Card style={{ marginBottom: '1rem' }}>
+                  <CardHeader onClick={this.toggleTab} data-event={index}>Questions</CardHeader>
+                  <Collapse isOpen={this.state.collapseTab === index}>
+                    {/* cardlist for questions */}
+                  </Collapse>
+                </Card>
+              )
+            }
+          })}
           <Row>
             <br/>
           </Row>

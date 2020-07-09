@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import { Button, ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter, Collapse, Input} from 'reactstrap';
+import { Button, ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter, Collapse, Input } from 'reactstrap';
 import axios from 'axios';
 
 import TagList from './TagList';
@@ -116,10 +116,9 @@ class Card extends React.Component {
 
         </td>
       </tr>
-
         <Collapse isOpen={this.state.collapseTags}>
             <tr>
-              <td style={{border:"none"}}><TagList tags={this.state.tags} /></td>
+              <td style={{border:"none"}}><TagList tags={this.state.tags}/></td>
             </tr>
         </Collapse>
 
