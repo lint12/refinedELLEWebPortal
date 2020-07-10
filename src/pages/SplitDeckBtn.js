@@ -6,7 +6,6 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } fr
   
     const toggle = () => setOpen(!dropdownOpen);
 
-
     return (
       <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
         <Button 
@@ -14,8 +13,9 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } fr
           id="deckButton" 
           type="button"
           onClick={ () => {
-            props.updateCurrentModule({ module: props.curDeck })
-        }}>{props.curDeck.name}
+            console.log("SplitDeckBtn: ", props.curModule); 
+            props.updateCurrentModule({ module: props.curModule })
+        }}>{props.curModule.name}
         </Button>
         
         <DropdownToggle caret color="info" style={{backgroundColor: '#5faeb5', border: 'none', borderRadius: '0px'}}/>

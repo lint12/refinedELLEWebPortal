@@ -141,7 +141,6 @@ export default class Modules extends Component {
     });
   }
 
-
   change(e) {
     this.setState({
       [e.target.name]: e.target.value
@@ -203,7 +202,7 @@ export default class Modules extends Component {
                   <SplitDeckBtn 
                     key={i}
                     id={deck.moduleID} 
-                    curDeck={deck} 
+                    curModule={deck} 
                     updateCurrentModule={this.updateCurrentModule}
                     deleteModule={this.deleteModule}>
                   </SplitDeckBtn>
@@ -218,8 +217,7 @@ export default class Modules extends Component {
           <Col>
             {this.state.modules.length !== 0 ? 
             <Deck
-              id={this.state.currentModule.moduleID}
-              deckName={this.state.currentModule.name}
+              curModule={this.state.currentModule}
               cards={this.state.cards}
               serviceIP={this.props.serviceIP}
               updateCurrentModule={this.updateCurrentModule}>

@@ -20,6 +20,7 @@ class AddModule extends React.Component {
     e.preventDefault();
     console.log("submit button has been pressed"); 
     console.log(this.props.serviceIP); 
+
     var data = {
         name: this.state.name,
         language: this.state.language, 
@@ -32,6 +33,11 @@ class AddModule extends React.Component {
         {headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then(res => {
       console.log(res.data);
+      //clears out the input fields once post has succeeded 
+      this.setState({
+        name: "",
+        language: ""
+      }); 
       this.props.updateModuleList();
     }).catch(function (error) {
       console.log(error);

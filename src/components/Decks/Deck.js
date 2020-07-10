@@ -12,8 +12,8 @@ class Deck extends React.Component {
     this.toggleTab = this.toggleTab.bind(this); 
 
     this.state = {
-      id: this.props.id,
-      name: this.props.deckName,
+      id: this.props.curModule.moduleID,
+      name: this.props.curModule.name,
       language: "",
 
       searchCard: "",
@@ -27,7 +27,6 @@ class Deck extends React.Component {
 
   componentDidMount() {
     console.log("deck.js serviceIP: ", this.props.serviceIP);
-
   }
 
   updateSearchCard(e) {
@@ -44,9 +43,9 @@ class Deck extends React.Component {
   }
 
   render () {
-      let terms = this.props.cards.filter(card => card.type === "MATCH").map((card, i) => {return card.answers[0]});
-      let phrases = this.props.cards.filter(card => card.type === "PHRASE").map((card, i) => {return card.answers[0]}); 
-      let questions = this.props.cards.filter(card => card.type === "LONGFORM").map((card, i) => {return card.answers}); 
+      let terms = this.props.cards.filter(card => card.type.toLowerCase() === "match").map((card, i) => {return card.answers[0]});
+      let phrases = this.props.cards.filter(card => card.type.toLowerCase() === "phrase").map((card, i) => {return card.answers[0]}); 
+      let questions = this.props.cards.filter(card => card.type.toLowerCase() === "longform").map((card, i) => {return card.answers}); 
       
       console.log("terms: ", terms);
       console.log("phrases: ", phrases); 
@@ -72,7 +71,7 @@ class Deck extends React.Component {
         <Container className='Deck'>
           <Row className='Header' style={{marginBottom: '25px'}}>
             <InputGroup style={{borderRadius: '12px'}}>
-              <InputGroupAddon addonType="prepend"><InputGroupText>{this.props.deckName}</InputGroupText></InputGroupAddon>
+              <InputGroupAddon addonType="prepend"><InputGroupText>{this.props.curModule.name}</InputGroupText></InputGroupAddon>
               <Input type="text" placeholder="Search" value={this.state.searchCard} onChange={this.updateSearchCard.bind(this)}/>
               <InputGroupAddon addonType="append"><Button style={{backgroundColor:'#3e6184'}} onClick={this.toggleNewCard}>Add Card</Button></InputGroupAddon>
             </InputGroup>
@@ -86,13 +85,14 @@ class Deck extends React.Component {
             </Collapse>
             </Col>
           </Row>
-          {this.state.tabs.map(index => { 
+          {this.state.tabs.map((index,i) => { 
             if (index === 0) {
               return (
                 <Card style={{ marginBottom: '1rem' }}>
                   <CardHeader onClick={this.toggleTab} data-event={index}>Terms</CardHeader>
                   <Collapse isOpen={this.state.collapseTab === index}>
-                    <CardList cards = {filteredTerms} serviceIP={this.props.serviceIP}/>
+                    <CardList cards = {filteredTerms} serviceIP={this.props.serviceIP} 
+                    curModule={this.props.curModule} updateCurrentModule={this.props.updateCurrentModule}/>
                   </Collapse>
                 </Card>
               )

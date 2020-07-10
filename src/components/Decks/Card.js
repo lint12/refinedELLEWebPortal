@@ -56,17 +56,24 @@ class Card extends React.Component {
     //TODO: actually create a new card
   }
 
+  //toggling delete modal, is not related to delete card API 
   handleDelete = () => {
     console.log(this.state.card); 
     this.toggleModal(); 
   }
 
-  deleteCard = e => {
+  deleteCard = (e) => {
     console.log("call API request to delete"); 
-    e.preventDefault();
-
-    axios.delete('http://34.239.123.94:3000/term', 
-    { data: { termID: this.state.card.termID }, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }})
+    console.log(this.state.card.termID);
+    this.toggleModal(); 
+    axios.delete(this.props.serviceIP + '/term', { data: { termID: this.state.card.termID },
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+    }).then( res => {
+      console.log(res.data);
+      this.props.updateCurrentModule({ module: this.props.curModule });  
+    }).catch(function (error) {
+      console.log(error);
+    });
   }
 
   toggleCollapsedTags = () => {

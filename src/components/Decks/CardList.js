@@ -22,7 +22,9 @@ const CardList = (props) => {
                 <Card
                   key={card.termID}
                   card={card}
-                  serviceIP={props.serviceIP}/>
+                  serviceIP={props.serviceIP}
+                  curModule={props.curModule}
+                  updateCurrentModule={props.updateCurrentModule}/>
               )
             })}
           </tbody>
