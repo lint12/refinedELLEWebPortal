@@ -28,23 +28,23 @@ Super tiny fix: include module name next to the search bar on the card list side
 
 ### Database Fields and Inputs For Cards 
 -- Terms, words and their translations along with other information
-- Types:
+-- Types:
 - NN  (Noun)
 - VR  (Verb)
 - AJ  (Adjective)+
 - AV  (Adverb)
 - PH  (Phrase)
 
-- Genders:
+-- Genders:
 - MA (Male)
 - FE (Female)
 - NA (Nongendered)
 
-- Front/Back clarification
+-- Front/Back clarification
 - Front is the word in the foreign language (prompt),
 - Back is the word in the native language (answer)
 
-- Types:
+-- Types:
 - MATCH       (Base type, uses a term as the question prompt, only one answer)
 - PHRASE      (Identical to MATCH, but for whole phrases, only one answer)
 - IMAGE       (Select a word corresponding to an image, may have multiple answers)
