@@ -27,29 +27,29 @@ Super tiny fix: include module name next to the search bar on the card list side
 - https://alligator.io/react/axios-react/
 
 ### Database Fields and Inputs For Cards 
--- Terms, words and their translations along with other information
--- Types:
-- NN  (Noun)
-- VR  (Verb)
-- AJ  (Adjective)+
-- AV  (Adverb)
-- PH  (Phrase)
+- Terms, words and their translations along with other information
+  - Types:
+    - NN  (Noun)
+    - VR  (Verb)
+    - AJ  (Adjective)+
+    - AV  (Adverb)
+    - PH  (Phrase)
 
--- Genders:
-- MA (Male)
-- FE (Female)
-- NA (Nongendered)
+  - Genders:
+    - MA (Male)
+    - FE (Female)
+    - NA (Nongendered)
 
--- Front/Back clarification
-- Front is the word in the foreign language (prompt),
-- Back is the word in the native language (answer)
+- Front/Back clarification
+  - Front is the word in the foreign language (prompt),
+  - Back is the word in the native language (answer)
 
--- Types:
-- MATCH       (Base type, uses a term as the question prompt, only one answer)
-- PHRASE      (Identical to MATCH, but for whole phrases, only one answer)
-- IMAGE       (Select a word corresponding to an image, may have multiple answers)
-- AUDIO       (Select a word corresponding to audio, may have multiple answers)
-- LONGFORM    (Questions with a full text prompt, may have multiple answers)
+  - Types:
+    - MATCH       (Base type, uses a term as the question prompt, only one answer)
+    - PHRASE      (Identical to MATCH, but for whole phrases, only one answer)
+    - IMAGE       (Select a word corresponding to an image, may have multiple answers)
+    - AUDIO       (Select a word corresponding to audio, may have multiple answers)
+    - LONGFORM    (Questions with a full text prompt, may have multiple answers)
 
 ### Reactjs Knowledge 
 #### React Life Cycle Diagram 
