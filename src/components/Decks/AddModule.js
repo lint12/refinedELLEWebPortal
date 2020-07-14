@@ -8,7 +8,9 @@ class AddModule extends React.Component {
 
       this.state = {
         name: "",
-        language: ""
+        language: "", 
+        status : false, 
+        success : false
       }; 
 
       this.submitModule = this.submitModule.bind(this); 
@@ -33,14 +35,13 @@ class AddModule extends React.Component {
         {headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then(res => {
       console.log(res.data);
-      //clears out the input fields once post has succeeded 
       this.setState({
-        name: "",
-        language: ""
+        success: true
       }); 
+      this.onShowStatus(); 
       this.props.updateModuleList();
     }).catch(function (error) {
-      console.log(error);
+        console.log(error);
     });
   }
 
@@ -52,39 +53,65 @@ class AddModule extends React.Component {
     this.setState({language: e.target.value}); 
   } 
 
-    render () {
-        return (
-            <div>
-            <Alert color="none" style={{color: '#004085', backgroundColor: 'aliceblue'}}>
-            <Form onSubmit={this.submitModule}> 
-                <Row>
-			        <Col>
-                        <FormGroup>
-							<Label for="moduleName">Module Name:</Label>
-							<Input type="text" placeholder="Module Name" 
-                            value={this.state.name} onChange={this.updateName}/>
-						</FormGroup>
-                    </Col>
-                </Row>
-                <Row>
-			        <Col>
-                        <FormGroup>
-							<Label for="moduleLang">Language:</Label>
-							<Input type="text" placeholder="Language"
-                            value={this.state.language} onChange={this.updateLanguage}/>
-						</FormGroup>
-                    </Col>
-                </Row>
-                <Row>
-					<Col>
-						<Button style={{backgroundColor: '#004085'}} type="submit" block>Create</Button>
-					</Col>
-				</Row>
-            </Form>
-            </Alert> 
-            </div>
-        )
+  onShowStatus = () => {
+    this.setState({ status: true }, ()=>{
+      window.setTimeout(()=>{
+        this.setState({ 
+          status: false, 
+          name: "", 
+          language: "", 
+          success: false
+        })
+      },2000)
+    }); 
+  }
+
+  renderStatus = () => {
+    if (this.state.status && this.state.success) {
+      console.log("success")
+        return  <Alert color="success" isOpen={this.state.status}>{this.state.name} has been added successfully! </Alert>
     }
+    else if (this.state.status && !this.state.success) {
+      console.log("failure")
+        return <Alert color="danger" isOpen={this.state.status}>Failure to add {this.state.name}</Alert>
+    }
+  } 
+
+  render () {
+    return (
+      <div>
+        <Alert color="none" style={{color: '#004085', backgroundColor: 'aliceblue'}}>
+        <Form onSubmit={this.submitModule}> 
+          {this.renderStatus()}
+          <Row>
+          <Col>
+            <FormGroup>
+              <Label for="moduleName">Module Name:</Label>
+              <Input type="text" placeholder="Module Name" 
+                     value={this.state.name} onChange={this.updateName}/>
+            </FormGroup>
+          </Col>
+          </Row>
+          <Row>
+          <Col>
+            <FormGroup>
+              <Label for="moduleLang">Language:</Label>
+              <Input type="text" placeholder="Language"
+                     value={this.state.language} onChange={this.updateLanguage}/>
+            </FormGroup>
+          </Col>
+          </Row>
+          <Row>
+          <Col>
+            <Button style={{backgroundColor: '#004085'}} type="submit" block
+              >Create</Button>
+          </Col>
+          </Row>
+          </Form>
+          </Alert> 
+      </div>
+    )
+  }
 }
 
 export default AddModule

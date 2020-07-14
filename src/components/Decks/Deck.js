@@ -1,7 +1,7 @@
 import React from 'react'
 import { Container, Row, Col, Input, InputGroup, InputGroupAddon, InputGroupText, Button, Collapse, Card, CardHeader } from 'reactstrap';
 import CardList from './CardList'
-import axios from 'axios';
+//import axios from 'axios';
 
 import AddTerm from './AddTerm';
 
@@ -56,6 +56,8 @@ class Deck extends React.Component {
             if (term) 
               return ((term.front.toLowerCase().indexOf(this.state.searchCard.toLowerCase()) !== -1) || 
               (term.back.toLowerCase().indexOf(this.state.searchCard.toLowerCase()) !== -1));
+            else 
+              return null; 
           }
       );
 
@@ -64,6 +66,8 @@ class Deck extends React.Component {
           if (phrase) 
             return ((phrase.front.toLowerCase().indexOf(this.state.searchCard.toLowerCase()) !== -1) || 
             (phrase.back.toLowerCase().indexOf(this.state.searchCard.toLowerCase()) !== -1));
+          else 
+            return null; 
         }
      );
 
@@ -88,7 +92,7 @@ class Deck extends React.Component {
           {this.state.tabs.map((index,i) => { 
             if (index === 0) {
               return (
-                <Card style={{ marginBottom: '1rem' }}>
+                <Card key={i} style={{ marginBottom: '1rem' }}>
                   <CardHeader onClick={this.toggleTab} data-event={index}>Terms</CardHeader>
                   <Collapse isOpen={this.state.collapseTab === index}>
                     <CardList cards = {filteredTerms} serviceIP={this.props.serviceIP} 
@@ -99,7 +103,7 @@ class Deck extends React.Component {
             }
             else if (index === 1) {
               return (
-                <Card style={{ marginBottom: '1rem' }}>
+                <Card key={i} style={{ marginBottom: '1rem' }}>
                   <CardHeader onClick={this.toggleTab} data-event={index}>Phrases</CardHeader>
                   <Collapse isOpen={this.state.collapseTab === index}>
                     <CardList cards = {filteredPhrases} serviceIP={this.props.serviceIP}/>
@@ -109,7 +113,7 @@ class Deck extends React.Component {
             }
             else {
               return (
-                <Card style={{ marginBottom: '1rem' }}>
+                <Card key={i} style={{ marginBottom: '1rem' }}>
                   <CardHeader onClick={this.toggleTab} data-event={index}>Questions</CardHeader>
                   <Collapse isOpen={this.state.collapseTab === index}>
                     {/* cardlist for questions */}

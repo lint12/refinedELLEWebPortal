@@ -10,6 +10,8 @@ const CardList = (props) => {
             <tr>
               <th style={{width: '32%'}}>English</th>
               <th style={{width: '32%'}}>Translated</th>
+              <th style={{width: '12%'}}>Type</th>
+              <th style={{width: '12%'}}>Gender</th>
               <th style={{width: '12%'}}>Picture</th>
               <th style={{width: '12%'}}>Audio</th>
 							<th style={{width: '12%'}}>ID</th>
