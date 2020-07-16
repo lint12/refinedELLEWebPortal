@@ -871,21 +871,6 @@ Prevent double borders
 
 .thinForm {	padding: 0px 15px; }
 
-#deckButton { 
-	width: 100%;
-	background-color: #5faeb5;
-	color: white;
-	border: none;
-	text-align: center;
-  display: inline-block;
-  border-bottom-left-radius: 0px;
-  border-top-left-radius: 0px;
-}
-
-#deckButton:hover { 
-	background-color: #3F6184;
-}
-
 /*--------------------------------------------------------------
 # Deck and Session Tables
 --------------------------------------------------------------*/

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Collapse, Button, Card, Input, InputGroup,
-   InputGroupAddon, Container, Row, Col, Alert} from 'reactstrap';
+   InputGroupAddon, Container, Row, Col, Alert } from 'reactstrap';
 import axios from 'axios';
   
 import AddModule from '../components/Decks/AddModule';
@@ -19,6 +19,7 @@ export default class Modules extends Component {
     super(props);
     this.toggleNewModule = this.toggleNewModule.bind(this);
     this.change = this.change.bind(this);
+    this.editModule = this.editModule.bind(this); 
     this.deleteModule = this.deleteModule.bind(this);
     this.updateModuleList = this.updateModuleList.bind(this);
     this.updateCurrentModule = this.updateCurrentModule.bind(this);
@@ -44,7 +45,6 @@ export default class Modules extends Component {
       deckID: "",
       //for adding a new deck 
       deckName: "",
-      ttype: "",
 
       searchDeck: '',
       collapseNewModule: false,
@@ -70,16 +70,17 @@ export default class Modules extends Component {
       let modules = res.data; 
       console.log("initialized list, modules: ", modules);
 
-      this.setState({ currentModule: modules[0],
-                      modules : modules,
-                      dynamicModules: modules });
-
-      if (this.state.modules.length === 0) {
+      if (modules.length === 0) {
         this.toggleEmptyCollectionAlert(); 
-      };
+      }
+      else {
+        this.setState({ currentModule: modules[0],
+                        modules : modules,
+                        dynamicModules: modules });
 
-      //setting the displayed module to currentModule
-      this.updateCurrentModule({module: this.state.currentModule});
+        //setting the displayed module to currentModule
+        this.updateCurrentModule({module: this.state.currentModule});
+      }
 
     }).catch(function (error) {
       console.log(error);
@@ -119,12 +120,38 @@ export default class Modules extends Component {
       this.setState({
         id: event.module.termID,
         module: event.module,
-        deckName: event.module.name,
+        deckName: event.module.name, //where are we using this?
         cards: cards,
         currentModule: event.module
       });
     }).catch(function (error) {
       console.log("updateCurrentModule error: ", error);
+    });
+  }
+
+  editModule = (editedName, event) => {
+    console.log("EDITING MODULE: ", event.module);
+
+    var data = {
+      moduleID: event.module.moduleID,
+      name: editedName, 
+      language: event.module.language,
+      complexity: 2 //all modules will have complexity 2
+    }
+
+    console.log("EDITED MODULE DATA: ", data); 
+
+    axios.put(this.props.serviceIP + '/module', data, 
+      {headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+    }).then( res => {
+      console.log(res.data);
+      this.updateModuleList(); 
+
+      console.log("current module id", this.state.currentModule.moduleID);
+      console.log("the edited module's id ", event.module.moduleID); 
+
+    }).catch(function (error) {
+      console.log(error);
     });
   }
 
@@ -136,6 +163,9 @@ export default class Modules extends Component {
   }).then( res => {
       console.log(res.data);
       this.updateModuleList(); 
+
+      if (id === this.state.currentModule.moduleID)
+        this.updateCurrentModule({module: this.state.modules[0]}); 
     }).catch(function (error) {
       console.log(error);
     });
@@ -204,7 +234,8 @@ export default class Modules extends Component {
                     id={deck.moduleID} 
                     curModule={deck} 
                     updateCurrentModule={this.updateCurrentModule}
-                    deleteModule={this.deleteModule}>
+                    deleteModule={this.deleteModule}
+                    editModule={this.editModule}>
                   </SplitDeckBtn>
                 ))
               }

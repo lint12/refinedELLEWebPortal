@@ -180,7 +180,7 @@ class Card extends React.Component {
             <Modal isOpen={this.state.modal} toggle={this.toggleModal}> 
               <ModalHeader toggle={this.toggleModal}>Delete</ModalHeader>
               <ModalBody>
-                <p>Are you sure you want to delete the card: {this.state.card.cardName}?</p>
+                <p>Are you sure you want to delete the card: {editedFront}?</p>
               </ModalBody>
               <ModalFooter>
                 <Button onClick={this.toggleModal}>Cancel</Button>

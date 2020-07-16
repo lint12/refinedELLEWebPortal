@@ -71,6 +71,7 @@ class Deck extends React.Component {
         }
      );
 
+      console.log("NAME: ", this.props.curModule.name); 
       return (
         <Container className='Deck'>
           <Row className='Header' style={{marginBottom: '25px'}}>
