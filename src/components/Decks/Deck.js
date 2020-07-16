@@ -29,6 +29,36 @@ class Deck extends React.Component {
     console.log("deck.js serviceIP: ", this.props.serviceIP);
   }
 
+  addTag = (tagList, tag) => {
+
+    let tempTagList = tagList;
+    tempTagList.push(tag);
+    return tempTagList;
+  }
+
+  deleteTag = (tagList, tag) => {
+    //TODO: create function that delete a tag from the database, given the tag
+    //And pass that function into autocomplete
+
+
+    let tempTagList = tagList;
+
+    if(tempTagList === undefined){
+      return;
+    }
+
+    let tagIndex = tempTagList.indexOf(tag);
+
+    if(tagIndex != -1){
+      tempTagList.splice(tagIndex, 1);
+    }
+
+    return tempTagList;
+
+    
+  }
+
+
   updateSearchCard(e) {
     this.setState({ searchCard: e.target.value.substr(0,20) });
   }
@@ -84,7 +114,9 @@ class Deck extends React.Component {
               <AddTerm
                 id={this.state.id}
                 type={0}
-                serviceIP={this.props.serviceIP}>
+                serviceIP={this.props.serviceIP}
+                deleteTag={this.deleteTag}
+                addTag={this.addTag}>
               </AddTerm>
             </Collapse>
             </Col>
@@ -96,7 +128,8 @@ class Deck extends React.Component {
                   <CardHeader onClick={this.toggleTab} data-event={index}>Terms</CardHeader>
                   <Collapse isOpen={this.state.collapseTab === index}>
                     <CardList cards = {filteredTerms} serviceIP={this.props.serviceIP} 
-                    curModule={this.props.curModule} updateCurrentModule={this.props.updateCurrentModule}/>
+                    curModule={this.props.curModule} updateCurrentModule={this.props.updateCurrentModule}
+                    deleteTag={this.deleteTag}/>
                   </Collapse>
                 </Card>
               )

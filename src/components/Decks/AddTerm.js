@@ -10,13 +10,14 @@ class AddTerm extends React.Component {
 		super(props);
 
 		this.change = this.change.bind(this);
+		this.getAllTags = this.getAllTags.bind(this);
 
 		this.state = {
 			cardID: "", //id of card we're adding
 			id: this.props.id, //id of deck we're adding the card to
 			front: "", //english translation of the word
 			back: "", //foreign version of the word
-			tags: ["tag1", "tag2", "tag3"], //array of tags associated with word
+			tags: [], //array of tags associated with word
 			difficulty: 1, //unused information
 			selectedPicFile: null, //file location of the picture selected
 			selectedAudioFile: null, //file location of the audio selected
@@ -29,13 +30,42 @@ class AddTerm extends React.Component {
 	componentDidMount(){
 		//TODO: populate this.state.allTags
 		//TODO: 
+
+		this.getAllTags();
 	}
+
+	updateTagList = (tagList) => {
+		this.setState({tags: tagList})
+	}
+
 
 	//updates the deck id to a new id
 	updateDeckID(newID) {
 		this.setState({
 			id: newID,
 		})
+	}
+
+	getAllTags = () => {
+		console.log("inside getAllTags, jwt: ", localStorage.getItem('jwt'));
+
+		let allTagsInDB = [];
+
+
+
+		axios.get(this.props.serviceIP + '/tags', {headers: {'Authorization': 'Bearer ' + localStorage.getItem('jwt')}
+			}).then(res => {
+				allTagsInDB = res.data;
+				console.log("res.data in getAllTags: ", allTagsInDB);
+			}).catch(error => {
+				console.log("error in getAllTags(): ", error);
+				return;
+			})
+
+
+		this.setState({
+			allTags: allTagsInDB
+		});
 	}
 
 	picFileChangedHandler = (event) => {
@@ -72,8 +102,9 @@ class AddTerm extends React.Component {
 		    var data = {
 					front: this.state.front,
 					back: this.state.back,
-					cardName: this.state.cardName,
-					difficulty: this.state.difficulty,
+					type: "MATCH",
+					image: formPicData,
+					audio: formAudioData
 		    }
 
 			var fileheader = {
@@ -85,9 +116,10 @@ class AddTerm extends React.Component {
 		        'Authorization': 'Bearer ' + localStorage.getItem('jwt')
 		    }
 
-			axios.post(this.props.serviceIP + '/card/'+this.state.id, data, {headers:headers})
+			axios.post(this.props.serviceIP + '/term/'+this.state.id, data, {headers:headers})
 			.then(res => {
 				console.log(res.data);
+				/*
 				axios.post(this.props.serviceIP + '/card/image/'+res.data.cardID, formPicData, {headers:fileheader})
 				.then(res => {
 					console.log(res.data);
@@ -101,8 +133,8 @@ class AddTerm extends React.Component {
 				})
 				.catch(function (error) {
 					console.log(error);
-				});
-			})
+				});*/
+			}) 
 			.catch(function (error) {
 				console.log(error);
 			});
@@ -111,25 +143,39 @@ class AddTerm extends React.Component {
 		}
   }
 
-  addTag = (tag) => {
-  	console.log("Got into addTag, tag: ", tag);
+  handleAddTag = (event) => {
+  	console.log("Got into handleAddTag, tag: ", event.tag);
+  	console.log("this.state.tags in addTerm: ", this.state.tags);
   	
-  	let temp = this.state.tags;
+  	let list = this.props.addTag(this.state.tags, event.tag);
 
-  	temp.push(tag);
+  	console.log("list in handleAddTag after addTag is called: ", list);
 
-  	this.setState({tags: temp});
+  	this.setState({
+  		tags: list
+  	})
   }
 
-  deleteTag = (tag) => {
-  	//TODO: create function that delete a tag from the database, given the tag
-  	//And pass that function into autocomplete
-  }
 
   createTag = (tag) => {
   	//TODO: create function that creates a brand new tag from the user input,
   	//adds that tag to the database, and associates that tag with the word being created
   	//And pass that function into Autocomplete
+
+  	console.log("Got into createTag, tag: ", tag);
+
+  	let tempTags = this.state.tags;
+  	tempTags.push(tag);
+  	this.setState({
+  		tags: tempTags
+  	});
+  }
+
+  handleDeleteTag = (event) => {
+  	let list = this.props.deleteTag(this.state.tags, event.tag);
+  	this.setState({
+  		tags: list
+  	})
   }
 
 render () {
@@ -198,7 +244,8 @@ render () {
 							name={"tags"}
 							id={"tags"}
 							placeholder={"Tag"}
-							onEnter={this.addTag}
+							handleAddTag={this.handleAddTag}
+							createTag={this.createTag}
 
 							suggestions={[
 								"Noun",
@@ -215,7 +262,8 @@ render () {
 				    </FormGroup>
 				    
 				    {/*Lists all of the tags on this term, displayed as buttons*/}
-				    <TagList tags= {this.state.tags}
+				    <TagList tags={this.state.tags} handleDeleteTag={this.handleDeleteTag} 
+				    updateTagList={this.updateTagList}
 				    />
 				    
 

@@ -38,6 +38,18 @@ class Autocomplete extends Component {
     };
   }
 
+  handleCreateTag = () => {
+
+    console.log("Got into handleCreateTag!");
+
+    this.props.createTag(this.state.userInput);
+    this.setState({
+      activeSuggestion: 0,
+      showSuggestions: false,
+      userInput: ""
+    })
+  }
+
   // Event fired when the input value is changed
   onChange = e => {
     const { suggestions } = this.props;
@@ -66,24 +78,48 @@ class Autocomplete extends Component {
       activeSuggestion: 0,
       filteredSuggestions: [],
       showSuggestions: false,
-      userInput: e.currentTarget.innerText
+      userInput: ""
     });
+
+    this.props.handleAddTag({tag: e.currentTarget.innerText});
   };
 
   // Event fired when the user presses a key down
   onKeyDown = e => {
-    const { activeSuggestion, filteredSuggestions } = this.state;
+    const { activeSuggestion, filteredSuggestions, userInput} = this.state;
+    const {suggestions} = this.props;
 
     // User pressed the enter key, update the input and close the
     // suggestions
     if (e.keyCode === 13) {
-      this.setState({
-        activeSuggestion: 0,
-        showSuggestions: false,
-        userInput: filteredSuggestions[activeSuggestion]
-      });
 
-      this.props.onEnter(this.state.userInput);
+      if(filteredSuggestions.length == 1){
+        this.setState({
+          activeSuggestion: 0,
+          showSuggestions: false,
+          userInput: ""
+        });
+
+        this.props.handleAddTag({tag: filteredSuggestions[0]});
+      
+      } else if(filteredSuggestions.length > 1) {
+        
+        let tempUserInput = filteredSuggestions[activeSuggestion];
+
+        let tempFilteredSuggestions = suggestions.filter(
+            (suggestion) => {return suggestion.toLowerCase().indexOf(tempUserInput.toLowerCase()) > -1}
+          );
+
+        console.log("in Audocomplete, tempUserInput: ", tempUserInput, "tempFilteredSuggestions: ", tempFilteredSuggestions);
+
+        this.setState({
+          activeSuggstion: 0,
+          showSuggestions: true,
+          userInput: tempUserInput,
+          filteredSuggestions: tempFilteredSuggestions
+        })
+      }
+
     }
     // User pressed the up arrow, decrement the index
     else if (e.keyCode === 38) {
@@ -121,7 +157,7 @@ class Autocomplete extends Component {
     if (showSuggestions && userInput) {
       if (filteredSuggestions.length) {
         suggestionsListComponent = (
-          <ul class="suggestions">
+          <ul className="suggestions">
             {filteredSuggestions.map((suggestion, index) => {
               let className;
 
@@ -144,8 +180,10 @@ class Autocomplete extends Component {
         );
       } else {
         suggestionsListComponent = (
-          <div class="no-suggestions">
-            <Button style={{backgroundColor: '#004085'}}>Add new {this.props.placeholder} </Button>
+          <div className="no-suggestions">
+            <Button style={{backgroundColor: '#004085'}} onClick={() => this.handleCreateTag()}>
+              Add new {this.props.placeholder} 
+            </Button>
           </div>
         );
       }

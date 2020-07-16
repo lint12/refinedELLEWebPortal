@@ -145,6 +145,15 @@ class Card extends React.Component {
     this.setState({ modal: !this.state.modal })
   }
 
+  handleDeleteTag = (event) => {
+    var list = this.props.deleteTag(this.state.tags, event.tag);
+    console.log("inside handleDeleteTag, list: ", list);
+    this.setState({
+      tags: list
+    })
+  }
+
+
   render() {
     let {editedFront, editedBack, editedType, editedGender, selectedImgFile, selectedAudioFile} = this.state;
     let imgLink = "http://34.239.123.94/Images/" + selectedImgFile;
@@ -192,7 +201,7 @@ class Card extends React.Component {
         </tr>
           <Collapse isOpen={this.state.collapseTags}>
               <tr>
-                <td style={{border:"none"}}><TagList tags={this.state.tags}/></td>
+                <td style={{border:"none"}}><TagList tags={this.state.tags} handleDeleteTag={this.handleDeleteTag}/></td>
               </tr>
           </Collapse>
         </Fragment>
