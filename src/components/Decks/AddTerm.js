@@ -47,7 +47,7 @@ class AddTerm extends React.Component {
 	}
 
 	getAllTags = () => {
-		console.log("inside getAllTags, jwt: ", localStorage.getItem('jwt'));
+		console.log("inside getAllTags");
 
 		let allTagsInDB = [];
 
@@ -56,6 +56,10 @@ class AddTerm extends React.Component {
 		axios.get(this.props.serviceIP + '/tags', {headers: {'Authorization': 'Bearer ' + localStorage.getItem('jwt')}
 			}).then(res => {
 				allTagsInDB = res.data;
+				this.setState({
+					allTags: allTagsInDB
+				});
+
 				console.log("res.data in getAllTags: ", allTagsInDB);
 			}).catch(error => {
 				console.log("error in getAllTags(): ", error);
@@ -66,6 +70,7 @@ class AddTerm extends React.Component {
 		this.setState({
 			allTags: allTagsInDB
 		});
+
 	}
 
 	picFileChangedHandler = (event) => {
@@ -179,6 +184,7 @@ class AddTerm extends React.Component {
   }
 
 render () {
+
     return (
 		<div>
 		{this.state.id !== "" ? 
@@ -222,24 +228,9 @@ render () {
 			
 			<Row>
 				<Col>
-					{/*
-					<FormGroup>
-						<Label for="tags">Tags:</Label>
-						<Input type="text"
-						name="tags"
-						onChange={e => this.change(e)}
-						value={this.state.tags}
-						id="tags"
-						placeholder="Tags" />
-					</FormGroup>
-					*/}
-					
-					{/*input field for putting in tags. Is an autocomplete field. suggestions should
-					be all existing tags in database, after hooked up to current database.
-					TODO: Make it so that when a user presses enter on an input in autocomplete, it updates
-					this component's tag list*/}
 					<Label for="back">Tags:</Label><br/>
 					<FormGroup width="50%">
+						{console.log("this.state.allTags: ", this.state.allTags.tags)}
 						<Autocomplete 
 							name={"tags"}
 							id={"tags"}
@@ -247,16 +238,7 @@ render () {
 							handleAddTag={this.handleAddTag}
 							createTag={this.createTag}
 
-							suggestions={[
-								"Noun",
-								"Verb",
-								"Fruit",
-								"Vegetable",
-								"Place",
-								"Animal",
-								"food"
-
-					        ]} 
+							suggestions={this.state.allTags.tags} 
 					    />
 
 				    </FormGroup>
