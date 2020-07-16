@@ -4,10 +4,12 @@
 - [x] searchModules()
 - [x] searchCards()
 - [x] addModule() : all fields must be filled out otherwise highlight the field that is not filled out 
-- [ ] editModule() : modal popup for the user to edit the language/name of the module 
+- [x] editModule() : modal popup for the user to edit the name of the module 
 - [x] deleteModule() : modal popup for user handling to double check if the user still wants to delete the module 
 - [ ] addCard() : depends on module type, should include validation for the front/back field of the card, the tag, picture, and audio fields are optional. (3 different types of card forms need to be made.)
+- [ ] addExistingTerms() : be able to add existing terms under the same language as the module to the term tab
 - [x] editCard() : modal popup for the user to edit the front/back of the card, and to edit the picture/audio file. 
+- [ ] editTags() : edit the tags for each term in edit mode  
 - [x] deleteCard() : modal popup for user handling to double check if the user still wants to delete the card 
 - [x] downloadImage() needs more testing when site is deployed
 - [x] downloadAudio() needs more testing when site is deploye
