@@ -5,18 +5,26 @@ import { Button } from 'reactstrap';
 class TagItem extends React.Component {
   constructor(props){
     super(props);
-    this.deleteTag = this.deleteTag.bind(this);
     this.editTag = this.editTag.bind(this);
 
     this.state = {
-      tag: this.props.tag
+      removeMode: false
     }
 
+
   }
 
-  deleteTag = (event) => {
-    console.log("DELETED TAG: ", this.state.tag)
+
+  setStyle = () => {
+    if(this.state.removeMode == false){
+      return {margin: "3px", border: "2px solid black"}
+    } else {
+      return {margin: "5px", border: "4px solid red"}
+    }
   }
+
+
+
 
   editTag = (id) => {
     console.log(id)
@@ -33,10 +41,17 @@ class TagItem extends React.Component {
 
 
   render() {
+
     return (
   			
         <div>
-          <Button style={{margin: "3px", border: "2px solid black"}}onClick={this.deleteTag} color="secondary">{this.state.tag}</Button>
+          <Button style={this.setStyle()}  color="secondary" 
+          onClick={() => {this.props.handleDeleteTag({tag: this.props.tag})}}
+          onMouseOver={() => {this.setState({removeMode: true})}}
+          onMouseOut={() => this.setState({removeMode: false})}
+        >
+            {this.props.tag}
+          </Button>
           {' '}
         </div>
       

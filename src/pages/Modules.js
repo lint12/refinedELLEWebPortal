@@ -53,22 +53,20 @@ export default class Modules extends Component {
   }
 
   componentDidMount() {
-      console.log("Decks has mounted")
       this.initializeModulesPage();
   }
 
 
   //populates the sidebar list of modules
   //sets the current module we're looking at to the first module on the list
-  initializeModulesPage = () => {
-    console.log("initializing ModuleList on sidebar"); 
+  initializeModulesPage = () => { 
     
     axios.get(this.props.serviceIP + '/modules', {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then(res => {
       
       let modules = res.data; 
-      console.log("initialized list, modules: ", modules);
+      console.log("initializeModulesPage res.data: ", res.data);
 
       if (modules.length === 0) {
         this.toggleEmptyCollectionAlert(); 
@@ -83,20 +81,19 @@ export default class Modules extends Component {
       }
 
     }).catch(function (error) {
-      console.log(error);
+      console.log("initializeModulesPage error: ", error);
     });
   }
 
   //makes an API call to get the module list on sidebar, and updates it
   //(it worked when it wasn't an arrow function, hasn't been tested since convered to arrow function)
   updateModuleList = () => {
-    console.log("updating ModuleList on sidebar"); 
     axios.get(this.props.serviceIP + '/modules', {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then(res => {
       
       let modules = res.data; 
-      console.log("updated list, modules: ", modules);
+      console.log("updateModuleList res.data: ", res.data);
 
       this.setState({ modules : modules,
                       dynamicModules: modules });
@@ -105,13 +102,14 @@ export default class Modules extends Component {
         this.toggleEmptyCollectionAlert(); 
       }
     }).catch(function (error) {
-      console.log(error);
+      console.log("updateModuleList error: ", error);
     });
   }
 
   //makes an API call to get the list of cards in the current module, which will then be displayed
   updateCurrentModule = (event) => {
-    console.log("Updating current module: ", event.module);
+    //console.log("inside updateCurrentModule, jwt: ", localStorage.getItem('jwt'));
+    
     axios.post(this.props.serviceIP + '/modulequestions', { moduleID: event.module.moduleID, 
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then( res => {
@@ -156,18 +154,16 @@ export default class Modules extends Component {
   }
 
   deleteModule = (id) => {
-    console.log("Delete Module ID: ", id); 
-    console.log("serviceIP in modules: ", this.props.serviceIP); 
     axios.delete(this.props.serviceIP + '/module', { data: {moduleID: id }, 
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
   }).then( res => {
-      console.log(res.data);
+      console.log("deleteModule res.data: ", res.data);
       this.updateModuleList(); 
 
       if (id === this.state.currentModule.moduleID)
         this.updateCurrentModule({module: this.state.modules[0]}); 
     }).catch(function (error) {
-      console.log(error);
+      console.log("deleteModule error: ", error);
     });
   }
 
@@ -206,7 +202,6 @@ export default class Modules extends Component {
   }
 
   render() {
-    console.log("rendering Modules page");
     return (
     <Container>
     <Template/>

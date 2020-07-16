@@ -15,25 +15,38 @@ class TagList extends Component {
 		};
 	}
 
+	componentDidMount() {
+		//console.log("in componentDidMount of TagList, this.props.deleteTag: ", this.props.deleteTag, "this.props.tags: ", this.props.tags);
+	}
 
-	renderList = (tags) => {
+
+	renderList = (tags, handleDeleteTag) => {
 		let list = [];
 
 
-
+	
 		for(let i = 0; i < tags.length; i++){
-			list.push(<TagItem tag={tags[i]} key={i}/>);
+			
+			list.push(<TagItem tag={tags[i]} key={i} 
+				handleDeleteTag={handleDeleteTag} />);
 		}
+	
+		/*
+		list = tags.map((label, i) => {return <TagItem tag={label} key={i} 
+				handleDeleteTag={handleDeleteTag} />})
+		*/
 
-		console.log("Done with renderList, list: ", list);
 		return list;
 	}
+
 	render(){
+
+
 		return(
 			<div>
 				<Label> Tags: </Label>
 				<Row>					
-					{this.renderList(this.state.tags)} 
+					{this.renderList(this.state.tags, this.props.handleDeleteTag)}
 				</Row>
 			</div>
 		);
