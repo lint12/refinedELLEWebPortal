@@ -27,7 +27,9 @@ const CardList = (props) => {
                   serviceIP={props.serviceIP}
                   curModule={props.curModule}
                   updateCurrentModule={props.updateCurrentModule}
-                  deleteTag={props.deleteTag}/>
+                  deleteTag={props.deleteTag}
+                  addTag={props.addTag}
+                  allTags={props.allTags}/>
               )
             })}
           </tbody>

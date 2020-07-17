@@ -28,7 +28,7 @@ class TagList extends Component {
 		for(let i = 0; i < tags.length; i++){
 			
 			list.push(<TagItem tag={tags[i]} key={i} 
-				handleDeleteTag={handleDeleteTag} />);
+				handleDeleteTag={handleDeleteTag} deletable={this.props.deletable}/>);
 		}
 	
 		/*

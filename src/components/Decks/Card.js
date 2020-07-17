@@ -3,6 +3,7 @@ import { Button, ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter, Collap
 import axios from 'axios';
 
 import TagList from './TagList';
+import Autocomplete from './Autocomplete';
 
 class Card extends React.Component {
   constructor(props){
@@ -18,6 +19,8 @@ class Card extends React.Component {
     this.editType = this.editType.bind(this); 
     this.editGender = this.editGender.bind(this); 
     this.submitEdit = this.submitEdit.bind(this);
+
+    console.log("This Card: ", this.props.card)
 
     this.state = {
       card: this.props.card,
@@ -44,8 +47,38 @@ class Card extends React.Component {
     console.log("clicked on edit btn"); 
   }
 
+  handleAddTag = (event) => {
+    console.log("Got into handleAddTag, tag: ", event.tag);
+    console.log("this.state.tags in addTerm: ", this.state.tags);
+    
+    let list = this.props.addTag(this.state.tags, event.tag);
+
+    console.log("list in handleAddTag after addTag is called: ", list);
+
+    this.setState({
+      tags: list
+    })
+  }
+
+
+  createTag = (tag) => {
+    //TODO: create function that creates a brand new tag from the user input,
+    //adds that tag to the database, and associates that tag with the word being created
+    //And pass that function into Autocomplete
+
+    console.log("Got into createTag, tag: ", tag);
+
+    let tempTags = this.state.tags;
+    tempTags.push(tag);
+    this.setState({
+      tags: tempTags
+    });
+  }
+
+
   editCard = () => {
-    this.setState({editMode: true})
+    this.setState({editMode: true,
+                  collapseTags: true})
   }
 
   editFront = (event) => {
@@ -153,6 +186,27 @@ class Card extends React.Component {
     })
   }
 
+  handleCancelEdit = (event) => {
+    this.setState({
+      card: this.props.card,
+      modal: false,
+
+      editMode: false,
+      editedFront: this.props.card.front,
+      editedBack: this.props.card.back,
+      editedType: this.props.card.type, 
+      editedGender: this.props.card.gender, 
+      collapseTags: false,
+      
+      selectedImgFile: this.props.card.imageLocation, 
+      selectedAudioFile: this.props.card.audioLocation, 
+      changedImage: false, 
+      changedAudio: false, 
+
+      tags: ["tag1", "tag2", "tag3"]
+    })
+  }
+
 
   render() {
     let {editedFront, editedBack, editedType, editedGender, selectedImgFile, selectedAudioFile} = this.state;
@@ -163,6 +217,7 @@ class Card extends React.Component {
     if (this.state.editMode === false){
       return (
         <Fragment>
+
         <tr onClick={this.toggleCollapsedTags}>
           <td>{editedFront}</td>
           <td>{editedBack}</td>
@@ -199,16 +254,20 @@ class Card extends React.Component {
 
           </td>
         </tr>
-          <Collapse isOpen={this.state.collapseTags}>
-              <tr>
-                <td style={{border:"none"}}><TagList tags={this.state.tags} handleDeleteTag={this.handleDeleteTag}/></td>
-              </tr>
-          </Collapse>
+
+        <Collapse isOpen={this.state.collapseTags}>
+            <tr >
+              <td style={{border:"none"}} colSpan="3"><TagList tags={this.state.tags} handleDeleteTag={this.handleDeleteTag} deletable={false}/></td>
+            </tr>
+        </Collapse>
+
         </Fragment>
       );
     } 
     else{
       return (
+      <Fragment>
+
       <tr>
         <td><Input type="value" onChange={this.editFront} value={this.state.editedFront} /></td>
         <td><Input type="value" onChange={this.editBack} value={this.state.editedBack} /></td>
@@ -231,10 +290,32 @@ class Card extends React.Component {
         <td>{this.state.card.termID}</td>
         <td>
           <ButtonGroup>
-            <Button style={{backgroundColor: 'lightcyan', width: '100%', height: '100%', color: 'black'}} onClick = {this.submitEdit}> Submit </Button>
+            <Button style={{backgroundColor: 'lightcyan', width: '50%', height: '100%', color: 'black'}} onClick = {this.submitEdit}> Submit </Button>
+            <Button style={{backgroundColor: 'lightcyan', width: '50%', height: '100%', color: 'black'}} onClick = {this.handleCancelEdit}> Cancel </Button>
           </ButtonGroup>
         </td>
       </tr>
+
+      <Collapse isOpen={true}>
+        <tr>
+          <td style={{border:"none"}} colSpan="3">
+            <TagList tags={this.state.tags} handleDeleteTag={this.handleDeleteTag} deletable={true}/>
+            Add Tag:
+            <Autocomplete 
+              name={"tags"}
+              id={"tags"}
+              placeholder={"Tag"}
+              handleAddTag={this.handleAddTag}
+              createTag={this.createTag}
+
+              suggestions={this.props.allTags} 
+              />
+          </td>
+
+        </tr>
+      </Collapse>
+
+      </Fragment>
       );
     }
     

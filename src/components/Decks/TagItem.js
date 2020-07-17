@@ -19,7 +19,7 @@ class TagItem extends React.Component {
     if(this.state.removeMode == false){
       return {margin: "3px", border: "2px solid black"}
     } else {
-      return {margin: "5px", border: "4px solid red"}
+      return {margin: "3px", border: "2px solid black", backgroundColor: "red"}
     }
   }
 
@@ -41,21 +41,32 @@ class TagItem extends React.Component {
 
 
   render() {
-
-    return (
-  			
+    if(this.props.deletable == true){
+      return (
+    			
+          <div>
+            <Button style={this.setStyle()}  color="secondary" 
+            onClick={() => {this.props.handleDeleteTag({tag: this.props.tag})}}
+            onMouseOver={() => {this.setState({removeMode: true})}}
+            onMouseOut={() => this.setState({removeMode: false})}
+            >
+              {this.props.tag}
+            </Button>
+            {' '}
+          </div>
+      );
+    } else {
+      return(
         <div>
-          <Button style={this.setStyle()}  color="secondary" 
-          onClick={() => {this.props.handleDeleteTag({tag: this.props.tag})}}
-          onMouseOver={() => {this.setState({removeMode: true})}}
-          onMouseOut={() => this.setState({removeMode: false})}
-        >
+          <Button style={this.setStyle()}  color="secondary" >
             {this.props.tag}
           </Button>
           {' '}
         </div>
-      
-    );
+        );
+    
+
+    }
   }
 }
 

@@ -10,7 +10,6 @@ class AddTerm extends React.Component {
 		super(props);
 
 		this.change = this.change.bind(this);
-		this.getAllTags = this.getAllTags.bind(this);
 
 		this.state = {
 			cardID: "", //id of card we're adding
@@ -22,7 +21,6 @@ class AddTerm extends React.Component {
 			selectedPicFile: null, //file location of the picture selected
 			selectedAudioFile: null, //file location of the audio selected
 
-			allTags: [] //list of all tags in the database
 
 		};
 	}
@@ -31,7 +29,7 @@ class AddTerm extends React.Component {
 		//TODO: populate this.state.allTags
 		//TODO: 
 
-		this.getAllTags();
+		
 	}
 
 	updateTagList = (tagList) => {
@@ -46,32 +44,7 @@ class AddTerm extends React.Component {
 		})
 	}
 
-	getAllTags = () => {
-		console.log("inside getAllTags");
 
-		let allTagsInDB = [];
-
-
-
-		axios.get(this.props.serviceIP + '/tags', {headers: {'Authorization': 'Bearer ' + localStorage.getItem('jwt')}
-			}).then(res => {
-				allTagsInDB = res.data;
-				this.setState({
-					allTags: allTagsInDB
-				});
-
-				console.log("res.data in getAllTags: ", allTagsInDB);
-			}).catch(error => {
-				console.log("error in getAllTags(): ", error);
-				return;
-			})
-
-
-		this.setState({
-			allTags: allTagsInDB
-		});
-
-	}
 
 	picFileChangedHandler = (event) => {
 	  this.setState({
@@ -230,7 +203,7 @@ render () {
 				<Col>
 					<Label for="back">Tags:</Label><br/>
 					<FormGroup width="50%">
-						{console.log("this.state.allTags: ", this.state.allTags.tags)}
+						{console.log("this.props.allTags: ", this.props.allTags)}
 						<Autocomplete 
 							name={"tags"}
 							id={"tags"}
@@ -238,14 +211,14 @@ render () {
 							handleAddTag={this.handleAddTag}
 							createTag={this.createTag}
 
-							suggestions={this.state.allTags.tags} 
+							suggestions={this.props.allTags} 
 					    />
 
 				    </FormGroup>
 				    
 				    {/*Lists all of the tags on this term, displayed as buttons*/}
 				    <TagList tags={this.state.tags} handleDeleteTag={this.handleDeleteTag} 
-				    updateTagList={this.updateTagList}
+				    updateTagList={this.updateTagList} deletable={true}
 				    />
 				    
 

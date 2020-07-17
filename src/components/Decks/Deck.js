@@ -1,7 +1,7 @@
 import React from 'react'
 import { Container, Row, Col, Input, InputGroup, InputGroupAddon, InputGroupText, Button, Collapse, Card, CardHeader } from 'reactstrap';
 import CardList from './CardList'
-//import axios from 'axios';
+import axios from 'axios';
 
 import AddTerm from './AddTerm';
 
@@ -21,12 +21,15 @@ class Deck extends React.Component {
 
       collapseTab: false,
       tabs: [0,1,2],
+
+      allTags: []
     };
 
   }
 
   componentDidMount() {
     console.log("deck.js serviceIP: ", this.props.serviceIP);
+    this.getAllTags();
   }
 
   addTag = (tagList, tag) => {
@@ -70,6 +73,33 @@ class Deck extends React.Component {
   toggleTab(e) {
     let event = e.target.dataset.event; 
     this.setState({ collapseTab: this.state.collapseTab === Number(event) ? -1 : Number(event) })
+  }
+
+  getAllTags = () => {
+    console.log("inside getAllTags");
+
+    let allTagsInDB = [];
+
+
+
+    axios.get(this.props.serviceIP + '/tags', {headers: {'Authorization': 'Bearer ' + localStorage.getItem('jwt')}
+      }).then(res => {
+        allTagsInDB = res.data;
+        this.setState({
+          allTags: allTagsInDB.tags
+        });
+
+        console.log("res.data in getAllTags: ", allTagsInDB);
+      }).catch(error => {
+        console.log("error in getAllTags(): ", error);
+        return;
+      })
+
+
+    this.setState({
+      allTags: allTagsInDB
+    });
+
   }
 
   render () {
@@ -117,7 +147,8 @@ class Deck extends React.Component {
                 type={0}
                 serviceIP={this.props.serviceIP}
                 deleteTag={this.deleteTag}
-                addTag={this.addTag}>
+                addTag={this.addTag}
+                allTags={this.state.allTags}>
               </AddTerm>
             </Collapse>
             </Col>
@@ -130,7 +161,7 @@ class Deck extends React.Component {
                   <Collapse isOpen={this.state.collapseTab === index}>
                     <CardList cards = {filteredTerms} serviceIP={this.props.serviceIP} 
                     curModule={this.props.curModule} updateCurrentModule={this.props.updateCurrentModule}
-                    deleteTag={this.deleteTag}/>
+                    deleteTag={this.deleteTag} addTag={this.addTag} allTags={this.state.allTags}/>
                   </Collapse>
                 </Card>
               )
