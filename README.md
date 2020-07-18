@@ -14,7 +14,19 @@
 - [x] editTags() : edit the tags for each term in edit mode  
 - [x] deleteCard() : modal popup for user handling to double check if the user still wants to delete the card 
 - [x] downloadImage() needs more testing when site is deployed
-- [x] downloadAudio() needs more testing when site is deploye
+- [x] downloadAudio() needs more testing when site is deployed
+
+- [ ] addPhrase() : add a new phrase 
+- [ ] editPhrase() : edit the fields of the phrase 
+- [ ] deletePhrase() : modal popup for user handling to double check if the user still wants to delete the phrase
+
+----Form Validation when adding Modules and Terms---- 
+WILL THESE FUNCTIONS BE INEFFICIENT? 
+- [ ] traverse through the modules array to check if that module name is taken already or not // or does this work like autocomplete? 
+- [ ] traverse through the terms array for that specific module to see if it exists already
+
+---- Question ----
+
 
 - [ ] Figure out new layout of organizing each individual Module to reflect the new database 
 - [x] Super tiny fix: include module name next to the search bar on the card list side 
