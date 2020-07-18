@@ -311,41 +311,90 @@ class Card extends React.Component {
           value={this.state.editedFront} 
           />
         </td>
+
         <td>
           <Input 
-          type="value" 
-          onChange={this.editBack} 
-          value={this.state.editedBack} 
+            type="value" 
+            onChange={this.editBack} 
+            value={this.state.editedBack} 
+            />
+        </td>
+
+        <td>
+          <Input 
+            type="value" 
+            onChange={this.editType} 
+            value={this.state.editedType} 
+            />
+        </td>
+
+        <td>
+          <Input 
+            type="value" 
+            onChange={this.editGender} 
+            value={this.state.editedGender} 
+            />
+        </td>
+
+        <input 
+          style={{display: 'none'}}
+          type="file" onChange={this.imgFileSelectedHandler}  
+          ref={imgInput => this.imgInput = imgInput}
           />
-        </td>
-        <td><Input type="value" onChange={this.editType} value={this.state.editedType} /></td>
-        <td><Input type="value" onChange={this.editGender} value={this.state.editedGender} /></td>
-        <input style={{display: 'none'}} type="file" onChange={this.imgFileSelectedHandler}
-          ref={imgInput => this.imgInput = imgInput}/>
+
         <td>
-          <Button style={{backgroundColor: 'lightseagreen', width: '100%', fontSize: 'small'}} onClick={() => this.imgInput.click()}>
-            Upload <br /> Image
+          <Button 
+            style={{backgroundColor: 'lightseagreen', width: '100%', fontSize: 'small'}} 
+            onClick={() => this.imgInput.click()}
+            >
+              Upload <br/> Image
           </Button>
         </td>
-        <input style={{display: 'none'}} type="file" onChange={this.audioFileSelectedHandler}
-          ref={audioInput => this.audioInput = audioInput}/>
+
+        <input 
+          style={{display: 'none'}} 
+          type="file" 
+          onChange={this.audioFileSelectedHandler}
+          ref={audioInput => this.audioInput = audioInput}
+          />
+
         <td>
-          <Button style={{backgroundColor: 'lightseagreen', width: '100%', fontSize: 'small'}} onClick={() => this.audioInput.click()}>
-            Upload <br /> Audio
+          <Button 
+            style={{backgroundColor: 'lightseagreen', width: '100%', fontSize: 'small'}} 
+            onClick={() => this.audioInput.click()}
+            >
+              Upload <br /> Audio
           </Button>
         </td>
+
         <td>{this.state.card.termID}</td>
+
         <td>
           <ButtonGroup>
-            <Button style={{backgroundColor: 'lightcyan', width: '50%', height: '100%', color: 'black'}} onClick = {this.submitEdit}> Submit </Button>
-            <Button style={{backgroundColor: 'lightcyan', width: '50%', height: '100%', color: 'black'}} onClick = {this.handleCancelEdit}> Cancel </Button>
+            <Button 
+              style={{backgroundColor: 'lightcyan', width: '50%', height: '100%', color: 'black'}} 
+              onClick = {this.submitEdit}
+              > 
+                Submit 
+            </Button>
+            <Button 
+              style={{backgroundColor: 'lightcyan', width: '50%', height: '100%', color: 'black'}} 
+              onClick = {this.handleCancelEdit}
+              > 
+                Cancel 
+            </Button>
           </ButtonGroup>
         </td>
+
       </tr>
 
       <tr>
         <td style={{border:"none"}} colSpan="3">
-          <TagList tags={this.state.tags} handleDeleteTag={this.handleDeleteTag} deletable={true}/>
+          <TagList 
+            tags={this.state.tags} 
+            handleDeleteTag={this.handleDeleteTag} 
+            deletable={true}
+            />
           Add Tag:
           <Autocomplete 
             name={"tags"}
