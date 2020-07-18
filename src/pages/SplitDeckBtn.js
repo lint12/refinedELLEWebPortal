@@ -33,7 +33,8 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Pop
             <Form>
               <FormGroup>
                 <Label for="moduleName">Name:</Label>
-                <Input type="text" name="mName" id="moduleName" value={editedModuleName} onChange={ e => setName(e.target.value) }/>
+                <Input type="text" name="mName" id="moduleName" autoComplete="off" 
+                  value={editedModuleName} onChange={ e => setName(e.target.value) }/>
               </FormGroup>
               <Button onClick={ () => {
                 props.editModule(editedModuleName, { module: props.curModule })

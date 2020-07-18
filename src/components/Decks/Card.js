@@ -289,25 +289,22 @@ class Card extends React.Component {
         </td>
       </tr>
 
-      <Collapse isOpen={true}>
-        <tr>
-          <td style={{border:"none"}} colSpan="3">
-            <TagList tags={this.state.tags} handleDeleteTag={this.handleDeleteTag} deletable={true}/>
-            Add Tag:
-            <Autocomplete 
-              name={"tags"}
-              id={"tags"}
-              placeholder={"Tag"}
-              handleAddTag={this.handleAddTag}
-              createTag={this.createTag}
+      <tr>
+        <td style={{border:"none"}} colSpan="3">
+          <TagList tags={this.state.tags} handleDeleteTag={this.handleDeleteTag} deletable={true}/>
+          Add Tag:
+          <Autocomplete 
+            name={"tags"}
+            id={"tags"}
+            placeholder={"Tag"}
+            handleAddTag={this.handleAddTag}
+            createTag={this.createTag}
 
-              suggestions={this.props.allTags} 
-              />
-          </td>
+            suggestions={this.props.allTags} 
+            />
+        </td>
 
-        </tr>
-      </Collapse>
-
+      </tr>
       </Fragment>
       );
     }

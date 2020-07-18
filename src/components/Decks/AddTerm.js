@@ -12,7 +12,7 @@ class AddTerm extends React.Component {
 		this.change = this.change.bind(this);
 
 		this.state = {
-			cardID: "", //id of card we're adding
+			
 			front: "", //english translation of the word
 			back: "", //foreign version of the word
 			type: "", //NN, VR, AJ, AV, PH
@@ -22,20 +22,21 @@ class AddTerm extends React.Component {
 			selectedAudioFile: null, //file location of the audio selected
 
 			imgLabel: "Pick an image for the term", 
-			audioLabel: "Pick an audio for the term"
+			audioLabel: "Pick an audio for the term",
+
+
+      		//state properties below this point are never used, and we should probably delete them
+			cardID: "" //id of card we're adding
 		};
 	}
 
-	componentDidMount(){
-		//TODO: populate this.state.allTags
-		//TODO: 
-	}
 
+	//function that sets the taglist on this form
 	updateTagList = (tagList) => {
 		this.setState({tags: tagList})
 	}
 
-	//updates the deck id to a new id
+	//function never gets used, consider deleting it
 	updateDeckID(newID) {
 		this.setState({
 			id: newID,
@@ -61,7 +62,7 @@ class AddTerm extends React.Component {
 	      [e.target.name]: e.target.value
 		})
   	}
-  	//TODO: adapt to current database
+
   	//function that submits the data
 	submitTerm = (e) => {
 		console.log("FRONT: ", this.state.front)
@@ -78,6 +79,9 @@ class AddTerm extends React.Component {
 		{   
 			e.preventDefault();
 			const data = new FormData(); 
+			let header = {
+				headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+				};
 
 			//required fields for adding a term
 			data.append('front', this.state.front); 
@@ -102,39 +106,35 @@ class AddTerm extends React.Component {
 			if (this.state.selectedAudioFile !== undefined || this.state.selectedAudioFile !== undefined)
 				data.append('audio', this.state.selectedAudioFile);
 
-			axios.post(this.props.serviceIP + '/term', data, 
-				{headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-			}).then(res => {
-				console.log(res.data);
-				this.props.updateCurrentModule({ module: this.props.curModule });
-			}) 
-			.catch(function (error) {
-				console.log(error);
-			});
+
+			axios.post(this.props.serviceIP + '/term', data, header)
+				.then(res => {
+					this.props.updateCurrentModule({ module: this.props.curModule });
+				}) 
+				.catch(function (error) {
+					console.log("submitTerm error: ", error);
+				});
 		} else {
 			e.preventDefault();
 			alert("Please fill all inputs!");
 		}
   }
 
+
+  //TODO: handleAddTag and createTag kinda do the same thing. Maybe they should be one thing?
+  //function that adds a tag to list of tags on this form
   handleAddTag = (event) => {
-  	console.log("Got into handleAddTag, tag: ", event.tag);
-  	console.log("this.state.tags in addTerm: ", this.state.tags);
   	
   	let list = this.props.addTag(this.state.tags, event.tag);
 
-  	console.log("list in handleAddTag after addTag is called: ", list);
 
   	this.setState({
   		tags: list
   	})
   }
 
-
+  //function that adds a new tag from user input to list of tags on this form
   createTag = (tag) => {
-  	//TODO: create function that creates a brand new tag from the user input,
-  	//adds that tag to the database, and associates that tag with the word being created
-  	//And pass that function into Autocomplete
 
   	console.log("Got into createTag, tag: ", tag);
 
@@ -145,6 +145,7 @@ class AddTerm extends React.Component {
   	});
   }
 
+  //function that removes a tag from the list of tags on this form
   handleDeleteTag = (event) => {
   	let list = this.props.deleteTag(this.state.tags, event.tag);
   	this.setState({
@@ -153,19 +154,22 @@ class AddTerm extends React.Component {
   }
 
 render () {
-	console.log("IDDDDD: ", this.props.id);
     return (
 		<div>
 		{this.state.id !== "" ? 
 		<Form onSubmit={e => this.submitTerm(e)}>
 			<input type="hidden" value="prayer" />
-			<br></br>
+			
+			<br/>
 
 			<Alert style={{color: '#004085', backgroundColor: 'deepskyblue'}}>
 			<Row>
 				<Col>
 					<FormGroup>			
-						<Label for="front">English Word:</Label>
+						<Label for="front">
+							English Word:
+						</Label>
+
 						<Input type="text"
 						name="front"
 						onChange={e => this.change(e)}
@@ -180,7 +184,10 @@ render () {
 			<Row>
 				<Col>
 					<FormGroup>
-						<Label for="back">Translated Word:</Label>
+						<Label for="back">
+							Translated Word:
+						</Label>
+
 						<Input type="text"
 						name="back"
 						onChange={e => this.change(e)}
@@ -194,28 +201,46 @@ render () {
 			<Row>
 				<Col>
 					<FormGroup>
-						<Label for="selectType">Type:</Label>
-						<CustomInput type="select" name="type" id="selectType"
-						value={this.state.type} onChange={e => this.change(e)}>
+						<Label for="selectType">
+							Type:
+						</Label>
+
+						<CustomInput 
+							type="select" 
+							name="type" 
+							id="selectType"
+							value={this.state.type} 
+							onChange={e => this.change(e)}>
+
 							<option value="">Select</option>
 							<option value="NN">NN (Noun)</option>
 							<option value="VR">VR (Verb)</option>
 							<option value="AJ">AJ (Adjective)+</option>
 							<option value="AV">AV (Adverb)</option>
 							<option value="PH">PH (Phrase)</option>
+
 						</CustomInput>
 					</FormGroup>
 				</Col>
 
 				<Col>
 					<FormGroup>
-						<Label for="selectGender">Gender:</Label>
-						<CustomInput type="select" name="gender" id="selectGender" 
-						value={this.state.gender} onChange={e => this.change(e)}>
+						<Label for="selectGender">
+							Gender:
+						</Label>
+						
+						<CustomInput 
+							type="select" 
+							name="gender" 
+							id="selectGender" 
+							value={this.state.gender} 
+							onChange={e => this.change(e)}>
+
 							<option value="">Select</option>
 							<option value="MA">MA (Male)</option>
 							<option value="FE">FE (Female)</option>
 							<option value="NA">NA (Nongendered)</option>
+
 						</CustomInput>
 					</FormGroup>
 				</Col>
@@ -223,9 +248,13 @@ render () {
 			
 			<Row>
 				<Col>
-					<Label for="tags">Tags:</Label><br/>
+					<Label for="tags">
+						Tags:
+					</Label>
+
+					<br/>
+					
 					<FormGroup width="50%">
-						{console.log("this.props.allTags: ", this.props.allTags)}
 						<Autocomplete 
 							name={"tags"}
 							id={"tags"}
@@ -239,9 +268,12 @@ render () {
 				    
 				    {/*Lists all of the tags on this term, displayed as buttons*/}
 					<Alert color="warning">
-				    <TagList tags={this.state.tags} handleDeleteTag={this.handleDeleteTag} 
-				    updateTagList={this.updateTagList} deletable={true}
-				    />
+				    	<TagList 
+				    	tags={this.state.tags} 
+				    	handleDeleteTag={this.handleDeleteTag} 
+				    	updateTagList={this.updateTagList} 
+				    	deletable={true}
+				    	/>
 					</Alert>
 				    
 				</Col>
@@ -250,21 +282,39 @@ render () {
 			<Row>
 				<Col>
 					<FormGroup>
-						<Label for="imgFile">Image:</Label>
-						<CustomInput type="file" id="imgFile" label={this.state.imgLabel} onChange={this.imgFileChangedHandler}/>
+						<Label for="imgFile">
+							Image:
+						</Label>
+
+						<CustomInput 
+						type="file" 
+						id="imgFile" 
+						label={this.state.imgLabel} 
+						onChange={this.imgFileChangedHandler}
+						/>
 					</FormGroup>
 				</Col>
 				
 				<Col>
 					<FormGroup>
-						<Label for="audioFile">Audio:</Label>
-						<CustomInput type="file" id="audioFile" label={this.state.audioLabel} onChange={this.audioFileChangedHandler}/>
+						<Label for="audioFile">
+							Audio:
+						</Label>
+
+						<CustomInput 
+							type="file" 
+							id="audioFile" 
+							label={this.state.audioLabel} 
+							onChange={this.audioFileChangedHandler}
+							/>
 					</FormGroup>
 				</Col>
 			</Row>
 			<Row>
 				<Col>
-					<Button style={{backgroundColor: '#004085'}} type="submit" block>Create</Button>
+					<Button style={{backgroundColor: '#004085'}} type="submit" block>
+						Create
+					</Button>
 				</Col>
 			</Row>
 			</Alert>
