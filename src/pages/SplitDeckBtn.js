@@ -55,7 +55,7 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Pop
         <Modal isOpen={modalOpen}> 
           <ModalHeader toggle={toggleModal}>Delete</ModalHeader>
           <ModalBody>
-            <p>Are you sure you want to delete the card: {props.curModule.name}?</p>
+            <p>Are you sure you want to delete the module: {props.curModule.name}?</p>
           </ModalBody>
           <ModalFooter>
             <Button onClick={ () => {toggleModal()} }>Cancel</Button>

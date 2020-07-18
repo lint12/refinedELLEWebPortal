@@ -1,9 +1,11 @@
 import React from 'react'
 import { Table } from 'reactstrap';
 import Card from './Card';
+import Phrase from './Phrase';
 import '../../stylesheets/style.css';
 
 const CardList = (props) => {
+    if (props.type === 0) {
 	    return (
         <Table hover className="tableList">
           <thead>
@@ -34,7 +36,36 @@ const CardList = (props) => {
             })}
           </tbody>
         </Table>
-	    )
+      )
+    }
+    else {
+      return (
+        <Table hover className="tableList">
+        <thead>
+          <tr>
+            <th style={{width: '32%'}}>Phrase (English)</th>
+            <th style={{width: '32%'}}>Phrase (Translated)</th>
+            <th style={{width: '12%'}}>Picture</th>
+            <th style={{width: '12%'}}>Audio</th>
+            <th style={{width: '12%'}}>ID</th>
+            <th style={{width: '32%'}}> </th> 
+          </tr>
+        </thead>
+        <tbody>
+          {props.cards.map((card) => {
+            return (
+              <Phrase                   
+                key={card.termID}
+                card={card}
+                serviceIP={props.serviceIP}
+                curModule={props.curModule}
+                updateCurrentModule={props.updateCurrentModule}/>
+            )
+          })}
+        </tbody>
+        </Table>
+      )
+    }
 }
 
 export default CardList

@@ -14,7 +14,7 @@ class Deck extends React.Component {
     this.state = {
       id: this.props.curModule.moduleID,
       name: this.props.curModule.name,
-      language: "",
+      language: this.props.curModule.language,
 
       searchCard: "",
       collapseNewCard: false,
@@ -52,7 +52,7 @@ class Deck extends React.Component {
 
     let tagIndex = tempTagList.indexOf(tag);
 
-    if(tagIndex != -1){
+    if(tagIndex !== -1){
       tempTagList.splice(tagIndex, 1);
     }
 
@@ -143,8 +143,7 @@ class Deck extends React.Component {
             <Col>
             <Collapse isOpen={this.state.collapseNewCard}>
               <AddTerm
-                id={this.state.id}
-                type={0}
+                curModule={this.props.curModule} updateCurrentModule={this.props.updateCurrentModule}
                 serviceIP={this.props.serviceIP}
                 deleteTag={this.deleteTag}
                 addTag={this.addTag}
@@ -159,7 +158,7 @@ class Deck extends React.Component {
                 <Card key={i} style={{ marginBottom: '1rem' }}>
                   <CardHeader onClick={this.toggleTab} data-event={index}>Terms</CardHeader>
                   <Collapse isOpen={this.state.collapseTab === index}>
-                    <CardList cards = {filteredTerms} serviceIP={this.props.serviceIP} 
+                    <CardList type={0} cards = {filteredTerms} serviceIP={this.props.serviceIP} 
                     curModule={this.props.curModule} updateCurrentModule={this.props.updateCurrentModule}
                     deleteTag={this.deleteTag} addTag={this.addTag} allTags={this.state.allTags}/>
                   </Collapse>
@@ -171,7 +170,7 @@ class Deck extends React.Component {
                 <Card key={i} style={{ marginBottom: '1rem' }}>
                   <CardHeader onClick={this.toggleTab} data-event={index}>Phrases</CardHeader>
                   <Collapse isOpen={this.state.collapseTab === index}>
-                    <CardList cards = {filteredPhrases} serviceIP={this.props.serviceIP}/>
+                    <CardList type={1} cards = {filteredPhrases} serviceIP={this.props.serviceIP}/>
                   </Collapse>
                 </Card>
               )

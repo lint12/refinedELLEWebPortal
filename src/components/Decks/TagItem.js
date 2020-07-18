@@ -16,7 +16,7 @@ class TagItem extends React.Component {
 
 
   setStyle = () => {
-    if(this.state.removeMode == false){
+    if(this.state.removeMode === false){
       return {margin: "3px", border: "2px solid black"}
     } else {
       return {margin: "3px", border: "2px solid black", backgroundColor: "red"}
@@ -41,7 +41,7 @@ class TagItem extends React.Component {
 
 
   render() {
-    if(this.props.deletable == true){
+    if(this.props.deletable === true){
       return (
     			
           <div>

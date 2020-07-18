@@ -88,14 +88,14 @@ class Autocomplete extends Component {
 
   // Event fired when the user presses a key down
   onKeyDown = e => {
-    const { activeSuggestion, filteredSuggestions, userInput} = this.state;
+    const { activeSuggestion, filteredSuggestions, userInput } = this.state;
     const {suggestions} = this.props;
 
     // User pressed the enter key, update the input and close the
     // suggestions
     if (e.keyCode === 13) {
 
-      if(filteredSuggestions.length == 1){
+      if(filteredSuggestions.length === 1){
         this.setState({
           activeSuggestion: 0,
           showSuggestions: false,

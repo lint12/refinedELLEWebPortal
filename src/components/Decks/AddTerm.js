@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Form, FormGroup, Label, Input, Row, FormText, Col, Alert} from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, CustomInput, Row, Col, Alert} from 'reactstrap';
 import axios from 'axios';
 
 import TagList from './TagList';
@@ -13,29 +13,27 @@ class AddTerm extends React.Component {
 
 		this.state = {
 			cardID: "", //id of card we're adding
-			id: this.props.id, //id of deck we're adding the card to
 			front: "", //english translation of the word
 			back: "", //foreign version of the word
+			type: "", //NN, VR, AJ, AV, PH
+			gender: "", //MA, FE, NA
 			tags: [], //array of tags associated with word
-			difficulty: 1, //unused information
-			selectedPicFile: null, //file location of the picture selected
+			selectedImgFile: null, //file location of the picture selected
 			selectedAudioFile: null, //file location of the audio selected
 
-
+			imgLabel: "Pick an image for the term", 
+			audioLabel: "Pick an audio for the term"
 		};
 	}
 
 	componentDidMount(){
 		//TODO: populate this.state.allTags
 		//TODO: 
-
-		
 	}
 
 	updateTagList = (tagList) => {
 		this.setState({tags: tagList})
 	}
-
 
 	//updates the deck id to a new id
 	updateDeckID(newID) {
@@ -44,79 +42,77 @@ class AddTerm extends React.Component {
 		})
 	}
 
-
-
-	picFileChangedHandler = (event) => {
-	  this.setState({
-			selectedPicFile: event.target.files[0]
+	imgFileChangedHandler = (event) => {
+	  	this.setState({
+			selectedImgFile: event.target.files[0],
+			imgLabel: event.target.files[0] === undefined ? "Pick an image for the term" : event.target.files[0].name
 		})
 	}
 
 	audioFileChangedHandler = (event) => {
 		this.setState({
-			selectedAudioFile: event.target.files[0]
+			selectedAudioFile: event.target.files[0],
+			audioLabel: event.target.files[0] === undefined ? "Pick an audio for the term" : event.target.files[0].name
 		})
 	}
 
 	change(e) {
 	    this.setState({
 	      [e.target.name]: e.target.value
-	    })
+		})
   	}
   	//TODO: adapt to current database
   	//function that submits the data
-	submitTerm(e) {
-		if (this.state.front != null && this.state.back != null)
-		{
+	submitTerm = (e) => {
+		console.log("FRONT: ", this.state.front)
+		console.log("BACK: ", this.state.back)
+		console.log("TAGS: ", this.state.tags)
+		console.log("TYPE: ", this.state.type)
+		console.log("GENDER: ", this.state.gender)
+		console.log("IMG: ", this.state.selectedImgFile)
+		console.log("Audio: " ,this.state.selectedAudioFile)
+		console.log("language: ", this.props.curModule.language)
+		console.log("id: ", this.props.curModule.moduleID)
 
-		    e.preventDefault();
-			
-			const formPicData = new FormData();
-			formPicData.append('file', this.state.selectedPicFile);
-			
-			const formAudioData = new FormData();
-			formAudioData.append('file', this.state.selectedAudioFile);
-		    
-		    var data = {
-					front: this.state.front,
-					back: this.state.back,
-					type: "MATCH",
-					image: formPicData,
-					audio: formAudioData
-		    }
+		if (this.state.front.length !== 0 && this.state.back.length !== 0)
+		{   
+			e.preventDefault();
+			const data = new FormData(); 
 
-			var fileheader = {
-				'Authorization': 'Bearer ' + localStorage.getItem('jwt'),
-				'Content-Type': 'multipart/form-data'
-			}
+			//required fields for adding a term
+			data.append('front', this.state.front); 
+			data.append('back', this.state.back); 
+			data.append('language', this.state.language); 
 
-		    var headers = {
-		        'Authorization': 'Bearer ' + localStorage.getItem('jwt')
-		    }
+			//optional fields for adding a term
+			if (this.state.type.length !== 0)
+				data.append('type', this.state.type); 
 
-			axios.post(this.props.serviceIP + '/term/'+this.state.id, data, {headers:headers})
-			.then(res => {
+			if (this.state.gender.length !== 0)
+				data.append('gender', this.state.gender); 
+
+			//map through all the tags and make a tag field object for them 
+			this.state.tags.map((label) => {
+				return ( data.append('tag', label) )
+			})
+
+			if (this.state.selectedImgFile !== undefined || this.state.selectedImgFile !== undefined)
+				data.append('image', this.state.selectedImgFile);
+
+			if (this.state.selectedAudioFile !== undefined || this.state.selectedAudioFile !== undefined)
+				data.append('audio', this.state.selectedAudioFile);
+
+			axios.post(this.props.serviceIP + '/term', data, 
+				{headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+			}).then(res => {
 				console.log(res.data);
-				/*
-				axios.post(this.props.serviceIP + '/card/image/'+res.data.cardID, formPicData, {headers:fileheader})
-				.then(res => {
-					console.log(res.data);
-					})
-					.catch(function (error) {
-						console.log(error);
-					});
-				axios.post(this.props.serviceIP + '/card/sound/'+res.data.cardID, formAudioData, {headers:fileheader})
-				.then(res => {
-					console.log(res.data);
-				})
-				.catch(function (error) {
-					console.log(error);
-				});*/
+				this.props.updateCurrentModule({ module: this.props.curModule });
 			}) 
 			.catch(function (error) {
 				console.log(error);
 			});
 		} else {
+			e.preventDefault();
 			alert("Please fill all inputs!");
 		}
   }
@@ -157,7 +153,7 @@ class AddTerm extends React.Component {
   }
 
 render () {
-
+	console.log("IDDDDD: ", this.props.id);
     return (
 		<div>
 		{this.state.id !== "" ? 
@@ -168,10 +164,8 @@ render () {
 			<Alert style={{color: '#004085', backgroundColor: 'deepskyblue'}}>
 			<Row>
 				<Col>
-					<FormGroup>
-						
+					<FormGroup>			
 						<Label for="front">English Word:</Label>
-						
 						<Input type="text"
 						name="front"
 						onChange={e => this.change(e)}
@@ -186,9 +180,7 @@ render () {
 			<Row>
 				<Col>
 					<FormGroup>
-						
 						<Label for="back">Translated Word:</Label>
-						
 						<Input type="text"
 						name="back"
 						onChange={e => this.change(e)}
@@ -198,10 +190,40 @@ render () {
 					</FormGroup>
 				</Col>
 			</Row>
+
+			<Row>
+				<Col>
+					<FormGroup>
+						<Label for="selectType">Type:</Label>
+						<CustomInput type="select" name="type" id="selectType"
+						value={this.state.type} onChange={e => this.change(e)}>
+							<option value="">Select</option>
+							<option value="NN">NN (Noun)</option>
+							<option value="VR">VR (Verb)</option>
+							<option value="AJ">AJ (Adjective)+</option>
+							<option value="AV">AV (Adverb)</option>
+							<option value="PH">PH (Phrase)</option>
+						</CustomInput>
+					</FormGroup>
+				</Col>
+
+				<Col>
+					<FormGroup>
+						<Label for="selectGender">Gender:</Label>
+						<CustomInput type="select" name="gender" id="selectGender" 
+						value={this.state.gender} onChange={e => this.change(e)}>
+							<option value="">Select</option>
+							<option value="MA">MA (Male)</option>
+							<option value="FE">FE (Female)</option>
+							<option value="NA">NA (Nongendered)</option>
+						</CustomInput>
+					</FormGroup>
+				</Col>
+			</Row>
 			
 			<Row>
 				<Col>
-					<Label for="back">Tags:</Label><br/>
+					<Label for="tags">Tags:</Label><br/>
 					<FormGroup width="50%">
 						{console.log("this.props.allTags: ", this.props.allTags)}
 						<Autocomplete 
@@ -213,42 +235,30 @@ render () {
 
 							suggestions={this.props.allTags} 
 					    />
-
 				    </FormGroup>
 				    
 				    {/*Lists all of the tags on this term, displayed as buttons*/}
+					<Alert color="warning">
 				    <TagList tags={this.state.tags} handleDeleteTag={this.handleDeleteTag} 
 				    updateTagList={this.updateTagList} deletable={true}
 				    />
+					</Alert>
 				    
-
 				</Col>
 			</Row>
 
 			<Row>
 				<Col>
 					<FormGroup>
-						
-						<Label for="picFile">Picture: </Label>
-						
-						<Input type="file" onChange={this.picFileChangedHandler} />
-						
-						<FormText color="muted">
-							Pick an actual Image for the term.
-						</FormText>
+						<Label for="imgFile">Image:</Label>
+						<CustomInput type="file" id="imgFile" label={this.state.imgLabel} onChange={this.imgFileChangedHandler}/>
 					</FormGroup>
 				</Col>
 				
 				<Col>
 					<FormGroup>
-						
-						<Label for="audioFile">Audio File: </Label>
-						
-						<Input type="file" onChange={this.audioFileChangedHandler} />
-						
-						<FormText color="muted">
-							Pick an audio file for the term.
-						</FormText>
+						<Label for="audioFile">Audio:</Label>
+						<CustomInput type="file" id="audioFile" label={this.state.audioLabel} onChange={this.audioFileChangedHandler}/>
 					</FormGroup>
 				</Col>
 			</Row>

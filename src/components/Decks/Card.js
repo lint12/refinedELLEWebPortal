@@ -8,7 +8,6 @@ import Autocomplete from './Autocomplete';
 class Card extends React.Component {
   constructor(props){
     super(props);
-    this.handleEdit = this.handleEdit.bind(this); 
     this.editCard = this.editCard.bind(this);
     this.handleDelete = this.handleDelete.bind(this); 
     this.deleteCard = this.deleteCard.bind(this);
@@ -41,10 +40,6 @@ class Card extends React.Component {
       tags: ["tag1", "tag2", "tag3"]
     }
 
-  }
-
-  handleEdit = () => {
-    console.log("clicked on edit btn"); 
   }
 
   handleAddTag = (event) => {
@@ -213,11 +208,10 @@ class Card extends React.Component {
     let imgLink = "http://34.239.123.94/Images/" + selectedImgFile;
     let audioLink = "http://34.239.123.94/Audios/" + selectedAudioFile;
 
-    console.log("LINK: ", imgLink + selectedImgFile); 
+    //console.log("LINK: ", imgLink); 
     if (this.state.editMode === false){
       return (
         <Fragment>
-
         <tr onClick={this.toggleCollapsedTags}>
           <td>{editedFront}</td>
           <td>{editedBack}</td>
@@ -256,13 +250,12 @@ class Card extends React.Component {
         </tr>
 
         <Collapse isOpen={this.state.collapseTags}>
-            <tr >
-              <td style={{border:"none"}} colSpan="3"><TagList tags={this.state.tags} handleDeleteTag={this.handleDeleteTag} deletable={false}/></td>
-            </tr>
+          <td style={{border:"none"}} colSpan="3">
+            <TagList tags={this.state.tags} handleDeleteTag={this.handleDeleteTag} deletable={false}/>
+          </td>
         </Collapse>
-
         </Fragment>
-      );
+      )
     } 
     else{
       return (

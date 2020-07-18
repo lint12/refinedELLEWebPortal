@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form, FormGroup, Label, Input, Row, FormText, Col, Alert } from 'reactstrap';
+import { Button, ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import '../../stylesheets/style.css';
 import axios from 'axios';
 
@@ -8,91 +8,76 @@ class Phrase extends React.Component {
         super(props);
 
         this.state = {
-			cardID: "",
-			id: this.props.id, //refers to the deck that this card will be added to 
-			front: "",
-            back: "",
-            selectedAudioFile: null
+            card: this.props.card, 
+            editedFront: this.props.card.front,
+            editedBack: this.props.card.back, 
+            selectedImgFile: this.props.card.imageLocation, 
+            selectedAudioFile: this.props.card.audioLocation, 
+            id: this.props.card.termID,
+
+            modal: false
 		};
     }
 
-    handleSubmit = event => {
-        event.preventDefault(); 
-
-        // const phrase = {
-        //     front: this.state.front,
-        //     back: this.state.back
-        // }
-
-        axios.post()
+    editPhrase = () => {
+        console.log("edit btn for phrase is pressed")
+        // this.setState({editMode: true,
+        //               collapseTags: true})
     }
 
-    change(e) {
-        this.setState({
-          [e.target.name]: e.target.value
-        })
+    handleDelete = () => {
+        console.log(this.state.card); 
+        this.toggleModal(); 
+    }
+
+    deletePhrase = () => {
+        console.log("call api to delete phrase")
+    }
+
+    toggleModal = () => {
+        this.setState({ modal: !this.state.modal })
     }
 
     render () {
+        let {editedFront, editedBack, selectedImgFile, selectedAudioFile, id} = this.state;
+
+        let imgLink = "http://34.239.123.94/Images/" + selectedImgFile;
+        let audioLink = "http://34.239.123.94/Audios/" + selectedAudioFile;
+
         return (
-            <div>
-            <br></br>
-            <Form onSubmit={e => this.submitCard(e)}>
-            <Alert color='none' style={{color: '#004085', backgroundColor: 'burlywood'}}>
-                <Row>
-                    <Col>
-                        <FormGroup>
-                            <Label for="front">Phrase (English):</Label>
-                            <Input type="text"
-                            name="front"
-                            onChange={e => this.change(e)}
-                            value={this.state.front}
-                            id="front"
-                            placeholder="Phrase in English" />
-                        </FormGroup>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <FormGroup>
-                            <Label for="back">Phrase (Translated):</Label>
-                            <Input type="text"
-                            name="back"
-                            onChange={e => this.change(e)}
-                            value={this.state.back}
-                            id="back"
-                            placeholder="Phrase Translated" />
-                        </FormGroup>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <FormGroup>
-                            <Label for="picFile">Picture: </Label>
-                            <Input type="file" onChange={this.picFileChangedHandler} />
-                            <FormText color="muted">
-                                Pick an actual Image for the card.
-                            </FormText>
-                        </FormGroup>
-                    </Col>
-                    <Col>
-                        <FormGroup>
-                            <Label for="audioFile">Audio File: </Label>
-                            <Input type="file" onChange={this.audioFileChangedHandler} />
-                            <FormText color="muted">
-                                Pick an audio file for the card.
-                            </FormText>
-                        </FormGroup>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Button style={{backgroundColor: '#004085'}} type="submit" block>Create</Button>
-                    </Col>
-                </Row>
-            </Alert>
-            </Form>
-            </div>
+                <tr>
+                    <td>{editedFront}</td>
+                    <td>{editedBack}</td>
+                    <td>
+                        {/* favicon is just a placeholder for now more testing needs to be done after deployment */}
+                        <Button style={{backgroundColor: 'white', width: '100%'}} href="http://localhost:3000/favicon.ico" download>
+                        <img src={"./../../../image.png"} alt="frame icon" style={{width: '25px', height: '25px'}}/>
+                        </Button>
+                    </td>
+                    <td>
+                        {/* audio has to be in the same domain */}
+                        <Button style={{backgroundColor: 'white', width: '100%'}} href={audioLink} download> 
+                        <img src={"./../../../headphones.png"} alt="headphones icon" style={{width: '25px', height: '25px'}}/>
+                        </Button>
+                    </td>
+                    <td>{id}</td>
+                    <td>
+                        <ButtonGroup>
+                        <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.editPhrase()}><img src={"./../../../tools.png"} alt="edit icon" style={{width: '25px', height: '25px'}}/></Button>
+                        <Button style={{backgroundColor: 'lightcoral'}} onClick={this.handleDelete.bind()}><img src={"./../../../delete.png"} alt="trash can icon" style={{width: '25px', height: '25px'}}/></Button>
+                        </ButtonGroup>
+                        <Modal isOpen={this.state.modal} toggle={this.toggleModal}> 
+                        <ModalHeader toggle={this.toggleModal}>Delete</ModalHeader>
+                        <ModalBody>
+                            <p>Are you sure you want to delete the phrase: {editedFront}?</p>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button onClick={this.toggleModal}>Cancel</Button>
+                            <Button color="danger" onClick={this.deletePhrase.bind()}>Delete</Button>
+                        </ModalFooter>
+                        </Modal>
+                    </td>
+                </tr>
         )
     }
 }
