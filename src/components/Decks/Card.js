@@ -22,33 +22,30 @@ class Card extends React.Component {
     console.log("This Card: ", this.props.card)
 
     this.state = {
-      card: this.props.card,
+      card: this.props.card, //contains all of the data in the card
       modal: false,
 
-      editMode: false,
-      editedFront: this.props.card.front,
-      editedBack: this.props.card.back,
-      editedType: this.props.card.type, 
-      editedGender: this.props.card.gender, 
-      collapseTags: false,
+      editMode: false, //determines whether or not the editable version of the card is showing
+      editedFront: this.props.card.front, //contains the English word that can be edited
+      editedBack: this.props.card.back, //contains the foreign word that can be edited
+      editedType: this.props.card.type, //contains the type of 
+      editedGender: this.props.card.gender, //contains the gender of the card in question
+      collapseTags: false, //determines whether or not the tags are displayed on the card
       
-      selectedImgFile: this.props.card.imageLocation, 
-      selectedAudioFile: this.props.card.audioLocation, 
-      changedImage: false, 
-      changedAudio: false, 
+      selectedImgFile: this.props.card.imageLocation, //contains the location of the image for the card
+      selectedAudioFile: this.props.card.audioLocation, //contains the location of the audio for the card
+      changedImage: false, //determines whether or not the image file was changed
+      changedAudio: false, //determines whether or not the audio file was changed
 
-      tags: ["tag1", "tag2", "tag3"]
+      //TODO: populate tags with API call instead of dummy data
+      tags: ["tag1", "tag2", "tag3"] //contains the list of tags
     }
 
   }
-
+  //TODO: handleAddTag and createTag kinda do the same thing. Maybe they should be one thing?
+  //function that adds a tag to list of tags on this card(only available when editmode is true)
   handleAddTag = (event) => {
-    console.log("Got into handleAddTag, tag: ", event.tag);
-    console.log("this.state.tags in addTerm: ", this.state.tags);
-    
     let list = this.props.addTag(this.state.tags, event.tag);
-
-    console.log("list in handleAddTag after addTag is called: ", list);
 
     this.setState({
       tags: list
@@ -56,12 +53,8 @@ class Card extends React.Component {
   }
 
 
+  //function that adds a new tag from user input to list of tags on this card(only when editmode is true)
   createTag = (tag) => {
-    //TODO: create function that creates a brand new tag from the user input,
-    //adds that tag to the database, and associates that tag with the word being created
-    //And pass that function into Autocomplete
-
-    console.log("Got into createTag, tag: ", tag);
 
     let tempTags = this.state.tags;
     tempTags.push(tag);
@@ -70,50 +63,56 @@ class Card extends React.Component {
     });
   }
 
-
+  //function that gets called when the edit button is pushed. Sets editmode to true
   editCard = () => {
     this.setState({editMode: true,
                   collapseTags: true})
   }
 
+  //function that inputs data when user edits front of the card
   editFront = (event) => {
     this.setState({editedFront: event.target.value});
   }
 
+  //function that inputs data when user edits back of the card
   editBack = (event) => {
     this.setState({editedBack: event.target.value});
   }
 
+  //function that inputs data when user edits type of the card
   editType = (event) => {
     this.setState({editedType: event.target.value}); 
   }
 
+  //function that inputs data when user edits gender of the card
   editGender = (event) => {
     this.setState({editedGender: event.target.value}); 
   }
 
+  //function that inputs image when user uploads a new image to the card
   imgFileSelectedHandler = (event) => {
-    console.log("CLICKED ON IMG SELECTER")
     this.setState({ 
       selectedImgFile: event.target.files[0], 
       changedImage: true //remember to change it back to false later 
     }); 
   }
 
+  //function that inputs audio when user uploads new audio to the card
   audioFileSelectedHandler = (event) => {
-    console.log("CLICKED ON AUDIO SELECTER")
     this.setState({
       selectedAudioFile: event.target.files[0], 
       changedAudio: true //remember to change it back to false later 
     })
   }
 
+  //function that submits all of the edited data put on a card 
   submitEdit = (event) => {
     this.setState({editMode: false});
-    console.log("clicked on submit edit")
-    console.log("file selected: ", this.state.selectedPicFile); 
 
     const data = new FormData(); 
+    let header = {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+    };
 
     data.append('image', this.state.changedImage ? this.state.selectedImgFile : null); 
     data.append('audio', this.state.changedAudio ? this.state.selectedAudioFile : null); 
@@ -130,19 +129,18 @@ class Card extends React.Component {
     data.append('gender', this.state.editedGender); //editable  
     data.append('termID', this.props.card.termID); //not editable
     
-    axios.post(this.props.serviceIP + '/term', data, 
-      {headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-    }).then(res => {
-      console.log(res.data);
-      this.setState({
-        changedImage: false, 
-        changedAudio: false
-      })
+    axios.post(this.props.serviceIP + '/term', data, header)
+      .then(res => {
+        this.setState({
+          changedImage: false, 
+          changedAudio: false
+        });
 
-      this.props.updateCurrentModule({ module: this.props.curModule });  
-    }).catch(function (error) {
-      console.log(error);
-    });
+        this.props.updateCurrentModule({ module: this.props.curModule });  
+      })
+      .catch(error => {
+        console.log("submitEdit in Card.js error: ", error);
+      });
   }
 
   //toggling delete modal, is not related to delete card API 
@@ -151,20 +149,27 @@ class Card extends React.Component {
     this.toggleModal(); 
   }
 
+  //function for deleting a card from the database
   deleteCard = (e) => {
-    console.log("call API request to delete"); 
-    console.log(this.state.card.termID);
+
+
     this.toggleModal(); 
-    axios.delete(this.props.serviceIP + '/term', { data: { termID: this.state.card.termID },
+
+    let header = { 
+      data: { termID: this.state.card.termID },
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-    }).then( res => {
-      console.log(res.data);
-      this.props.updateCurrentModule({ module: this.props.curModule });  
-    }).catch(function (error) {
-      console.log(error);
-    });
+    };
+
+    axios.delete(this.props.serviceIP + '/term', header)
+      .then( res => {
+        this.props.updateCurrentModule({ module: this.props.curModule });  
+      })
+      .catch(error => {
+        console.log("deleteCard in Card.js error: ", error);
+      });
   }
 
+  //function that toggles whether or not tags a visible
   toggleCollapsedTags = () => {
     this.setState({collapseTags: !this.state.collapseTags})
   }
@@ -173,14 +178,15 @@ class Card extends React.Component {
     this.setState({ modal: !this.state.modal })
   }
 
+  //function that deletes a tag from the list of tags
   handleDeleteTag = (event) => {
     var list = this.props.deleteTag(this.state.tags, event.tag);
-    console.log("inside handleDeleteTag, list: ", list);
     this.setState({
       tags: list
     })
   }
 
+  //function that cancels the edit and sets everything back to what it was initially
   handleCancelEdit = (event) => {
     this.setState({
       card: this.props.card,
@@ -208,7 +214,6 @@ class Card extends React.Component {
     let imgLink = "http://34.239.123.94/Images/" + selectedImgFile;
     let audioLink = "http://34.239.123.94/Audios/" + selectedAudioFile;
 
-    //console.log("LINK: ", imgLink); 
     if (this.state.editMode === false){
       return (
         <Fragment>
@@ -219,27 +224,58 @@ class Card extends React.Component {
           <td>{editedGender}</td>
           <td>
             {/* favicon is just a placeholder for now more testing needs to be done after deployment */}
-            <Button style={{backgroundColor: 'white', width: '100%'}} href="http://localhost:3000/favicon.ico" download>
-            <img src={"./../../../image.png"} alt="frame icon" style={{width: '25px', height: '25px'}}/>
+            <Button 
+              style={{backgroundColor: 'white', width: '100%'}} 
+              href="http://localhost:3000/favicon.ico" 
+              download
+              >
+              <img 
+                src={"./../../../image.png"} 
+                alt="frame icon" 
+                style={{width: '25px', height: '25px'}}
+                />
             </Button>
           </td>
           <td>
             {/* audio has to be in the same domain */}
-            <Button style={{backgroundColor: 'white', width: '100%'}} href={audioLink} download> 
-            <img src={"./../../../headphones.png"} alt="headphones icon" style={{width: '25px', height: '25px'}}/>
+            <Button 
+              style={{backgroundColor: 'white', width: '100%'}} 
+              href={audioLink} 
+              download
+              > 
+              <img 
+                src={"./../../../headphones.png"} 
+                alt="headphones icon" 
+                style={{width: '25px', height: '25px'}}
+                />
             </Button>
           </td>
           <td>{this.state.card.termID}</td>
           <td>
             <ButtonGroup>
-            <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.editCard()}><img src={"./../../../tools.png"} alt="edit icon" style={{width: '25px', height: '25px'}}/></Button>
-            <Button style={{backgroundColor: 'lightcoral'}} onClick={this.handleDelete.bind()}><img src={"./../../../delete.png"} alt="trash can icon" style={{width: '25px', height: '25px'}}/></Button>
+              <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.editCard()}>
+                <img 
+                  src={"./../../../tools.png"} 
+                  alt="edit icon" 
+                  style={{width: '25px', height: '25px'}}
+                  />
+              </Button>
+              <Button style={{backgroundColor: 'lightcoral'}} onClick={this.handleDelete.bind()}>
+                <img 
+                  src={"./../../../delete.png"} 
+                  alt="trash can icon" 
+                  style={{width: '25px', height: '25px'}}
+                  />
+              </Button>
             </ButtonGroup>
+
             <Modal isOpen={this.state.modal} toggle={this.toggleModal}> 
               <ModalHeader toggle={this.toggleModal}>Delete</ModalHeader>
+              
               <ModalBody>
                 <p>Are you sure you want to delete the card: {editedFront}?</p>
               </ModalBody>
+
               <ModalFooter>
                 <Button onClick={this.toggleModal}>Cancel</Button>
                 <Button color="danger" onClick={this.deleteCard.bind()}>Delete</Button>
@@ -249,11 +285,17 @@ class Card extends React.Component {
           </td>
         </tr>
 
-        <Collapse isOpen={this.state.collapseTags}>
+        <tr>
           <td style={{border:"none"}} colSpan="3">
-            <TagList tags={this.state.tags} handleDeleteTag={this.handleDeleteTag} deletable={false}/>
+            <Collapse isOpen={this.state.collapseTags}>
+            <TagList 
+              tags={this.state.tags} 
+              handleDeleteTag={this.handleDeleteTag} 
+              deletable={false}
+              />
+            </Collapse>
           </td>
-        </Collapse>
+        </tr>
         </Fragment>
       )
     } 
@@ -262,8 +304,20 @@ class Card extends React.Component {
       <Fragment>
 
       <tr>
-        <td><Input type="value" onChange={this.editFront} value={this.state.editedFront} /></td>
-        <td><Input type="value" onChange={this.editBack} value={this.state.editedBack} /></td>
+        <td>
+        <Input 
+          type="value" 
+          onChange={this.editFront} 
+          value={this.state.editedFront} 
+          />
+        </td>
+        <td>
+          <Input 
+          type="value" 
+          onChange={this.editBack} 
+          value={this.state.editedBack} 
+          />
+        </td>
         <td><Input type="value" onChange={this.editType} value={this.state.editedType} /></td>
         <td><Input type="value" onChange={this.editGender} value={this.state.editedGender} /></td>
         <input style={{display: 'none'}} type="file" onChange={this.imgFileSelectedHandler}
