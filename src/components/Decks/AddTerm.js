@@ -100,10 +100,10 @@ class AddTerm extends React.Component {
 				return ( data.append('tag', label) )
 			})
 
-			if (this.state.selectedImgFile !== undefined || this.state.selectedImgFile !== undefined)
+			if (this.state.selectedImgFile !== null || this.state.selectedImgFile !== undefined)
 				data.append('image', this.state.selectedImgFile);
 
-			if (this.state.selectedAudioFile !== undefined || this.state.selectedAudioFile !== undefined)
+			if (this.state.selectedAudioFile !== null || this.state.selectedAudioFile !== undefined)
 				data.append('audio', this.state.selectedAudioFile);
 
 
@@ -217,7 +217,7 @@ render () {
 							<option value="VR">VR (Verb)</option>
 							<option value="AJ">AJ (Adjective)+</option>
 							<option value="AV">AV (Adverb)</option>
-							<option value="PH">PH (Phrase)</option>
+							{/* <option value="PH">PH (Phrase)</option> */}
 
 						</CustomInput>
 					</FormGroup>

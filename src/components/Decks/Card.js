@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import { Button, ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter, Collapse, Input } from 'reactstrap';
+import { Button, ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter, Collapse, Input, CustomInput, Tooltip } from 'reactstrap';
 import axios from 'axios';
 
 import TagList from './TagList';
@@ -13,17 +13,19 @@ class Card extends React.Component {
     this.deleteCard = this.deleteCard.bind(this);
     this.toggleCollapsedTags = this.toggleCollapsedTags.bind(this);
 
-    this.editFront = this.editFront.bind(this);
-    this.editBack = this.editBack.bind(this);
-    this.editType = this.editType.bind(this); 
-    this.editGender = this.editGender.bind(this); 
+    this.toggleImgTooltipOpen = this.toggleImgTooltipOpen.bind(this); 
+    this.toggleAudioTooltipOpen = this.toggleAudioTooltipOpen.bind(this); 
+
     this.submitEdit = this.submitEdit.bind(this);
+    this.change = this.change.bind(this);
 
     console.log("This Card: ", this.props.card)
 
     this.state = {
       card: this.props.card, //contains all of the data in the card
       modal: false,
+      imgTooltipOpen: false, 
+      audioTooltipOpen: false, 
 
       editMode: false, //determines whether or not the editable version of the card is showing
       editedFront: this.props.card.front, //contains the English word that can be edited
@@ -69,24 +71,11 @@ class Card extends React.Component {
                   collapseTags: true})
   }
 
-  //function that inputs data when user edits front of the card
-  editFront = (event) => {
-    this.setState({editedFront: event.target.value});
-  }
-
-  //function that inputs data when user edits back of the card
-  editBack = (event) => {
-    this.setState({editedBack: event.target.value});
-  }
-
-  //function that inputs data when user edits type of the card
-  editType = (event) => {
-    this.setState({editedType: event.target.value}); 
-  }
-
-  //function that inputs data when user edits gender of the card
-  editGender = (event) => {
-    this.setState({editedGender: event.target.value}); 
+  //function that changes the state of front, back, type, and gender based off of the name given to the input objects
+  change(e) {
+    this.setState({
+        [e.target.name]: e.target.value
+    })
   }
 
   //function that inputs image when user uploads a new image to the card
@@ -107,6 +96,14 @@ class Card extends React.Component {
 
   //function that submits all of the edited data put on a card 
   submitEdit = (event) => {
+    console.log("Changed image?: ", this.state.changedImage); 
+    console.log("selectedImg: ", this.state.selectedImgFile);
+
+    console.log("FRONT: ", this.state.editedFront); 
+    console.log("BACK: ", this.state.editedBack); 
+    console.log("TYPE: ", this.state.editedType); 
+    console.log("GENDER: ", this.state.editedGender); 
+
     this.setState({editMode: false});
 
     const data = new FormData(); 
@@ -114,8 +111,8 @@ class Card extends React.Component {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     };
 
-    data.append('image', this.state.changedImage ? this.state.selectedImgFile : null); 
-    data.append('audio', this.state.changedAudio ? this.state.selectedAudioFile : null); 
+    data.append('image', this.state.changedImage && this.state.selectedImgFile !== undefined ? this.state.selectedImgFile : null); 
+    data.append('audio', this.state.changedAudio && this.state.selectedAudioFile !== undefined ? this.state.selectedAudioFile : null); 
     data.append('front', this.state.editedFront); 
     data.append('back', this.state.editedBack); 
     data.append('language', this.props.card.language); //not editable 
@@ -151,8 +148,6 @@ class Card extends React.Component {
 
   //function for deleting a card from the database
   deleteCard = (e) => {
-
-
     this.toggleModal(); 
 
     let header = { 
@@ -176,6 +171,14 @@ class Card extends React.Component {
 
   toggleModal = () => {
     this.setState({ modal: !this.state.modal })
+  }
+
+  toggleImgTooltipOpen = () => {
+    this.setState({ imgTooltipOpen: !this.state.imgTooltipOpen }); 
+  }
+
+  toggleAudioTooltipOpen = () => {
+    this.setState({ audioTooltipOpen: !this.state.audioTooltipOpen }); 
   }
 
   //function that deletes a tag from the list of tags
@@ -286,7 +289,7 @@ class Card extends React.Component {
         </tr>
 
         <tr>
-          <td style={{border:"none"}} colSpan="3">
+          <td style={{border:"none"}} colSpan="8">
             <Collapse isOpen={this.state.collapseTags}>
             <TagList 
               tags={this.state.tags} 
@@ -307,7 +310,8 @@ class Card extends React.Component {
         <td>
         <Input 
           type="value" 
-          onChange={this.editFront} 
+          name="editedFront"
+          onChange={e => this.change(e)} 
           value={this.state.editedFront} 
           />
         </td>
@@ -315,56 +319,85 @@ class Card extends React.Component {
         <td>
           <Input 
             type="value" 
-            onChange={this.editBack} 
+            name="editedBack"
+            onChange={e => this.change(e)} 
             value={this.state.editedBack} 
             />
         </td>
 
         <td>
-          <Input 
-            type="value" 
-            onChange={this.editType} 
-            value={this.state.editedType} 
-            />
+          <CustomInput 
+							type="select" 
+							name="editedType" 
+							id="selectType"
+							value={this.state.editedType} 
+							onChange={e => this.change(e)}>
+
+							<option value="">Select</option>
+							<option value="NN">NN (Noun)</option>
+							<option value="VR">VR (Verb)</option>
+							<option value="AJ">AJ (Adjective)+</option>
+							<option value="AV">AV (Adverb)</option>
+					</CustomInput>
         </td>
 
         <td>
-          <Input 
-            type="value" 
-            onChange={this.editGender} 
-            value={this.state.editedGender} 
-            />
+          <CustomInput 
+							type="select" 
+							name="editedGender" 
+							id="selectGender"
+							value={this.state.editedGender} 
+							onChange={e => this.change(e)}>
+
+							<option value="">Select</option>
+							<option value="MA">MA (Male)</option>
+							<option value="FE">FE (Female)</option>
+							<option value="NA">NA (Nongendered)</option>
+					</CustomInput>
         </td>
 
-        <input 
-          style={{display: 'none'}}
-          type="file" onChange={this.imgFileSelectedHandler}  
-          ref={imgInput => this.imgInput = imgInput}
+        <td>
+          <input 
+            style={{display: 'none'}}
+            type="file" onChange={this.imgFileSelectedHandler}  
+            ref={imgInput => this.imgInput = imgInput}
           />
-
-        <td>
           <Button 
-            style={{backgroundColor: 'lightseagreen', width: '100%', fontSize: 'small'}} 
+            style={{backgroundColor: 'lightseagreen', width: '100%'}} 
+            id="uploadImage"
             onClick={() => this.imgInput.click()}
             >
-              Upload <br/> Image
+            <img 
+              src={"./../../../uploadImage.png"} 
+              alt="Icon made by Pixel perfect from www.flaticon.com" 
+              style={{width: '25px', height: '25px'}}
+            />
           </Button>
+          <Tooltip placement="top" isOpen={this.state.imgTooltipOpen} target="uploadImage" toggle={this.toggleImgTooltipOpen}>
+            Upload Image
+          </Tooltip>
         </td>
 
-        <input 
-          style={{display: 'none'}} 
-          type="file" 
-          onChange={this.audioFileSelectedHandler}
-          ref={audioInput => this.audioInput = audioInput}
-          />
-
         <td>
+          <input 
+            style={{display: 'none'}} 
+            type="file" onChange={this.audioFileSelectedHandler}
+            ref={audioInput => this.audioInput = audioInput}
+          />
           <Button 
-            style={{backgroundColor: 'lightseagreen', width: '100%', fontSize: 'small'}} 
+            style={{backgroundColor: 'lightseagreen', width: '100%'}} 
+            id="uploadAudio"
             onClick={() => this.audioInput.click()}
             >
-              Upload <br /> Audio
+            <img 
+              src={"./../../../uploadAudio.png"} 
+              alt="Icon made by Srip from www.flaticon.com" 
+              style={{width: '25px', height: '25px'}}
+            />
           </Button>
+          <Tooltip placement="top" isOpen={this.state.audioTooltipOpen} target="uploadAudio" toggle={this.toggleAudioTooltipOpen}>
+            Upload Audio
+          </Tooltip>
         </td>
 
         <td>{this.state.card.termID}</td>
@@ -372,16 +405,24 @@ class Card extends React.Component {
         <td>
           <ButtonGroup>
             <Button 
-              style={{backgroundColor: 'lightcyan', width: '50%', height: '100%', color: 'black'}} 
+              style={{backgroundColor: 'lightcyan', width: '25%', height: '100%', color: 'black'}} 
               onClick = {this.submitEdit}
               > 
-                Submit 
+              <img 
+                src={"./../../../submit.png"} 
+                alt="Icon made by Becris from www.flaticon.com" 
+                style={{width: '25px', height: '25px'}}
+              />
             </Button>
             <Button 
-              style={{backgroundColor: 'lightcyan', width: '50%', height: '100%', color: 'black'}} 
+              style={{backgroundColor: 'lightcyan', width: '25%', height: '100%', color: 'black'}} 
               onClick = {this.handleCancelEdit}
               > 
-                Cancel 
+              <img 
+                src={"./../../../cancel.png"} 
+                alt="Icon made by Freepik from www.flaticon.com" 
+                style={{width: '25px', height: '25px'}}
+              />
             </Button>
           </ButtonGroup>
         </td>
@@ -389,7 +430,7 @@ class Card extends React.Component {
       </tr>
 
       <tr>
-        <td style={{border:"none"}} colSpan="3">
+        <td style={{border:"none"}} colSpan="8">
           <TagList 
             tags={this.state.tags} 
             handleDeleteTag={this.handleDeleteTag} 

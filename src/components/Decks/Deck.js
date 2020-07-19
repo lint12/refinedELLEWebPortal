@@ -105,14 +105,33 @@ class Deck extends React.Component {
 
   }
 
+  // removeDups = (terms) => {
+  //   let newTerms = []; 
+
+  //   terms.map((term, i) => {
+  //     if (term !== undefined && i !== 0) {
+  //       if (!newTerms.termID.find(term.termID))
+  //         newTerms.push(term); 
+  //     }
+  //     else {
+  //       newTerms.push(term);
+  //     }
+  //   })
+
+  //   console.log(newTerms); 
+  //   return newTerms; 
+  // }
+
   render () {
       let terms = this.props.cards.filter(card => card.type.toLowerCase() === "match").map((card, i) => {return card.answers[0]});
       let phrases = this.props.cards.filter(card => card.type.toLowerCase() === "phrase").map((card, i) => {return card.answers[0]}); 
       let questions = this.props.cards.filter(card => card.type.toLowerCase() === "longform").map((card, i) => {return card.answers}); 
-      
+
       console.log("terms: ", terms);
       console.log("phrases: ", phrases); 
       console.log("questions: ", questions); 
+
+      //let uniqTerms = this.removeDups(terms);
 
       let filteredTerms = terms.filter(
           (term) => { 
@@ -153,7 +172,7 @@ class Deck extends React.Component {
               
               <InputGroupAddon addonType="append">
                 <Button style={{backgroundColor:'#3e6184'}} onClick={this.toggleNewCard}>
-                  Add Card
+                  Add Term
                 </Button>
               </InputGroupAddon>
             </InputGroup>
@@ -205,7 +224,9 @@ class Deck extends React.Component {
                     <CardList 
                       type={1} 
                       cards={filteredPhrases} 
-                      serviceIP={this.props.serviceIP}/>
+                      serviceIP={this.props.serviceIP}
+                      curModule={this.props.curModule} 
+                      updateCurrentModule={this.props.updateCurrentModule}/>
                   </Collapse>
                 </Card>
               )
