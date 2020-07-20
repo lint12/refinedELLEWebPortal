@@ -1,11 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Table } from 'reactstrap';
 import Card from './Card';
 import Phrase from './Phrase';
+
 import Question from './Question';
+import axios from 'axios';
+
 import '../../stylesheets/style.css';
 
 const CardList = (props) => {
+
+    const removeDuplicates = () => {
+      let idList = []; 
+      let filteredList = []; 
+
+      props.cards.map((card) => 
+      {
+          if (idList.indexOf(card.termID) === -1) {
+            idList.push(card.termID); 
+            filteredList.push(card);
+          }
+      })
+      return filteredList; 
+    }
+
+    let list = removeDuplicates(); 
+
     if (props.type === 0) {
 	    return (
         <Table hover className="tableList">
@@ -22,17 +42,17 @@ const CardList = (props) => {
             </tr>
           </thead>
           <tbody>
-            {props.cards.map((card) => {
+            {list.map((card) => {
               return (
                 <Card
-                  key={card.termID}
-                  card={card}
-                  serviceIP={props.serviceIP}
-                  curModule={props.curModule}
-                  updateCurrentModule={props.updateCurrentModule}
-                  deleteTag={props.deleteTag}
-                  addTag={props.addTag}
-                  allTags={props.allTags}/>
+                key={card.termID}
+                card={card}
+                serviceIP={props.serviceIP}
+                curModule={props.curModule}
+                updateCurrentModule={props.updateCurrentModule}
+                deleteTag={props.deleteTag}
+                addTag={props.addTag}
+                allTags={props.allTags}/>
               )
             })}
           </tbody>
@@ -42,6 +62,7 @@ const CardList = (props) => {
     else if(props.type === 1) {
       return (
         <Table hover className="tableList">
+
           <thead>
             <tr>
               <th style={{width: '32%'}}>Phrase (English)</th>
@@ -53,18 +74,14 @@ const CardList = (props) => {
             </tr>
           </thead>
           <tbody>
-            {props.cards.map((card) => {
+            {list.map((card) => {
               return (
                 <Phrase                   
                   key={card.termID}
                   card={card}
                   serviceIP={props.serviceIP}
                   curModule={props.curModule}
-                  updateCurrentModule={props.updateCurrentModule}
-
-                  deleteTag={props.deleteTag}
-                  addTag={props.addTag}
-                  allTags={props.allTags}/>
+                  updateCurrentModule={props.updateCurrentModule}/>
               )
             })}
           </tbody>
@@ -96,6 +113,7 @@ const CardList = (props) => {
               )
             })}
           </tbody>
+
         </Table>
       )
     }

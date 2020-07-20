@@ -12,7 +12,6 @@ class AddTerm extends React.Component {
 		this.change = this.change.bind(this);
 
 		this.state = {
-			
 			front: "", //english translation of the word
 			back: "", //foreign version of the word
 			type: "", //NN, VR, AJ, AV, PH
@@ -23,10 +22,6 @@ class AddTerm extends React.Component {
 
 			imgLabel: "Pick an image for the term", 
 			audioLabel: "Pick an audio for the term",
-
-
-      		//state properties below this point are never used, and we should probably delete them
-			cardID: "" //id of card we're adding
 		};
 	}
 
@@ -86,7 +81,8 @@ class AddTerm extends React.Component {
 			//required fields for adding a term
 			data.append('front', this.state.front); 
 			data.append('back', this.state.back); 
-			data.append('language', this.state.language); 
+			data.append('moduleID', this.props.curModule.moduleID); 
+			data.append('language', this.props.curModule.language); 
 
 			//optional fields for adding a term
 			if (this.state.type.length !== 0)
@@ -109,6 +105,8 @@ class AddTerm extends React.Component {
 
 			axios.post(this.props.serviceIP + '/term', data, header)
 				.then(res => {
+					console.log(res.data); 
+					this.resetFields(); 
 					this.props.updateCurrentModule({ module: this.props.curModule });
 				}) 
 				.catch(function (error) {
@@ -120,6 +118,20 @@ class AddTerm extends React.Component {
 		}
   }
 
+  resetFields = () => {
+	  this.setState({
+		front: "", 
+		back: "", 
+		type: "", 
+		gender: "", 
+		tags: [], 
+		selectedImgFile: null, 
+		selectedAudioFile: null, 
+
+		imgLabel: "Pick an image for the term", 
+		audioLabel: "Pick an audio for the term",
+	  })
+  }
 
   //TODO: handleAddTag and createTag kinda do the same thing. Maybe they should be one thing?
   //function that adds a tag to list of tags on this form
@@ -288,6 +300,7 @@ render () {
 
 						<CustomInput 
 						type="file" 
+						accept=".png, .jpg, .jpeg" 
 						id="imgFile" 
 						label={this.state.imgLabel} 
 						onChange={this.imgFileChangedHandler}
@@ -303,6 +316,7 @@ render () {
 
 						<CustomInput 
 							type="file" 
+							accept=".ogg, .wav, .mp3" 
 							id="audioFile" 
 							label={this.state.audioLabel} 
 							onChange={this.audioFileChangedHandler}

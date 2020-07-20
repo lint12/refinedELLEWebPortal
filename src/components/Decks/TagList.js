@@ -33,7 +33,7 @@ class TagList extends Component {
 			<div>
 				<Label> Tags: </Label>
 				<Row>					
-					{this.renderList(this.state.tags, this.props.handleDeleteTag)}
+					{this.renderList(this.props.tags, this.props.handleDeleteTag)}
 				</Row>
 			</div>
 		);

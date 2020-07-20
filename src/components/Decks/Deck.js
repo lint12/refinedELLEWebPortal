@@ -4,20 +4,22 @@ import CardList from './CardList'
 import axios from 'axios';
 
 import AddTerm from './AddTerm';
+
 import AddQuestion from './AddQuestion';
+import AddPhrase from './AddPhrase'; 
+
 
 class Deck extends React.Component {
   constructor(props) {
     super(props);
     this.toggleNewCard = this.toggleNewCard.bind(this);
+    this.toggleNewPhrase = this.toggleNewPhrase.bind(this);
     this.toggleTab = this.toggleTab.bind(this); 
 
     this.state = {
-      
-      
-
       searchCard: "", //what gets typed in the search bar that filters the card lists
       collapseNewCard: false, //determines whether or not the new card form is open
+      collapseNewPhrase: false,
 
       collapseTab: false, //determines whether or not a tab is collpased, maybe should be a number
       tabs: [0,1,2],
@@ -101,6 +103,10 @@ class Deck extends React.Component {
     this.setState({ collapseNewCard: !this.state.collapseNewCard });
   }
 
+  toggleNewPhrase() {
+    this.setState({ collapseNewPhrase: !this.state.collapseNewPhrase });
+  }
+
   toggleTab(e) {
     let event = e.target.dataset.event; 
     this.setState({ collapseTab: this.state.collapseTab === Number(event) ? -1 : Number(event) })
@@ -159,23 +165,6 @@ class Deck extends React.Component {
       })
   }
 
-  // removeDups = (terms) => {
-  //   let newTerms = []; 
-
-  //   terms.map((term, i) => {
-  //     if (term !== undefined && i !== 0) {
-  //       if (!newTerms.termID.find(term.termID))
-  //         newTerms.push(term); 
-  //     }
-  //     else {
-  //       newTerms.push(term);
-  //     }
-  //   })
-
-  //   console.log(newTerms); 
-  //   return newTerms; 
-  // }
-
   render () {
       let terms = this.props.cards.filter(card => card.type.toLowerCase() === "match").map((card, i) => {return card.answers[0]});
       let phrases = this.props.cards.filter(card => card.type.toLowerCase() === "phrase").map((card, i) => {return card.answers[0]}); 
@@ -184,8 +173,6 @@ class Deck extends React.Component {
       console.log("terms: ", terms);
       console.log("phrases: ", phrases); 
       console.log("questions: ", questions); 
-
-      //let uniqTerms = this.removeDups(terms);
 
       let filteredTerms = terms.filter(
           (term) => { 
@@ -229,6 +216,11 @@ class Deck extends React.Component {
                   Add Term
                 </Button>
               </InputGroupAddon>
+              <InputGroupAddon addonType="append">
+                <Button style={{backgroundColor:'#3e6184'}} onClick={this.toggleNewPhrase}>
+                  Add Phrase
+                </Button>
+              </InputGroupAddon>
             </InputGroup>
 
             <Col>
@@ -259,6 +251,14 @@ class Deck extends React.Component {
                   />
 
               
+              </Collapse>
+
+              <Collapse isOpen={this.state.collapseNewPhrase}>
+                <AddPhrase
+                  curModule={this.props.curModule} 
+                  updateCurrentModule={this.props.updateCurrentModule}
+                  serviceIP={this.props.serviceIP}
+                />
               </Collapse>
             </Col>
           </Row>
