@@ -5,6 +5,23 @@ import Phrase from './Phrase';
 import '../../stylesheets/style.css';
 
 const CardList = (props) => {
+
+    const removeDuplicates = () => {
+      let idList = []; 
+      let filteredList = []; 
+
+      props.cards.map((card) => 
+      {
+          if (idList.indexOf(card.termID) === -1) {
+            idList.push(card.termID); 
+            filteredList.push(card);
+          }
+      })
+      return filteredList; 
+    }
+
+    let list = removeDuplicates(); 
+
     if (props.type === 0) {
 	    return (
         <Table hover className="tableList">
@@ -21,17 +38,17 @@ const CardList = (props) => {
             </tr>
           </thead>
           <tbody>
-            {props.cards.map((card) => {
+            {list.map((card) => {
               return (
                 <Card
-                  key={card.termID}
-                  card={card}
-                  serviceIP={props.serviceIP}
-                  curModule={props.curModule}
-                  updateCurrentModule={props.updateCurrentModule}
-                  deleteTag={props.deleteTag}
-                  addTag={props.addTag}
-                  allTags={props.allTags}/>
+                key={card.termID}
+                card={card}
+                serviceIP={props.serviceIP}
+                curModule={props.curModule}
+                updateCurrentModule={props.updateCurrentModule}
+                deleteTag={props.deleteTag}
+                addTag={props.addTag}
+                allTags={props.allTags}/>
               )
             })}
           </tbody>
@@ -52,7 +69,7 @@ const CardList = (props) => {
           </tr>
         </thead>
         <tbody>
-          {props.cards.map((card) => {
+          {list.map((card) => {
             return (
               <Phrase                   
                 key={card.termID}
