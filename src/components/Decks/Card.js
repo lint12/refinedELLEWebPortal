@@ -40,10 +40,15 @@ class Card extends React.Component {
       changedAudio: false, //determines whether or not the audio file was changed
 
       //TODO: populate tags with API call instead of dummy data
-      tags: ["tag1", "tag2", "tag3"] //contains the list of tags
+      tags: [] //contains the list of tags
     }
 
   }
+
+  componentDidMount() {
+    this.getTermTags(this.props.card.termID)
+  }
+
   //TODO: handleAddTag and createTag kinda do the same thing. Maybe they should be one thing?
   //function that adds a tag to list of tags on this card(only available when editmode is true)
   handleAddTag = (event) => {
@@ -181,6 +186,26 @@ class Card extends React.Component {
     this.setState({ audioTooltipOpen: !this.state.audioTooltipOpen }); 
   }
 
+  getTermTags = (id) => {
+    let config = {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+      params: {
+        termID: id
+      }
+    }
+
+    axios.get(this.props.serviceIP + '/tags_in_term', config)
+    .then( res => {
+      this.setState({
+        tags: res.data
+      })
+    })
+    .catch(function (error) {
+      console.log("getTermTags error: ", error);
+    });
+
+  }
+
   //function that deletes a tag from the list of tags
   handleDeleteTag = (event) => {
     var list = this.props.deleteTag(this.state.tags, event.tag);
@@ -213,6 +238,7 @@ class Card extends React.Component {
 
 
   render() {
+    console.log(this.state.tags); 
     let {editedFront, editedBack, editedType, editedGender, selectedImgFile, selectedAudioFile} = this.state;
     let imgLink = "http://34.239.123.94/Images/" + selectedImgFile;
     let audioLink = "http://34.239.123.94/Audios/" + selectedAudioFile;

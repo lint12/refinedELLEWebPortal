@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Table } from 'reactstrap';
 import Card from './Card';
 import Phrase from './Phrase';
+import axios from 'axios';
 import '../../stylesheets/style.css';
 
 const CardList = (props) => {
