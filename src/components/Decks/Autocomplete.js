@@ -40,6 +40,14 @@ class Autocomplete extends Component {
     };
   }
 
+  handleCreate = () => {
+    if(this.props.createTag !== undefined){
+      this.handleCreateTag();
+    } else if(this.props.createAnswer !== undefined){
+      this.handleCreateAnswer();
+    }
+  }
+
   handleCreateTag = () => {
 
     console.log("Got into handleCreateTag!");
@@ -47,6 +55,16 @@ class Autocomplete extends Component {
     this.props.createTag(this.state.userInput);
     this.setState({
       activeSuggestion: 0,
+      showSuggestions: false,
+      userInput: ""
+    })
+  }
+
+  handleCreateAnswer = () => {
+
+    this.props.createAnswer(this.state.userInput);
+    this.setState({
+      activeSuggstion: 0,
       showSuggestions: false,
       userInput: ""
     })
@@ -83,7 +101,11 @@ class Autocomplete extends Component {
       userInput: ""
     });
 
-    this.props.handleAddTag({tag: e.currentTarget.innerText});
+    if(this.props.handleAddTag != undefined){
+      this.props.handleAddTag({tag: e.currentTarget.innerText});
+    } else if(this.props.handleAddAnswer != undefined){
+      this.props.handleAddAnswer({answer: e.currentTarget.innerText});
+    }
   };
 
   // Event fired when the user presses a key down
@@ -183,7 +205,7 @@ class Autocomplete extends Component {
       } else {
         suggestionsListComponent = (
           <div className="no-suggestions">
-            <Button style={{backgroundColor: '#004085'}} onClick={() => this.handleCreateTag()}>
+            <Button style={{backgroundColor: '#004085'}} onClick={() => this.handleCreate()}>
               Add new {this.props.placeholder} 
             </Button>
           </div>

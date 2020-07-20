@@ -2,12 +2,12 @@ import React from 'react'
 import { Button } from 'reactstrap';
 
 
-class TagItem extends React.Component {
+class AnswerButton extends React.Component {
   constructor(props){
     super(props);
 
     this.state = {
-      removeMode: false //determines whether or not this tag will be able to be deleted via click
+      removeMode: false //determines whether or not this answer will be able to be deleted via click
     }
 
 
@@ -28,11 +28,11 @@ class TagItem extends React.Component {
         <div>
           <Button style={this.setStyle()}  
           color="secondary" 
-          onClick={() => {this.props.handleDeleteTag({tag: this.props.tag})}}
+          onClick={() => {this.props.handleDeleteAnswer({answer: this.props.answer})}}
           onMouseOver={() => {this.setState({removeMode: true})}}
           onMouseOut={() => this.setState({removeMode: false})}
           >
-            {this.props.tag}
+            {this.props.answer}
           </Button>
           {' '}
         </div>
@@ -43,7 +43,7 @@ class TagItem extends React.Component {
           <Button style={this.setStyle()}  
           color="secondary" 
           >
-            {this.props.tag}
+            {this.props.answer}
           </Button>
           {' '}
         </div>
@@ -52,4 +52,4 @@ class TagItem extends React.Component {
   }
 }
 
-export default TagItem
+export default AnswerButton
