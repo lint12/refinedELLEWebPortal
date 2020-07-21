@@ -34,6 +34,8 @@ export default class Modules extends Component {
       currentModule: [], //current module we're looking at
 
       cards: [], //cards in the module we're looking ats
+
+      allAnswers: [],
  
       searchDeck: '', //what gets typed in the search bar that filters the module list
       collapseNewModule: false, //determines whether or not the new module form is open
@@ -81,6 +83,8 @@ export default class Modules extends Component {
           this.updateCurrentModule({module: this.state.currentModule});
         }
 
+        this.getAllAnswers();
+
       })
       .catch(function (error) {
         console.log("initializeModulesPage error: ", error);
@@ -105,6 +109,8 @@ export default class Modules extends Component {
         
         this.setState({ modules : modules,
                         dynamicModules: modules });
+
+        
       })
       .catch(function (error) {
         console.log("updateModuleList error: ", error);
@@ -134,10 +140,55 @@ export default class Modules extends Component {
           currentModule: event.module
         });
 
+        this.getAllAnswers();
       })
       .catch(function (error) {
         console.log("updateCurrentModule error: ", error);
       });
+  }
+
+  getAllAnswers = () => {
+
+    console.log("in getAllAnswers, this.currentModule: ", this.state.currentModule);
+
+    let allAnswersInDB = [];
+
+    let header = {
+      headers: {'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+      params: {language: this.state.currentModule.language}  
+    };
+
+    axios.get(this.props.serviceIP + '/term', header)
+      .then(res => {
+        allAnswersInDB = res.data;
+
+        console.log("AllAnswers in getAllAnswers before filter: ", allAnswersInDB);
+        console.log("language in getAllAnswers: ", this.state.currentModule.language);
+
+        allAnswersInDB = allAnswersInDB.filter((answer) => {
+          if(answer.type !== 'PH'){
+            return true;
+          } else{
+            return false;
+          }
+        });
+
+        allAnswersInDB = allAnswersInDB.map((answer) => {
+          return ({ front: answer.front,
+                    id: answer.termID
+                  })
+        });
+
+        console.log("in getAllAnswers, allAnswersInDB: ", allAnswersInDB);
+
+        this.setState({
+          allAnswers: allAnswersInDB
+        });
+
+      })
+      .catch(error => {
+        console.log("error in getAllAnswers: ", error);
+      })
   }
 
 
@@ -291,6 +342,7 @@ export default class Modules extends Component {
                 cards={this.state.cards}
                 serviceIP={this.props.serviceIP}
                 updateCurrentModule={this.updateCurrentModule}
+                allAnswers={this.state.allAnswers}
                 />
               : 
               <Alert isOpen={this.state.emptyCollection}>

@@ -15,18 +15,8 @@ class AddAnswer extends React.Component {
 			
 			front: this.props.front, //english translation of the word
 			back: "", //foreign version of the word
-			type: "", //NN, VR, AJ, AV, PH
-			gender: "", //MA, FE, NA
 			tags: [], //array of tags associated with word
-			selectedImgFile: null, //file location of the picture selected
-			selectedAudioFile: null, //file location of the audio selected
 
-			imgLabel: "Pick an image for the term", 
-			audioLabel: "Pick an audio for the term",
-
-
-      		//state properties below this point are never used, and we should probably delete them
-			cardID: "" //id of card we're adding
 		};
 
 		console.log("in constructor of AddAnswer, this.state.front: ", this.state.front);
@@ -44,26 +34,6 @@ class AddAnswer extends React.Component {
 		this.setState({tags: tagList})
 	}
 
-	//function never gets used, consider deleting it
-	updateDeckID(newID) {
-		this.setState({
-			id: newID,
-		})
-	}
-
-	imgFileChangedHandler = (event) => {
-	  	this.setState({
-			selectedImgFile: event.target.files[0],
-			imgLabel: event.target.files[0] === undefined ? "Pick an image for the term" : event.target.files[0].name
-		})
-	}
-
-	audioFileChangedHandler = (event) => {
-		this.setState({
-			selectedAudioFile: event.target.files[0],
-			audioLabel: event.target.files[0] === undefined ? "Pick an audio for the term" : event.target.files[0].name
-		})
-	}
 
 	change(e) {
 	    this.setState({
@@ -80,18 +50,18 @@ class AddAnswer extends React.Component {
 		console.log("Got into submitTerm from addQuestion")
 		console.log("FRONT: ", this.state.front)
 		console.log("BACK: ", this.state.back)
-		console.log("TAGS: ", this.state.tags)
 		console.log("language: ", this.props.curModule.language)
 		console.log("id: ", this.props.curModule.moduleID)
 
 		e.preventDefault();
 		this.props.addAnswerToList(this.props.front);
 
-		/*
+		
 		if (this.state.front.length !== 0 && this.state.back.length !== 0)
 		{   
 			e.preventDefault();
 			const data = new FormData(); 
+
 			let header = {
 				headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
 				};
@@ -99,30 +69,21 @@ class AddAnswer extends React.Component {
 			//required fields for adding a term
 			data.append('front', this.state.front); 
 			data.append('back', this.state.back); 
-			data.append('language', this.state.language); 
+			data.append('language', this.props.curModule.language); 
 
-			//optional fields for adding a term
-			if (this.state.type.length !== 0)
-				data.append('type', this.state.type); 
 
-			if (this.state.gender.length !== 0)
-				data.append('gender', this.state.gender); 
 
 			//map through all the tags and make a tag field object for them 
 			this.state.tags.map((label) => {
 				return ( data.append('tag', label) )
 			})
 
-			if (this.state.selectedImgFile !== null || this.state.selectedImgFile !== undefined)
-				data.append('image', this.state.selectedImgFile);
-
-			if (this.state.selectedAudioFile !== null || this.state.selectedAudioFile !== undefined)
-				data.append('audio', this.state.selectedAudioFile);
-
-
 			axios.post(this.props.serviceIP + '/term', data, header)
 				.then(res => {
+					console.log("res.data in AddAnswer.js: ", res.data);
 					this.props.updateCurrentModule({ module: this.props.curModule });
+					this.props.addAnswerToList({front: this.state.front,
+												id: res.data})
 				}) 
 				.catch(function (error) {
 					console.log("submitTerm error: ", error);
@@ -131,7 +92,7 @@ class AddAnswer extends React.Component {
 			e.preventDefault();
 			alert("Please fill all inputs!");
 		}
-		*/
+		
   }
 
 

@@ -25,7 +25,7 @@ class Deck extends React.Component {
       tabs: [0,1,2],
 
       allTags: [], //contains all the tags in the database. for autocomplete purposes
-      allAnswers: [], //contains all of the terms in the database. For autocomplete on longform questions
+      allAnswers: this.props.allAnswers, //contains all of the terms in the database. For autocomplete on longform questions
 
 
       //state properties below this point are never used, and we should probably delete them
@@ -38,7 +38,6 @@ class Deck extends React.Component {
 
   componentDidMount() {
     this.getAllTags();
-    this.getAllAnswers();
   }
 
   //function for adding a tag to a list of tags
@@ -50,14 +49,7 @@ class Deck extends React.Component {
     return tempTagList;
   }
 
-  //function for adding an answer to a list of answers on a longform question
-  addAnswer = (answerButtonList, answer) => {
-    let tempAnswerButtonList  = answerButtonList;
 
-    tempAnswerButtonList.push(answer);
-
-    return tempAnswerButtonList;
-  }
 
   //fumction for deleting a tag from a list of tags
   deleteTag = (tagList, tag) => {
@@ -77,21 +69,6 @@ class Deck extends React.Component {
     return tempTagList;
   }
 
-  //function for deleting an answer from a list of answers on a longform question 
-  deleteAnswer = (answerButtonList, answer) => {
-    if(answerButtonList === undefined){
-      return;
-    }
-
-    let tempAnswerButtonList = answerButtonList;
-    let answerIndex = tempAnswerButtonList.indexOf(answer);
-
-    if(answerIndex !== -1){
-      tempAnswerButtonList.splice(answerIndex, 1);
-    }
-
-    return tempAnswerButtonList;
-  }
 
   //function for changing the searchbar for cards
   updateSearchCard(e) {
@@ -136,34 +113,7 @@ class Deck extends React.Component {
       })
   }
 
-  //TODO: Actually make this work. It doesn't atm
-  getAllAnswers = () => {
 
-    let allAnswersInDB = [];
-
-    let header = {
-      
-      headers: {'Authorization': 'Bearer ' + localStorage.getItem('jwt'),
-      data: {'langauge':'SP'}
-      }
-      
-    };
-
-    axios.get(this.props.serviceIP + '/term', header)
-      .then(res => {
-        allAnswersInDB = res.data;
-
-        console.log("in getAllAnswers, allAnswersInDB: ", allAnswersInDB);
-
-        this.setState({
-          allAnswers: allAnswersInDB
-        });
-
-      })
-      .catch(error => {
-        console.log("error in getAllAnswers: ", error);
-      })
-  }
 
   render () {
       let terms = this.props.cards.filter(card => card.type.toLowerCase() === "match").map((card, i) => {return card.answers[0]});
@@ -173,6 +123,7 @@ class Deck extends React.Component {
       console.log("terms: ", terms);
       console.log("phrases: ", phrases); 
       console.log("questions: ", questions); 
+      console.log("this.props.allAnswers in Deck.js: ", this.props.allAnswers);
 
       let filteredTerms = terms.filter(
           (term) => { 
@@ -235,14 +186,14 @@ class Deck extends React.Component {
                   allTags={this.state.allTags}
                   />
               */}
+
                 <AddQuestion
                   curModule={this.props.curModule} 
                   updateCurrentModule={this.props.updateCurrentModule}
                   serviceIP={this.props.serviceIP}
                   
-                  deleteAnswer={this.deleteAnswer}
-                  addAnswer={this.addAnswer}
-                  allAnswers={this.state.allAnswers}
+                  
+                  allAnswers={this.props.allAnswers}
                   
                   deleteTag={this.deleteTag}
                   addTag={this.addTag}

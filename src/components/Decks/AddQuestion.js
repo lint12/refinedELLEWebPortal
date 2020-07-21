@@ -18,8 +18,6 @@ class AddQuestion extends React.Component {
 			
 			front: "", //english translation of the word
 			back: "", //foreign version of the word
-			type: "", //NN, VR, AJ, AV, PH
-			gender: "", //MA, FE, NA
 			answers: [], //array of answers associated with word
 			selectedImgFile: null, //file location of the picture selected
 			selectedAudioFile: null, //file location of the audio selected
@@ -35,6 +33,7 @@ class AddQuestion extends React.Component {
 			cardID: "" //id of card we're adding
 		};
 	}
+
 
 
 	//function that sets the answerlist on this form
@@ -120,12 +119,24 @@ class AddQuestion extends React.Component {
 	}
 
 
+
 	//TODO: handleAddAnswer and createAnswer kinda do the same thing. Maybe they should be one thing?
 	//function that adds a answer to list of answers on this form
 	handleAddAnswer = (event) => {
 		
-		let list = this.props.addAnswer(this.state.answers, event.answer);
+		//let list = this.props.addAnswer(this.state.answers, event.answer);
 
+		let list = this.state.answers;
+		let answerObject = this.props.allAnswers.find((answer) => {
+			if(answer.front === event.answer){
+				return true;
+			} else{
+				return false;
+			}
+		});
+
+		list.push(answerObject);
+		console.log("answerObject in handleAddAnswer: ", answerObject);
 
 		this.setState({
 			answers: list
@@ -134,7 +145,6 @@ class AddQuestion extends React.Component {
 
 	//function that adds a new answer from user input to list of answers on this form
 	createAnswer = (answer) => {
-
 
 		console.log("Got into createAnswer, answer: ", answer);
 
@@ -164,13 +174,33 @@ class AddQuestion extends React.Component {
 
 	//function that removes a answer from the list of answers on this form
 	handleDeleteAnswer = (event) => {
-		let list = this.props.deleteAnswer(this.state.answers, event.answer);
-		this.setState({
-			answers: list
-		})
+
+    let tempAnswerButtonList = this.state.answers;
+    
+    let answerObject = this.state.answers.find((answer) => {
+    	if(answer.front === event.answer){
+    		return true;
+    	} else {
+    		return false;
+    	}
+    });
+
+
+    let answerIndex = tempAnswerButtonList.indexOf(answerObject);
+
+    if(answerIndex !== -1){
+      tempAnswerButtonList.splice(answerIndex, 1);
+    }
+
+    this.setState({
+    	answers: tempAnswerButtonList
+    })
+
 	}
 
 	render () {
+		console.log("this.props.allAnswers: ", this.props.allAnswers.map((answer) => {return(answer.front)}))
+
 	    return (
 			<div>
 			{this.state.id !== "" ? 
@@ -215,7 +245,7 @@ class AddQuestion extends React.Component {
 								handleAddAnswer={this.handleAddAnswer}
 								createAnswer={this.createAnswer}
 
-								suggestions={this.props.allAnswers} 
+								suggestions={this.props.allAnswers.map((answer) => {return(answer.front)})} 
 						    />
 					    </FormGroup>
 
@@ -224,7 +254,9 @@ class AddQuestion extends React.Component {
 					    {/*Lists all of the answers on this question, displayed as buttons*/}
 						<Alert color="warning">
 							<AnswerButtonList 
-							answers={this.state.answers} 
+							answers={this.state.answers.map((answer) => { 
+									return(answer.front)}
+									)} 
 							handleDeleteAnswer={this.handleDeleteAnswer} 
 							updateAnswerButtonList={this.updateAnswerButtonList} 
 							deletable={true}
