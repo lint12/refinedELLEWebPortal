@@ -35,7 +35,7 @@ export default class Modules extends Component {
 
       cards: [], //cards in the module we're looking ats
 
-      allAnswers: [],
+      allAnswers: [], //list of terms an addQuestion form will use for autocomplete
  
       searchDeck: '', //what gets typed in the search bar that filters the module list
       collapseNewModule: false, //determines whether or not the new module form is open
@@ -149,8 +149,6 @@ export default class Modules extends Component {
 
   getAllAnswers = () => {
 
-    console.log("in getAllAnswers, this.currentModule: ", this.state.currentModule);
-
     let allAnswersInDB = [];
 
     let header = {
@@ -162,8 +160,6 @@ export default class Modules extends Component {
       .then(res => {
         allAnswersInDB = res.data;
 
-        console.log("AllAnswers in getAllAnswers before filter: ", allAnswersInDB);
-        console.log("language in getAllAnswers: ", this.state.currentModule.language);
 
         allAnswersInDB = allAnswersInDB.filter((answer) => {
           if(answer.type !== 'PH'){
@@ -179,10 +175,20 @@ export default class Modules extends Component {
                   })
         });
 
-        console.log("in getAllAnswers, allAnswersInDB: ", allAnswersInDB);
-
+        //---
+        //removes duplicates
+        let frontArray = [];
+        let allAnswersMinusDupes = []
+        for(let i = 0; i < allAnswersInDB.length; i++){
+          if(frontArray.indexOf(allAnswersInDB[i].front) === -1){
+            frontArray.push(allAnswersInDB[i].front);
+            allAnswersMinusDupes.push(allAnswersInDB[i]);
+          }
+        }
+        //---
+        
         this.setState({
-          allAnswers: allAnswersInDB
+          allAnswers: allAnswersMinusDupes
         });
 
       })

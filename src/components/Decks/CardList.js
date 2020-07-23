@@ -93,18 +93,18 @@ const CardList = (props) => {
         <Table hover className="tableList">
           <thead>
             <tr>
-              <th style={{width: '32%'}}>Question</th>
-              <th style={{width: '12%'}}>Picture</th>
-              <th style={{width: '12%'}}>Audio</th>
-              <th style={{width: '12%'}}>ID</th>
-              <th style={{width: '32%'}}> </th>
+              <th style={{width: '64%'}}>Question</th>
+              <th style={{width: '9%'}}>Picture</th>
+              <th style={{width: '9%'}}>Audio</th>
+              <th style={{width: '9%'}}>ID</th>
+              <th style={{width: '9%'}}> </th>
             </tr>
           </thead>
           <tbody>
             {props.cards.map((card) => {
               return(
                 <Question
-                  key={card.termID}
+                  key={card.questionID}
                   question={card}
                   serviceIP={props.serviceIP}
                   curModule={props.curModule}

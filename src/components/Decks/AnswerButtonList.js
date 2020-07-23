@@ -31,7 +31,7 @@ class AnswerButtonList extends Component {
 	render(){
 		return(
 			<div>
-				<Label> Answers: </Label>
+				
 				<Row>					
 					{this.renderList(this.props.answers, this.props.handleDeleteAnswer)}
 				</Row>

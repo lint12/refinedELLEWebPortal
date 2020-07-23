@@ -16,17 +16,22 @@ class AddQuestion extends React.Component {
 
 		this.state = {
 			
+			questionText: "",//text of the longform question being asked
 			front: "", //english translation of the word
-			back: "", //foreign version of the word
 			answers: [], //array of answers associated with word
+			newlyCreatedAnswers : [], //array of answers the user created via this form
+			newlyCreatedAnswersIDArray: [], //array that stores IDs of new answers after they're added
 			selectedImgFile: null, //file location of the picture selected
 			selectedAudioFile: null, //file location of the audio selected
+			type: [],
 
 			imgLabel: "Pick an image for the question", 
 			audioLabel: "Pick an audio for the question",
 
 			submittingAnswer: false, //determines whether or not the AddAnswer form will be shown
 			userCreatedAnswer: "", //what the user put in the field when they clicked create answer
+
+			questionID: "",
 
 
       		//state properties below this point are never used, and we should probably delete them
@@ -36,17 +41,7 @@ class AddQuestion extends React.Component {
 
 
 
-	//function that sets the answerlist on this form
-	updateAnswerButtonList = (answerButtonList) => {
-		this.setState({answers: answerButtonList})
-	}
 
-	//function never gets used, consider deleting it
-	updateDeckID(newID) {
-		this.setState({
-			id: newID,
-		})
-	}
 
 	imgFileChangedHandler = (event) => {
 		this.setState({
@@ -70,10 +65,12 @@ class AddQuestion extends React.Component {
 
 	//TODO: Make this actually work
 	//function that submits the data
+	//needs to submit the question, and then make a request to add answers to question
+
 	submitQuestion = (e) => {
 		console.log("Got into submitQuestion")
 
-		if (this.state.front.length !== 0 && this.state.back.length !== 0)
+		if (this.state.questionText.length !== 0)
 		{   
 			e.preventDefault();
 			const data = new FormData(); 
@@ -82,21 +79,13 @@ class AddQuestion extends React.Component {
 				};
 
 			//required fields for adding a question
-			data.append('front', this.state.front); 
-			data.append('back', this.state.back); 
-			data.append('language', this.state.language); 
+			data.append('questionText', this.state.questionText);
+			data.append('language', this.props.curModule.language); 
 
 			//optional fields for adding a question
 			if (this.state.type.length !== 0)
 				data.append('type', this.state.type); 
 
-			if (this.state.gender.length !== 0)
-				data.append('gender', this.state.gender); 
-
-			//map through all the answers and make a answer field object for them 
-			this.state.answers.map((label) => {
-				return ( data.append('answer', label) )
-			})
 
 			if (this.state.selectedImgFile !== null || this.state.selectedImgFile !== undefined)
 				data.append('image', this.state.selectedImgFile);
@@ -107,6 +96,13 @@ class AddQuestion extends React.Component {
 
 			axios.post(this.props.serviceIP + '/question', data, header)
 				.then(res => {
+					//TODO: change the backend so this is how it actually works
+					this.setState({
+						questionID: res.data.questionID
+					})
+
+					this.submitAnswers();
+
 					this.props.updateCurrentModule({ module: this.props.curModule });
 				}) 
 				.catch(function (error) {
@@ -119,21 +115,114 @@ class AddQuestion extends React.Component {
 	}
 
 
+	submitAnswers = () => {
+		for(let i = 0; i < this.state.answers.length; i++){
+			this.submitIndividualAnswer(this.state.answers[i]);
+		}
+
+		for(let j = 0; j < this.state.newlyCreatedAnswersIDArray.length; j++){
+			this.submitIndividualAnswer(this.state.newlyCreatedAnswersIDArray[j]);
+		}
+	}
+
+	submitIndividualAnswer = (answer) => {
+
+		let header = {
+			headers: {'Authorization': 'Bearer ' + localStorage.getItem('jwt')}
+		}
+
+		let data = {
+			questionID: this.state.questionID,
+			termID: answer.id
+		}
+
+		axios.post(this.props.serviceIP + '/addAnswer', data, header)
+			.then(res => {
+				console.log("res.data in submitIndividualAnswer: ", res.data)
+			})
+			.catch(error => {
+				console.log("error in submitIndividualAnswer: ", error)
+			})
+	}
+
+	createNewAnswer = (answer) => {
+		let header = {
+			headers : {'Authorization' : 'Bearer' + localStorage.getItem('jwt')}
+		}
+
+		console.log("FRONT: ", answer.front)
+		console.log("BACK: ", answer.back)
+		console.log("TAGS: ", answer.tags)
+
+		if (this.state.front.length !== 0 && this.state.back.length !== 0)
+		{   
+			//e.preventDefault();
+			const data = new FormData(); 
+			let header = {
+				headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+				};
+
+			//required fields for adding a term
+			data.append('front', this.state.front); 
+			data.append('back', this.state.back); 
+			data.append('moduleID', this.props.curModule.moduleID); 
+			data.append('language', this.props.curModule.language); 
+
+			//optional fields for adding a term
+			if (this.state.type.length !== 0)
+				data.append('type', this.state.type); 
+
+
+			//map through all the tags and make a tag field object for them 
+			this.state.tags.map((label) => {
+				return ( data.append('tag', label) )
+			})
+
+			if (this.state.selectedImgFile !== null || this.state.selectedImgFile !== undefined)
+				data.append('image', this.state.selectedImgFile);
+
+			if (this.state.selectedAudioFile !== null || this.state.selectedAudioFile !== undefined)
+				data.append('audio', this.state.selectedAudioFile);
+
+
+			axios.post(this.props.serviceIP + '/term', data, header)
+				.then(res => {
+					console.log(res.data); 
+					this.resetFields(); 
+					this.props.updateCurrentModule({ module: this.props.curModule });
+
+					//add ID of newly created answer to ID array
+					let tempNewlyCreatedAnswersIDArray = this.state.newlyCreatedAnswersIDArray;
+					tempNewlyCreatedAnswersIDArray.push({id: res.data.termID})
+					this.setState({
+						newlyCreatedAnswersIDArray: tempNewlyCreatedAnswersIDArray
+					})
+				}) 
+				.catch(function (error) {
+					console.log("submitTerm error: ", error);
+				});
+		} else {
+			//e.preventDefault();
+			alert("Please fill all inputs!");
+		}
+	}
+
 
 	//TODO: handleAddAnswer and createAnswer kinda do the same thing. Maybe they should be one thing?
-	//function that adds a answer to list of answers on this form
+	//function that adds an existing term as an answer
 	handleAddAnswer = (event) => {
 		
 		//let list = this.props.addAnswer(this.state.answers, event.answer);
 
 		let list = this.state.answers;
-		let answerObject = this.props.allAnswers.find((answer) => {
-			if(answer.front === event.answer){
-				return true;
-			} else{
-				return false;
-			}
-		});
+		let answerObject = this.props.allAnswers.find(
+			(answer) => {
+				if(answer.front === event.answer){
+					return true;
+				} else{
+					return false;
+				}
+			});
 
 		list.push(answerObject);
 		console.log("answerObject in handleAddAnswer: ", answerObject);
@@ -162,12 +251,12 @@ class AddQuestion extends React.Component {
 	}
 
 	//function that adds a newly created answer to the list of answers on this question
-	addAnswerToList = (answer) => {
-		let tempAnswers = this.state.answers;
-		tempAnswers.push(answer);
+	addNewAnswerToList = (answer) => {
+		let tempNewlyCreatedAnswers = this.state.newlyCreatedAnswers;
+		tempNewlyCreatedAnswers.push(answer);
 
 		this.setState({
-			answers: tempAnswers,
+			newlyCreatedAnswers: tempNewlyCreatedAnswers,
 			submittingAnswer: false
 		})
 	}
@@ -175,26 +264,51 @@ class AddQuestion extends React.Component {
 	//function that removes a answer from the list of answers on this form
 	handleDeleteAnswer = (event) => {
 
-    let tempAnswerButtonList = this.state.answers;
-    
-    let answerObject = this.state.answers.find((answer) => {
-    	if(answer.front === event.answer){
-    		return true;
-    	} else {
-    		return false;
-    	}
-    });
+		let tempAnswerButtonList = this.state.answers;
+		
+		let answerObject = this.state.answers.find((answer) => {
+			if(answer.front === event.answer){
+				return true;
+			} else {
+				return false;
+			}
+		});
 
 
-    let answerIndex = tempAnswerButtonList.indexOf(answerObject);
+		let answerIndex = tempAnswerButtonList.indexOf(answerObject);
 
-    if(answerIndex !== -1){
-      tempAnswerButtonList.splice(answerIndex, 1);
-    }
+		if(answerIndex !== -1){
+		  tempAnswerButtonList.splice(answerIndex, 1);
+		}
 
-    this.setState({
-    	answers: tempAnswerButtonList
-    })
+		this.setState({
+			answers: tempAnswerButtonList
+		})
+
+	}
+
+	handleDeleteNewAnswer = (event) => {
+
+		let tempAnswerButtonList = this.state.newlyCreatedAnswers;
+		
+		let answerObject = this.state.newlyCreatedAnswers.find((answer) => {
+			if(answer.front === event.answer){
+				return true;
+			} else {
+				return false;
+			}
+		});
+
+
+		let answerIndex = tempAnswerButtonList.indexOf(answerObject);
+
+		if(answerIndex !== -1){
+		  tempAnswerButtonList.splice(answerIndex, 1);
+		}
+
+		this.setState({
+			newlyCreatedAnswers: tempAnswerButtonList
+		})
 
 	}
 
@@ -214,15 +328,15 @@ class AddQuestion extends React.Component {
 				<Row>
 					<Col>
 						<FormGroup>			
-							<Label for="front">
+							<Label for="questionText">
 								Question:
 							</Label>
 
 							<Input type="text"
-							name="front"
+							name="questionText"
 							onChange={e => this.change(e)}
-							value={this.state.front}
-							id="front"
+							value={this.state.questionText}
+							id="questionText"
 							placeholder="Question" 
 							autoComplete="off"/>
 						</FormGroup>
@@ -253,12 +367,20 @@ class AddQuestion extends React.Component {
 					    
 					    {/*Lists all of the answers on this question, displayed as buttons*/}
 						<Alert color="warning">
+							<Label> Answers: </Label>
 							<AnswerButtonList 
 							answers={this.state.answers.map((answer) => { 
 									return(answer.front)}
 									)} 
 							handleDeleteAnswer={this.handleDeleteAnswer} 
-							updateAnswerButtonList={this.updateAnswerButtonList} 
+							deletable={true}
+							/>
+							
+							<AnswerButtonList
+							answers={this.state.newlyCreatedAnswers.map((answer) =>{
+									return(answer.front)}
+									)}
+							handleDeleteAnswer={this.handleDeleteNewAnswer}
 							deletable={true}
 							/>
 						</Alert>
@@ -319,9 +441,10 @@ class AddQuestion extends React.Component {
 					addTag={this.props.addTag}
 					allTags={this.props.allTags}
 					front={this.state.userCreatedAnswer}
+					initialFront={this.state.userCreatedAnswer}
 
 					cancelCreateAnswer={this.cancelCreateAnswer}
-					addAnswerToList={this.addAnswerToList}
+					addNewAnswerToList={this.addNewAnswerToList}
 				/>
 							
 			</Collapse>

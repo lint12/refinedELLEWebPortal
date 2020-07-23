@@ -20,8 +20,9 @@ class Deck extends React.Component {
       searchCard: "", //what gets typed in the search bar that filters the card lists
       collapseNewCard: false, //determines whether or not the new card form is open
       collapseNewPhrase: false,
+      collapseNewQuestion: false,
 
-      collapseTab: false, //determines whether or not a tab is collpased, maybe should be a number
+      collapseTab: -1, //determines whether or not a tab is collapsed, maybe should be a number
       tabs: [0,1,2],
 
       allTags: [], //contains all the tags in the database. for autocomplete purposes
@@ -84,8 +85,15 @@ class Deck extends React.Component {
     this.setState({ collapseNewPhrase: !this.state.collapseNewPhrase });
   }
 
+  toggleNewQuestion = () => {
+    this.setState({ collapseNewQuestion: !this.state.collapseNewQuestion });
+  }
+
   toggleTab(e) {
     let event = e.target.dataset.event; 
+
+    console.log("event in toggleTab: ", event)
+    console.log("this.state.collapseTab: ", this.state.collapseTab === Number(event) ? -1 : Number(event))
     this.setState({ collapseTab: this.state.collapseTab === Number(event) ? -1 : Number(event) })
   }
 
@@ -118,7 +126,7 @@ class Deck extends React.Component {
   render () {
       let terms = this.props.cards.filter(card => card.type.toLowerCase() === "match").map((card, i) => {return card.answers[0]});
       let phrases = this.props.cards.filter(card => card.type.toLowerCase() === "phrase").map((card, i) => {return card.answers[0]}); 
-      let questions = this.props.cards.filter(card => card.type.toLowerCase() === "longform").map((card, i) => {return card.answers}); 
+      let questions = this.props.cards.filter(card => card.type.toLowerCase() === "longform").map((card, i) => {return card}); 
 
       console.log("terms: ", terms);
       console.log("phrases: ", phrases); 
@@ -145,6 +153,15 @@ class Deck extends React.Component {
         }
      );
 
+      let filteredQuestions = questions.filter(
+        (question) => {
+          if(question){
+            return(question.questionText.toLowerCase().indexOf(this.state.searchCard.toLowerCase()) !== -1)
+          } else
+            return null;
+        }
+      );
+
       return (
         <Container className='Deck'>
           <Row className='Header' style={{marginBottom: '25px'}}>
@@ -167,16 +184,22 @@ class Deck extends React.Component {
                   Add Term
                 </Button>
               </InputGroupAddon>
+
               <InputGroupAddon addonType="append">
                 <Button style={{backgroundColor:'#3e6184'}} onClick={this.toggleNewPhrase}>
                   Add Phrase
                 </Button>
               </InputGroupAddon>
+
+              <InputGroupAddon addonType="append">
+                <Button style={{backgroundColor:'#3e6184'}} onClick={this.toggleNewQuestion}>
+                  Add Question
+                </Button>
+              </InputGroupAddon>
             </InputGroup>
 
             <Col>
-              <Collapse isOpen={this.state.collapseNewCard}>
-              {/*
+              <Collapse isOpen={this.state.collapseNewCard}>     
                 <AddTerm
                   curModule={this.props.curModule} 
                   updateCurrentModule={this.props.updateCurrentModule}
@@ -184,24 +207,7 @@ class Deck extends React.Component {
                   deleteTag={this.deleteTag}
                   addTag={this.addTag}
                   allTags={this.state.allTags}
-                  />
-              */}
-
-                <AddQuestion
-                  curModule={this.props.curModule} 
-                  updateCurrentModule={this.props.updateCurrentModule}
-                  serviceIP={this.props.serviceIP}
-                  
-                  
-                  allAnswers={this.props.allAnswers}
-                  
-                  deleteTag={this.deleteTag}
-                  addTag={this.addTag}
-                  allTags={this.state.allTags}
-
-                  />
-
-              
+                  />        
               </Collapse>
 
               <Collapse isOpen={this.state.collapseNewPhrase}>
@@ -210,6 +216,20 @@ class Deck extends React.Component {
                   updateCurrentModule={this.props.updateCurrentModule}
                   serviceIP={this.props.serviceIP}
                 />
+              </Collapse>
+
+              <Collapse isOpen={this.state.collapseNewQuestion}>
+                <AddQuestion
+                  curModule={this.props.curModule} 
+                  updateCurrentModule={this.props.updateCurrentModule}
+                  serviceIP={this.props.serviceIP}
+                        
+                  allAnswers={this.props.allAnswers}
+                  
+                  deleteTag={this.deleteTag}
+                  addTag={this.addTag}
+                  allTags={this.state.allTags}
+                  />
               </Collapse>
             </Col>
           </Row>
@@ -262,7 +282,13 @@ class Deck extends React.Component {
                   </CardHeader>
                   
                   <Collapse isOpen={this.state.collapseTab === index}>
-                    {/* cardlist for questions */}
+                    <CardList 
+                        type={2} 
+                        cards={filteredQuestions} 
+                        serviceIP={this.props.serviceIP}
+                        curModule={this.props.curModule} 
+                        updateCurrentModule={this.props.updateCurrentModule}
+                    />
                   </Collapse>
                 </Card>
               )

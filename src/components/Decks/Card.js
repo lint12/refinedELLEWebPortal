@@ -216,6 +216,7 @@ class Card extends React.Component {
 
   //function that cancels the edit and sets everything back to what it was initially
   handleCancelEdit = (event) => {
+    console.log("this")
     this.setState({
       card: this.props.card,
       modal: false,
@@ -232,7 +233,6 @@ class Card extends React.Component {
       changedImage: false, 
       changedAudio: false, 
 
-      tags: ["tag1", "tag2", "tag3"]
     })
   }
 

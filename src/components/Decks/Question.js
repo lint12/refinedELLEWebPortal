@@ -28,7 +28,7 @@ class Question extends React.Component {
       audioTooltipOpen: false, 
 
       editMode: false, //determines whether or not the editable version of the question is showing
-      editedFront: this.props.question.front, //contains the English word that can be edited
+      editedQuestionText: this.props.question.questionText, //contains the English word that can be edited
       collapseAnswers: false, //determines whether or not the answers are displayed on the question
       
       selectedImgFile: this.props.question.imageLocation, //contains the location of the image for the question
@@ -37,10 +37,12 @@ class Question extends React.Component {
       changedAudio: false, //determines whether or not the audio file was changed
 
       //TODO: populate answers with API call instead of dummy data
-      answers: ["answer1", "answer2", "answer3"] //contains the list of answers
+      answers: this.props.question.answers.map((answer) => {return answer.front}) //contains the list of answers
     }
 
   }
+
+
   //TODO: handleAddAnswer and createAnswer kinda do the same thing. Maybe they should be one thing?
   //function that adds a answer to list of answers on this question(only available when editmode is true)
   handleAddAnswer = (event) => {
@@ -146,12 +148,13 @@ class Question extends React.Component {
     this.toggleModal(); 
 
     let header = { 
-      data: { termID: this.state.question.termID },
+      data: { questionID: this.state.question.questionID },
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     };
 
-    axios.delete(this.props.serviceIP + '/term', header)
+    axios.delete(this.props.serviceIP + '/deletequestion', header)
       .then( res => {
+        console.log("res.data in deleteQuestion: ", res.data);
         this.props.updateCurrentModule({ module: this.props.curModule });  
       })
       .catch(error => {
@@ -205,7 +208,7 @@ class Question extends React.Component {
 
 
   render() {
-    let {editedFront, editedBack, editedType, editedGender, selectedImgFile, selectedAudioFile} = this.state;
+    let {questionText, selectedImgFile, selectedAudioFile, question, editedQuestionText} = this.state;
     let imgLink = "http://34.239.123.94/Images/" + selectedImgFile;
     let audioLink = "http://34.239.123.94/Audios/" + selectedAudioFile;
 
@@ -213,10 +216,7 @@ class Question extends React.Component {
       return (
         <Fragment>
         <tr onClick={this.toggleCollapsedAnswers}>
-          <td>{editedFront}</td>
-          <td>{editedBack}</td>
-          <td>{editedType}</td>
-          <td>{editedGender}</td>
+          <td>{question.questionText}</td>
           <td>
             {/* favicon is just a placeholder for now more testing needs to be done after deployment */}
             <Button 
@@ -245,7 +245,7 @@ class Question extends React.Component {
                 />
             </Button>
           </td>
-          <td>{this.state.question.termID}</td>
+          <td>{this.state.question.questionID}</td>
           <td>
             <ButtonGroup>
               <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.editQuestion()}>
@@ -268,7 +268,7 @@ class Question extends React.Component {
               <ModalHeader toggle={this.toggleModal}>Delete</ModalHeader>
               
               <ModalBody>
-                <p>Are you sure you want to delete the question: {editedFront}?</p>
+                <p>Are you sure you want to delete the question: {editedQuestionText}?</p>
               </ModalBody>
 
               <ModalFooter>
@@ -283,6 +283,7 @@ class Question extends React.Component {
         <tr>
           <td style={{border:"none"}} colSpan="8">
             <Collapse isOpen={this.state.collapseAnswers}>
+            Answers: 
             <AnswerButtonList 
               answers={this.state.answers} 
               handleDeleteAnswer={this.handleDeleteAnswer} 
@@ -423,6 +424,7 @@ class Question extends React.Component {
 
       <tr>
         <td style={{border:"none"}} colSpan="8">
+          Answers: 
           <AnswerButtonList 
             answers={this.state.answers} 
             handleDeleteAnswer={this.handleDeleteAnswer} 
