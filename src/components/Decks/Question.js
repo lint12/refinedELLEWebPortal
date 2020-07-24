@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import { Button, ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter, Collapse, Input, CustomInput, Tooltip } from 'reactstrap';
+import { Button, ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter, Collapse, Input, Tooltip } from 'reactstrap';
 import axios from 'axios';
 
 import AnswerButtonList from './AnswerButtonList';
@@ -225,7 +225,7 @@ class Question extends React.Component {
 
 
   render() {
-    let {questionText, selectedImgFile, selectedAudioFile, question, editedQuestionText} = this.state;
+    let {selectedImgFile, selectedAudioFile, question, editedQuestionText} = this.state;
     let imgLink = "http://34.239.123.94/Images/" + selectedImgFile;
     let audioLink = "http://34.239.123.94/Audios/" + selectedAudioFile;
 
@@ -302,7 +302,7 @@ class Question extends React.Component {
             <Collapse isOpen={this.state.collapseAnswers}>
             Answers: 
             <AnswerButtonList 
-              answers={this.state.answers} 
+              answers={this.props.question.answers.map((answer) => {return answer.front})} 
               handleDeleteAnswer={this.handleDeleteAnswer} 
               deletable={false}
               />
@@ -403,7 +403,7 @@ class Question extends React.Component {
         <td style={{border:"none"}} colSpan="8">
           Answers: 
           <AnswerButtonList 
-            answers={this.state.answers} 
+            answers={this.state.answers} //this.props.question.map(answers ...) maybe?
             handleDeleteAnswer={this.handleDeleteAnswer} 
             deletable={true}
             />

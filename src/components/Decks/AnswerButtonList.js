@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Label, Row } from 'reactstrap';
+import {Row } from 'reactstrap';
 
 import AnswerButton from './AnswerButton';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Form, FormGroup, Label, Input, 
-	CustomInput, Row, Col, Alert, Collapse, Modal, ModalHeader, ModalBody} from 'reactstrap';
+	CustomInput, Row, Col, Alert, Modal, ModalHeader, ModalBody} from 'reactstrap';
 import axios from 'axios';
 
 import AnswerButton from './AnswerButton';
@@ -15,7 +15,6 @@ class AddQuestion extends React.Component {
 		this.change = this.change.bind(this);
 
 		this.state = {
-			
 			questionText: "",//text of the longform question being asked
 			front: "", //english translation of the word
 			answers: [], //array of answers associated with word
@@ -32,16 +31,8 @@ class AddQuestion extends React.Component {
 			userCreatedAnswer: "", //what the user put in the field when they clicked create answer
 
 			questionID: "",
-
-
-      		//state properties below this point are never used, and we should probably delete them
-			cardID: "" //id of card we're adding
 		};
 	}
-
-
-
-
 
 	imgFileChangedHandler = (event) => {
 		this.setState({
@@ -97,8 +88,6 @@ class AddQuestion extends React.Component {
 
 			axios.post(this.props.serviceIP + '/question', data, header)
 				.then(res => {
-					//this.resetFields();
-
 					console.log("res.data in submitQuestion: ", res.data);
 					//TODO: change the backend so this is how it actually works
 					this.setState({
@@ -109,9 +98,9 @@ class AddQuestion extends React.Component {
 						this.createNewAnswer(this.state.newlyCreatedAnswers[i]);
 					}
 
-
 					this.submitAnswers();
 
+					this.resetFields();
 					this.props.updateCurrentModule({ module: this.props.curModule });
 				}) 
 				.catch(function (error) {
@@ -131,13 +120,6 @@ class AddQuestion extends React.Component {
 			console.log("going into submitIndividualAnswer, this.state.answers[i]: ", this.state.answers[i])
 			this.submitIndividualAnswer(this.state.answers[i]);
 		}
-		/*
-		for(let j = 0; j < this.state.newlyCreatedAnswersIDArray.length; j++){
-
-			console.log("going into submitIndividualAnswer, this.state.newanswers[j]: ", this.state.newlyCreatedAnswersIDArray[j])
-			this.submitIndividualAnswer(this.state.newlyCreatedAnswersIDArray[j]);
-		}
-		*/
 	}
 
 	submitIndividualAnswer = (answer) => {
@@ -157,9 +139,6 @@ class AddQuestion extends React.Component {
 		axios.post(this.props.serviceIP + '/addAnswer', data, header)
 			.then(res => {
 				console.log("res.data in submitIndividualAnswer: ", res.data)
-				if(answer.front === "NULL"){
-					this.props.updateCurrentModule({module: this.props.curModule})
-				}
 			})
 			.catch(error => {
 				console.log("error in submitIndividualAnswer: ", error)
@@ -190,42 +169,33 @@ class AddQuestion extends React.Component {
 			data.append('language', this.props.curModule.language); 
 
 
-
 			//map through all the tags and make a tag field object for them 
 			answer.tags.map((label) => {
 				return ( data.append('tag', label) )
 			})
 
-			if (answer.selectedImgFile !== null || answer.selectedImgFile !== undefined)
-				data.append('image', answer.selectedImgFile);
-
-			if (answer.selectedAudioFile !== null || answer.selectedAudioFile !== undefined)
-				data.append('audio', answer.selectedAudioFile);
-
-
 			console.log("in createNewAnswer for addQuestion. input data: ", data);
 			axios.post(this.props.serviceIP + '/term', data, header)
-				.then(res => {
+				.then(async res => {
 					console.log("res.data in createNewAnswer: ", res.data); 
-					//this.resetFields(); 
-					
-					/*
 
-					//add ID of newly created answer to ID array
-					let tempNewlyCreatedAnswersIDArray = this.state.newlyCreatedAnswersIDArray;
-					
-					//TODO: Make it so that id is equal to the termID
-					tempNewlyCreatedAnswersIDArray.push({id: res.data.termID})
-					
-					this.setState({
-						newlyCreatedAnswersIDArray: tempNewlyCreatedAnswersIDArray
+					//this.submitIndividualAnswer({ id: res.data.termID })
+
+					let data = {
+						questionID: this.state.questionID,
+						termID: res.data.termID
+					}
+
+					console.log("Nested data: ", data); 
+			
+					await axios.post(this.props.serviceIP + '/addAnswer', data, header)
+						.then(res => {
+							console.log("res.data in nested axios request: ", res.data)
+							this.props.updateCurrentModule({module: this.props.curModule})
+						})
+						.catch(error => {
+							console.log("error in nested axios request: ", error)
 					})
-
-					console.log("newlyCreatedAnswersIDArray: ", this.state.newlyCreatedAnswersIDArray)
-					*/
-
-					this.submitIndividualAnswer({front: "NULL",
-												id: res.data.termID})
 
 				}) 
 				.catch(function (error) {
@@ -342,6 +312,28 @@ class AddQuestion extends React.Component {
 
 	}
 
+	//clears the input fields of the addQuestion form 
+	//cannot however change questionID back to blank or else adding a newly created term as an answer would not work 
+	//questionID itself will be updated correctly when the addQuestion API request is called
+	resetFields = () => {
+		this.setState({
+			questionText: "",
+			front: "", 
+			answers: [], 
+			newlyCreatedAnswers : [], 
+			newlyCreatedAnswersIDArray: [], 
+			selectedImgFile: null, 
+			selectedAudioFile: null, 
+			type: [],
+
+			imgLabel: "Pick an image for the question", 
+			audioLabel: "Pick an audio for the question",
+
+			submittingAnswer: false, 
+			userCreatedAnswer: "", 
+		})
+	}
+
 	render () {
 	    return (
 			<div>
@@ -352,7 +344,7 @@ class AddQuestion extends React.Component {
 				
 				<br/>
 
-				<Alert style={{color: '#004085', backgroundColor: 'deepskyblue'}}>
+				<Alert style={{color: '#004085', backgroundColor: 'indianred'}}>
 				<Row>
 					<Col>
 						<FormGroup>			
@@ -419,13 +411,14 @@ class AddQuestion extends React.Component {
 				<Row>
 					<Col>
 						<FormGroup>
-							<Label for="imgFile">
+							<Label for="qstImgFile">
 								Image:
 							</Label>
 
 							<CustomInput 
 							type="file" 
-							id="imgFile" 
+							accept=".png, .jpg, .jpeg" 
+							id="qstImgFile" 
 							label={this.state.imgLabel} 
 							onChange={this.imgFileChangedHandler}
 							/>
@@ -434,13 +427,14 @@ class AddQuestion extends React.Component {
 					
 					<Col>
 						<FormGroup>
-							<Label for="audioFile">
+							<Label for="qstAudioFile">
 								Audio:
 							</Label>
 
 							<CustomInput 
 								type="file" 
-								id="audioFile" 
+								accept=".ogg, .wav, .mp3" 
+								id="qstAudioFile" 
 								label={this.state.audioLabel} 
 								onChange={this.audioFileChangedHandler}
 								/>

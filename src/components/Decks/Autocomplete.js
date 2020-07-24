@@ -101,9 +101,9 @@ class Autocomplete extends Component {
       userInput: ""
     });
 
-    if(this.props.handleAddTag != undefined){
+    if(this.props.handleAddTag !== undefined){
       this.props.handleAddTag({tag: e.currentTarget.innerText});
-    } else if(this.props.handleAddAnswer != undefined){
+    } else if(this.props.handleAddAnswer !== undefined){
       this.props.handleAddAnswer({answer: e.currentTarget.innerText});
     }
   };

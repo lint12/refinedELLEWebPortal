@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Form, FormGroup, Label, Input, CustomInput, Row, Col, Alert} from 'reactstrap';
-import axios from 'axios';
+import { Button, Form, FormGroup, Label, Input, Row, Col, Alert} from 'reactstrap';
+//import axios from 'axios';
 
 import TagList from './TagList';
 import Autocomplete from './Autocomplete';

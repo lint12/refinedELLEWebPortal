@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Table } from 'reactstrap';
+
 import Card from './Card';
 import Phrase from './Phrase';
-
 import Question from './Question';
-import axios from 'axios';
 
 import '../../stylesheets/style.css';
 

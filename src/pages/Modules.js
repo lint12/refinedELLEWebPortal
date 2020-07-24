@@ -130,6 +130,7 @@ export default class Modules extends Component {
 
         let cards = res.data;
 
+        console.log("updateCurrentModule has been called and the new cards are: ", cards); 
 
         this.setState({
           id: event.module.termID,
