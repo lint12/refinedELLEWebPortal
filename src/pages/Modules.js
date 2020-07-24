@@ -130,7 +130,6 @@ export default class Modules extends Component {
 
         let cards = res.data;
 
-        console.log(cards); 
 
         this.setState({
           id: event.module.termID,
@@ -186,7 +185,7 @@ export default class Modules extends Component {
           }
         }
         //---
-        
+
         this.setState({
           allAnswers: allAnswersMinusDupes
         });

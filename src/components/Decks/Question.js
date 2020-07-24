@@ -19,7 +19,6 @@ class Question extends React.Component {
     this.submitEdit = this.submitEdit.bind(this);
     this.change = this.change.bind(this);
 
-    console.log("This Question: ", this.props.question)
 
     this.state = {
       question: this.props.question, //contains all of the data in the question
@@ -37,7 +36,8 @@ class Question extends React.Component {
       changedAudio: false, //determines whether or not the audio file was changed
 
       //TODO: populate answers with API call instead of dummy data
-      answers: this.props.question.answers.map((answer) => {return answer.front}) //contains the list of answers
+      answers: this.props.question.answers.map((answer) => {return answer.front}), //contains the list of answers
+      originalAnswers: this.props.question.answers.map((answer) => {return answer.front})
     }
 
   }
@@ -62,6 +62,32 @@ class Question extends React.Component {
     this.setState({
       answers: tempAnswers
     });
+  }
+
+  handleDeleteAnswer = (event) => {
+    console.log("Got into handleDeleteAnswer, event.answer: ", event.answer)
+
+    let tempAnswerButtonList = this.state.answers;
+    
+    let answerObject = this.state.answers.find((answer) => {
+      if(answer === event.answer){
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+
+    let answerIndex = tempAnswerButtonList.indexOf(answerObject);
+
+    if(answerIndex !== -1){
+      tempAnswerButtonList.splice(answerIndex, 1);
+    }
+
+    this.setState({
+      answers: tempAnswerButtonList
+    })
+
   }
 
   //function that gets called when the edit button is pushed. Sets editmode to true
@@ -98,10 +124,7 @@ class Question extends React.Component {
     console.log("Changed image?: ", this.state.changedImage); 
     console.log("selectedImg: ", this.state.selectedImgFile);
 
-    console.log("FRONT: ", this.state.editedFront); 
-    console.log("BACK: ", this.state.editedBack); 
-    console.log("TYPE: ", this.state.editedType); 
-    console.log("GENDER: ", this.state.editedGender); 
+    console.log("QUESTIONTEXT: ", this.state.editedQuestionText); 
 
     this.setState({editMode: false});
 
@@ -112,16 +135,16 @@ class Question extends React.Component {
 
     data.append('image', this.state.changedImage && this.state.selectedImgFile !== undefined ? this.state.selectedImgFile : null); 
     data.append('audio', this.state.changedAudio && this.state.selectedAudioFile !== undefined ? this.state.selectedAudioFile : null); 
-    data.append('front', this.state.editedFront); 
-    data.append('back', this.state.editedBack); 
-    data.append('language', this.props.question.language); //not editable 
+    data.append('questionText', this.state.editedQuestionText); 
 
     //map through all the answers and make a answer field object for them 
+    /*
     this.state.answers.map((label) => {
       return ( data.append('answer', label) )
     })
+    */
 
-    data.append('termID', this.props.question.termID); //not editable
+    data.append('questionID', this.props.question.questionID); //not editable
     
     axios.post(this.props.serviceIP + '/term', data, header)
       .then(res => {
@@ -179,13 +202,7 @@ class Question extends React.Component {
     this.setState({ audioTooltipOpen: !this.state.audioTooltipOpen }); 
   }
 
-  //function that deletes a answer from the list of answers
-  handleDeleteAnswer = (event) => {
-    var list = this.props.deleteAnswer(this.state.answers, event.answer);
-    this.setState({
-      answers: list
-    })
-  }
+
 
   //function that cancels the edit and sets everything back to what it was initially
   handleCancelEdit = (event) => {
@@ -202,7 +219,7 @@ class Question extends React.Component {
       changedImage: false, 
       changedAudio: false, 
 
-      answers: ["answer1", "answer2", "answer3"]
+      answers: JSON.parse(JSON.stringify(this.state.originalAnswers))
     })
   }
 
@@ -303,50 +320,10 @@ class Question extends React.Component {
         <td>
         <Input 
           type="value" 
-          name="editedFront"
+          name="editedQuestionText"
           onChange={e => this.change(e)} 
-          value={this.state.editedFront} 
+          value={this.state.editedQuestionText} 
           />
-        </td>
-
-        <td>
-          <Input 
-            type="value" 
-            name="editedBack"
-            onChange={e => this.change(e)} 
-            value={this.state.editedBack} 
-            />
-        </td>
-
-        <td>
-          <CustomInput 
-                            type="select" 
-                            name="editedType" 
-                            id="selectType"
-                            value={this.state.editedType} 
-                            onChange={e => this.change(e)}>
-
-                            <option value="">Select</option>
-                            <option value="NN">NN (Noun)</option>
-                            <option value="VR">VR (Verb)</option>
-                            <option value="AJ">AJ (Adjective)+</option>
-                            <option value="AV">AV (Adverb)</option>
-                    </CustomInput>
-        </td>
-
-        <td>
-          <CustomInput 
-                            type="select" 
-                            name="editedGender" 
-                            id="selectGender"
-                            value={this.state.editedGender} 
-                            onChange={e => this.change(e)}>
-
-                            <option value="">Select</option>
-                            <option value="MA">MA (Male)</option>
-                            <option value="FE">FE (Female)</option>
-                            <option value="NA">NA (Nongendered)</option>
-                    </CustomInput>
         </td>
 
         <td>
@@ -393,7 +370,7 @@ class Question extends React.Component {
           </Tooltip>
         </td>
 
-        <td>{this.state.question.termID}</td>
+        <td>{this.state.question.questionID}</td>
 
         <td>
           <ButtonGroup>

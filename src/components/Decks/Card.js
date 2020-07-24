@@ -19,7 +19,6 @@ class Card extends React.Component {
     this.submitEdit = this.submitEdit.bind(this);
     this.change = this.change.bind(this);
 
-    console.log("This Card: ", this.props.card)
 
     this.state = {
       card: this.props.card, //contains all of the data in the card
@@ -40,14 +39,16 @@ class Card extends React.Component {
       changedAudio: false, //determines whether or not the audio file was changed
 
       //TODO: populate tags with API call instead of dummy data
-      tags: [] //contains the list of tags
+      tags: [], //contains the list of tags
+      originalTags: []
     }
 
   }
 
   componentDidMount() {
     this.getTermTags(this.props.card.termID)
-  }
+
+    }
 
   //TODO: handleAddTag and createTag kinda do the same thing. Maybe they should be one thing?
   //function that adds a tag to list of tags on this card(only available when editmode is true)
@@ -197,7 +198,8 @@ class Card extends React.Component {
     axios.get(this.props.serviceIP + '/tags_in_term', config)
     .then( res => {
       this.setState({
-        tags: res.data
+        tags: res.data,
+        originalTags: JSON.parse(JSON.stringify(res.data))
       })
     })
     .catch(function (error) {
@@ -208,15 +210,25 @@ class Card extends React.Component {
 
   //function that deletes a tag from the list of tags
   handleDeleteTag = (event) => {
-    var list = this.props.deleteTag(this.state.tags, event.tag);
+    //var list = this.props.deleteTag(this.state.tags, event.tag);
+
+    let tempTagList = this.state.tags;
+    let tagIndex = tempTagList.indexOf(event.tag);
+
+    if(tagIndex !== -1){
+      tempTagList.splice(tagIndex, 1);
+    }
+
+
+    console.log("middle of delete, this.state.tags: ", this.state.tags, "this.state.originalTags: ", this.state.originalTags)
     this.setState({
-      tags: list
+      tags: tempTagList
     })
+
   }
 
   //function that cancels the edit and sets everything back to what it was initially
   handleCancelEdit = (event) => {
-    console.log("this")
     this.setState({
       card: this.props.card,
       modal: false,
@@ -233,12 +245,12 @@ class Card extends React.Component {
       changedImage: false, 
       changedAudio: false, 
 
+      tags: JSON.parse(JSON.stringify(this.state.originalTags))
     })
   }
 
 
   render() {
-    console.log(this.state.tags); 
     let {editedFront, editedBack, editedType, editedGender, selectedImgFile, selectedAudioFile} = this.state;
     let imgLink = "http://34.239.123.94/Images/" + selectedImgFile;
     let audioLink = "http://34.239.123.94/Audios/" + selectedAudioFile;

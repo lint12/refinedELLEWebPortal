@@ -127,11 +127,10 @@ class Deck extends React.Component {
       let terms = this.props.cards.filter(card => card.type.toLowerCase() === "match").map((card, i) => {return card.answers[0]});
       let phrases = this.props.cards.filter(card => card.type.toLowerCase() === "phrase").map((card, i) => {return card.answers[0]}); 
       let questions = this.props.cards.filter(card => card.type.toLowerCase() === "longform").map((card, i) => {return card}); 
-
+      console.log("Got into Deck.js render()")
       console.log("terms: ", terms);
       console.log("phrases: ", phrases); 
       console.log("questions: ", questions); 
-      console.log("this.props.allAnswers in Deck.js: ", this.props.allAnswers);
 
       let filteredTerms = terms.filter(
           (term) => { 
@@ -142,6 +141,8 @@ class Deck extends React.Component {
               return null; 
           }
       );
+
+      console.log("filteredTerms: ", filteredTerms);
 
       let filteredPhrases = phrases.filter(
         (phrase) => { 

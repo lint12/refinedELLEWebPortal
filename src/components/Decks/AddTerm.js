@@ -102,7 +102,7 @@ class AddTerm extends React.Component {
 			if (this.state.selectedAudioFile !== null || this.state.selectedAudioFile !== undefined)
 				data.append('audio', this.state.selectedAudioFile);
 
-
+			console.log("in submitTerm for addTerm. input data: ", data);
 			axios.post(this.props.serviceIP + '/term', data, header)
 				.then(res => {
 					console.log(res.data); 

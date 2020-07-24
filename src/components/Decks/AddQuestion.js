@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Form, FormGroup, Label, Input, 
-	CustomInput, Row, Col, Alert, Collapse} from 'reactstrap';
+	CustomInput, Row, Col, Alert, Collapse, Modal, ModalHeader, ModalBody} from 'reactstrap';
 import axios from 'axios';
 
 import AnswerButton from './AnswerButton';
@@ -80,11 +80,12 @@ class AddQuestion extends React.Component {
 
 			//required fields for adding a question
 			data.append('questionText', this.state.questionText);
-			data.append('language', this.props.curModule.language); 
 
 			//optional fields for adding a question
-			if (this.state.type.length !== 0)
-				data.append('type', this.state.type); 
+			
+			data.append('type', "LONGFORM"); 
+
+			data.append('moduleID', this.props.curModule.moduleID)
 
 
 			if (this.state.selectedImgFile !== null || this.state.selectedImgFile !== undefined)
@@ -96,10 +97,18 @@ class AddQuestion extends React.Component {
 
 			axios.post(this.props.serviceIP + '/question', data, header)
 				.then(res => {
+					//this.resetFields();
+
+					console.log("res.data in submitQuestion: ", res.data);
 					//TODO: change the backend so this is how it actually works
 					this.setState({
 						questionID: res.data.questionID
 					})
+
+					for(let i = 0; i < this.state.newlyCreatedAnswers.length; i++){
+						this.createNewAnswer(this.state.newlyCreatedAnswers[i]);
+					}
+
 
 					this.submitAnswers();
 
@@ -110,22 +119,31 @@ class AddQuestion extends React.Component {
 				});
 		} else {
 			e.preventDefault();
-			alert("Please fill all inputs!");
+			alert("Please fill all inputs!sdfasfdasf");
 		}
 	}
 
 
 	submitAnswers = () => {
+		console.log("Got into submitAnswers");
+
 		for(let i = 0; i < this.state.answers.length; i++){
+			console.log("going into submitIndividualAnswer, this.state.answers[i]: ", this.state.answers[i])
 			this.submitIndividualAnswer(this.state.answers[i]);
 		}
-
+		/*
 		for(let j = 0; j < this.state.newlyCreatedAnswersIDArray.length; j++){
+
+			console.log("going into submitIndividualAnswer, this.state.newanswers[j]: ", this.state.newlyCreatedAnswersIDArray[j])
 			this.submitIndividualAnswer(this.state.newlyCreatedAnswersIDArray[j]);
 		}
+		*/
 	}
 
 	submitIndividualAnswer = (answer) => {
+
+		console.log("questionID in submitIndividualAnswer: ", this.state.questionID);
+		console.log("answerID in submitIndividualAnswer: ", answer.id);
 
 		let header = {
 			headers: {'Authorization': 'Bearer ' + localStorage.getItem('jwt')}
@@ -139,6 +157,9 @@ class AddQuestion extends React.Component {
 		axios.post(this.props.serviceIP + '/addAnswer', data, header)
 			.then(res => {
 				console.log("res.data in submitIndividualAnswer: ", res.data)
+				if(answer.front === "NULL"){
+					this.props.updateCurrentModule({module: this.props.curModule})
+				}
 			})
 			.catch(error => {
 				console.log("error in submitIndividualAnswer: ", error)
@@ -147,59 +168,68 @@ class AddQuestion extends React.Component {
 
 	createNewAnswer = (answer) => {
 		let header = {
-			headers : {'Authorization' : 'Bearer' + localStorage.getItem('jwt')}
-		}
+			headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+			};
 
+		console.log("in createNewAnswer")
 		console.log("FRONT: ", answer.front)
 		console.log("BACK: ", answer.back)
 		console.log("TAGS: ", answer.tags)
 
-		if (this.state.front.length !== 0 && this.state.back.length !== 0)
+
+		if (answer.front.length !== 0 && answer.back.length !== 0)
 		{   
 			//e.preventDefault();
 			const data = new FormData(); 
-			let header = {
-				headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-				};
+			
 
 			//required fields for adding a term
-			data.append('front', this.state.front); 
-			data.append('back', this.state.back); 
+			data.append('front', answer.front); 
+			data.append('back', answer.back); 
 			data.append('moduleID', this.props.curModule.moduleID); 
 			data.append('language', this.props.curModule.language); 
 
-			//optional fields for adding a term
-			if (this.state.type.length !== 0)
-				data.append('type', this.state.type); 
 
 
 			//map through all the tags and make a tag field object for them 
-			this.state.tags.map((label) => {
+			answer.tags.map((label) => {
 				return ( data.append('tag', label) )
 			})
 
-			if (this.state.selectedImgFile !== null || this.state.selectedImgFile !== undefined)
-				data.append('image', this.state.selectedImgFile);
+			if (answer.selectedImgFile !== null || answer.selectedImgFile !== undefined)
+				data.append('image', answer.selectedImgFile);
 
-			if (this.state.selectedAudioFile !== null || this.state.selectedAudioFile !== undefined)
-				data.append('audio', this.state.selectedAudioFile);
+			if (answer.selectedAudioFile !== null || answer.selectedAudioFile !== undefined)
+				data.append('audio', answer.selectedAudioFile);
 
 
+			console.log("in createNewAnswer for addQuestion. input data: ", data);
 			axios.post(this.props.serviceIP + '/term', data, header)
 				.then(res => {
-					console.log(res.data); 
-					this.resetFields(); 
-					this.props.updateCurrentModule({ module: this.props.curModule });
+					console.log("res.data in createNewAnswer: ", res.data); 
+					//this.resetFields(); 
+					
+					/*
 
 					//add ID of newly created answer to ID array
 					let tempNewlyCreatedAnswersIDArray = this.state.newlyCreatedAnswersIDArray;
+					
+					//TODO: Make it so that id is equal to the termID
 					tempNewlyCreatedAnswersIDArray.push({id: res.data.termID})
+					
 					this.setState({
 						newlyCreatedAnswersIDArray: tempNewlyCreatedAnswersIDArray
 					})
+
+					console.log("newlyCreatedAnswersIDArray: ", this.state.newlyCreatedAnswersIDArray)
+					*/
+
+					this.submitIndividualAnswer({front: "NULL",
+												id: res.data.termID})
+
 				}) 
 				.catch(function (error) {
-					console.log("submitTerm error: ", error);
+					console.log("createNewAnswer error: ", error);
 				});
 		} else {
 			//e.preventDefault();
@@ -313,8 +343,6 @@ class AddQuestion extends React.Component {
 	}
 
 	render () {
-		console.log("this.props.allAnswers: ", this.props.allAnswers.map((answer) => {return(answer.front)}))
-
 	    return (
 			<div>
 			{this.state.id !== "" ? 
@@ -431,23 +459,28 @@ class AddQuestion extends React.Component {
 			</Form> 
 
 		{/*TODO: make the screen focus on this after it gets opened*/}
-			<Collapse isOpen={this.state.submittingAnswer}>
-					    	
-				<AddAnswer
-					curModule={this.props.curModule} 
-					updateCurrentModule={this.props.updateCurrentModule}
-					serviceIP={this.props.serviceIP}
-					deleteTag={this.props.deleteTag}
-					addTag={this.props.addTag}
-					allTags={this.props.allTags}
-					front={this.state.userCreatedAnswer}
-					initialFront={this.state.userCreatedAnswer}
+			<Modal isOpen={this.state.submittingAnswer}>
+				
+				<ModalHeader>
+					Add Answer: 
+				</ModalHeader>
+				<ModalBody>
+					<AddAnswer
+						curModule={this.props.curModule} 
+						updateCurrentModule={this.props.updateCurrentModule}
+						serviceIP={this.props.serviceIP}
+						deleteTag={this.props.deleteTag}
+						addTag={this.props.addTag}
+						allTags={this.props.allTags}
+						front={this.state.userCreatedAnswer}
+						initialFront={this.state.userCreatedAnswer}
 
-					cancelCreateAnswer={this.cancelCreateAnswer}
-					addNewAnswerToList={this.addNewAnswerToList}
-				/>
+						cancelCreateAnswer={this.cancelCreateAnswer}
+						addNewAnswerToList={this.addNewAnswerToList}
+					/>
+				</ModalBody>
 							
-			</Collapse>
+			</Modal>
 			</div>: null  }</div>
 	)
 	}
