@@ -378,6 +378,7 @@ class AddQuestion extends React.Component {
 								placeholder={"Answer"}
 								handleAddAnswer={this.handleAddAnswer}
 								createAnswer={this.createAnswer}
+								renderButton={true}
 
 								suggestions={this.props.allAnswers.map((answer) => {return(answer.front)})} 
 						    />

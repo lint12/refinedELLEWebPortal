@@ -30,7 +30,7 @@ export default class Template extends React.Component {
           <ul className="nav-menu">
             <li><Link to='/downloads'>Download</Link></li>
             <li><Link to='/profile'>Profile</Link></li>
-            <li><Link to='/modules'>Decks</Link></li>
+            <li><Link to='/modules'>Modules</Link></li>
 						<li><Link to='/sessions'>Sessions</Link></li>
             <li><Link to='/userlist'>User List</Link></li>
             <li><Link to='/logout'>Sign Out</Link></li>

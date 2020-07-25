@@ -481,6 +481,7 @@ class Card extends React.Component {
             placeholder={"Tag"}
             handleAddTag={this.handleAddTag}
             createTag={this.createTag}
+            renderButton={true}
 
             suggestions={this.props.allTags} 
             />

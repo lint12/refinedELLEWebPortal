@@ -8,7 +8,7 @@ import Autocomplete from './Autocomplete';
 class Question extends React.Component {
   constructor(props){
     super(props);
-    this.editQuestion = this.editQuestion.bind(this);
+    this.toggleEditMode = this.toggleEditMode.bind(this);
     this.handleDelete = this.handleDelete.bind(this); 
     this.deleteQuestion = this.deleteQuestion.bind(this);
     this.toggleCollapsedAnswers = this.toggleCollapsedAnswers.bind(this);
@@ -91,7 +91,7 @@ class Question extends React.Component {
   }
 
   //function that gets called when the edit button is pushed. Sets editmode to true
-  editQuestion = () => {
+  toggleEditMode = () => {
     this.setState({editMode: true,
                   collapseAnswers: true})
   }
@@ -121,8 +121,6 @@ class Question extends React.Component {
 
   //function that submits all of the edited data put on a question 
   submitEdit = (event) => {
-    console.log("Changed image?: ", this.state.changedImage); 
-    console.log("selectedImg: ", this.state.selectedImgFile);
 
     console.log("QUESTIONTEXT: ", this.state.editedQuestionText); 
 
@@ -133,9 +131,14 @@ class Question extends React.Component {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     };
 
-    data.append('image', this.state.changedImage && this.state.selectedImgFile !== undefined ? this.state.selectedImgFile : null); 
-    data.append('audio', this.state.changedAudio && this.state.selectedAudioFile !== undefined ? this.state.selectedAudioFile : null); 
+    //data.append('image', this.state.changedImage && this.state.selectedImgFile !== undefined ? this.state.selectedImgFile : null); 
+    //data.append('audio', this.state.changedAudio && this.state.selectedAudioFile !== undefined ? this.state.selectedAudioFile : null); 
+    data.append('imageID', 3);
+    data.append('audioID', 3);
+
+    data.append('type', "LONGFORM");
     data.append('questionText', this.state.editedQuestionText); 
+    data.append('questionID', this.props.question.questionID); //not editable
 
     //map through all the answers and make a answer field object for them 
     /*
@@ -144,14 +147,19 @@ class Question extends React.Component {
     })
     */
 
-    data.append('questionID', this.props.question.questionID); //not editable
     
-    axios.post(this.props.serviceIP + '/term', data, header)
+    
+    axios.post(this.props.serviceIP + '/modifyquestion', data, header)
       .then(res => {
+
+        console.log("res.data in submitEdit in Question.js: ", res.data);
+        
         this.setState({
           changedImage: false, 
           changedAudio: false
         });
+
+
 
         this.props.updateCurrentModule({ module: this.props.curModule });  
       })
@@ -265,7 +273,7 @@ class Question extends React.Component {
           <td>{this.state.question.questionID}</td>
           <td>
             <ButtonGroup>
-              <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.editQuestion()}>
+              <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.toggleEditMode()}>
                 <img 
                   src={"./../../../tools.png"} 
                   alt="edit icon" 
@@ -414,6 +422,7 @@ class Question extends React.Component {
             placeholder={"Answer"}
             handleAddAnswer={this.handleAddAnswer}
             createAnswer={this.createAnswer}
+            renderButton={true}
 
             suggestions={this.props.allAnswers} 
             />

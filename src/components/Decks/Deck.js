@@ -1,9 +1,13 @@
 import React from 'react'
-import { Container, Row, Col, Input, InputGroup, InputGroupAddon, InputGroupText, Button, Collapse, Card, CardHeader } from 'reactstrap';
+import { Container, Row, Col, Input, InputGroup, InputGroupAddon, InputGroupText, Button,
+    ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
+    Collapse, Card, CardHeader } from 'reactstrap';
+
 import CardList from './CardList'
 import axios from 'axios';
 
 import AddTerm from './AddTerm';
+import AddExistingTerm from './AddExistingTerm';
 
 import AddQuestion from './AddQuestion';
 import AddPhrase from './AddPhrase'; 
@@ -21,6 +25,9 @@ class Deck extends React.Component {
       collapseNewCard: false, //determines whether or not the new card form is open
       collapseNewPhrase: false,
       collapseNewQuestion: false,
+      collapseExistingCard: false,
+
+      addTermButtonOpen: false,
 
       collapseTab: -1, //determines whether or not a tab is collapsed, maybe should be a number
       tabs: [0,1,2],
@@ -76,6 +83,9 @@ class Deck extends React.Component {
     this.setState({ searchCard: e.target.value.substr(0,20) });
   }
 
+  closeAllOtherForms = (openForm) => {
+    
+  }
   //toggles whether or not the new card form is visible
   toggleNewCard() {
     this.setState({ collapseNewCard: !this.state.collapseNewCard });
@@ -95,6 +105,18 @@ class Deck extends React.Component {
     console.log("event in toggleTab: ", event)
     console.log("this.state.collapseTab: ", this.state.collapseTab === Number(event) ? -1 : Number(event))
     this.setState({ collapseTab: this.state.collapseTab === Number(event) ? -1 : Number(event) })
+  }
+
+  toggleAddTermButton = () => {
+    this.setState({
+      addTermButtonOpen: !this.state.addTermButtonOpen
+    })
+  }
+
+  toggleExistingCard = () => {
+    this.setState({
+      collapseExistingCard: !this.state.collapseExistingCard
+    })
   }
 
   //gets all the tags in the database
@@ -180,10 +202,23 @@ class Deck extends React.Component {
                 value={this.state.searchCard} 
                 onChange={this.updateSearchCard.bind(this)}/>
               
+
               <InputGroupAddon addonType="append">
-                <Button style={{backgroundColor:'#3e6184'}} onClick={this.toggleNewCard}>
-                  Add Term
-                </Button>
+
+                <ButtonDropdown 
+                  style={{backgroundColor:'#3e6184'}} 
+                  isOpen={this.state.addTermButtonOpen}
+                  toggle={this.toggleAddTermButton}
+                  >
+                  <DropdownToggle caret>
+                    Add Term
+                  </DropdownToggle>
+                  <DropdownMenu>
+                    <DropdownItem onClick={this.toggleExistingCard}> Add Existing</DropdownItem>
+                    <DropdownItem onClick={this.toggleNewCard}> Add New</DropdownItem>
+                  </DropdownMenu>
+                </ButtonDropdown>
+
               </InputGroupAddon>
 
               <InputGroupAddon addonType="append">
@@ -208,6 +243,19 @@ class Deck extends React.Component {
                   deleteTag={this.deleteTag}
                   addTag={this.addTag}
                   allTags={this.state.allTags}
+                  toggleNewCard={this.toggleNewCard}
+                  />        
+              </Collapse>
+
+              <Collapse isOpen={this.state.collapseExistingCard}>     
+                <AddExistingTerm
+                  curModule={this.props.curModule} 
+                  updateCurrentModule={this.props.updateCurrentModule}
+                  serviceIP={this.props.serviceIP}
+                  deleteTag={this.deleteTag}
+                  addTag={this.addTag}
+                  allTags={this.state.allTags}
+                  toggleExistingCard={this.toggleExistingCard}
                   />        
               </Collapse>
 

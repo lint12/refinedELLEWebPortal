@@ -134,7 +134,7 @@ class Autocomplete extends Component {
             (suggestion) => {return suggestion.toLowerCase().indexOf(tempUserInput.toLowerCase()) > -1}
           );
 
-        console.log("in Audocomplete, tempUserInput: ", tempUserInput, "tempFilteredSuggestions: ", tempFilteredSuggestions);
+        console.log("in Autocomplete, tempUserInput: ", tempUserInput, "tempFilteredSuggestions: ", tempFilteredSuggestions);
 
         this.setState({
           activeSuggstion: 0,
@@ -202,7 +202,7 @@ class Autocomplete extends Component {
             })}
           </ul>
         );
-      } else {
+      } else if(this.props.renderButton === true){
         suggestionsListComponent = (
           <div className="no-suggestions">
             <Button style={{backgroundColor: '#004085'}} onClick={() => this.handleCreate()}>
