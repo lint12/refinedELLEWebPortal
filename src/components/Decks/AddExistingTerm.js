@@ -1,9 +1,11 @@
 import React from 'react';
-import { Button, Form, FormGroup, Label, Input, CustomInput, Row, Col, Alert} from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, CustomInput, Row, Col, Alert,
+	Card} from 'reactstrap';
 import axios from 'axios';
 
 import TagList from './TagList';
 import Autocomplete from './Autocomplete';
+import AnswerButtonList from './AnswerButtonList'
 
 class AddExistingTerm extends React.Component {
 	constructor(props) {
@@ -13,9 +15,14 @@ class AddExistingTerm extends React.Component {
 
 		this.state = {
 			search: "",
-			tags: [] //array of tags associated with word
+			tags: [], //array of tags associated with word
+			previousTags: [],
+			addedTerms: [],
+			tagFilteredTerms: []
 		};
 	}
+
+
 
 
 	//function that sets the taglist on this form
@@ -116,6 +123,7 @@ class AddExistingTerm extends React.Component {
   	this.setState({
   		tags: list
   	})
+  	this.updateTagFilteredTerms();
   }
 
   //function that adds a new tag from user input to list of tags on this form
@@ -136,9 +144,127 @@ class AddExistingTerm extends React.Component {
   	this.setState({
   		tags: list
   	})
+  	this.updateTagFilteredTerms();
   }
 
+  handleDeleteAnswer = (event) => {
+
+		let tempAnswerButtonList = this.state.addedTerms;
+		
+		let answerObject = this.state.addedTerms.find((answer) => {
+			if(answer.front === event.answer){
+				return true;
+			} else {
+				return false;
+			}
+		});
+
+
+		let answerIndex = tempAnswerButtonList.indexOf(answerObject);
+
+		if(answerIndex !== -1){
+		  tempAnswerButtonList.splice(answerIndex, 1);
+		}
+
+		this.setState({
+			addedTerms: tempAnswerButtonList
+		})
+
+	}
+
+handleAddExistingTerm = (event) => {
+
+	console.log("Got into handleAddExistingTerm, front: ", event.front, "id: ", event.id);
+	
+	let tempAddedTerms = this.state.addedTerms;
+	tempAddedTerms.push({front: event.front, id: event.id});
+	
+	this.setState({
+		addedTerms: tempAddedTerms
+	})
+
+
+	
+}
+
+updateTagFilteredTerms = () => {
+	this.setState({
+		tagFilteredTerms: []
+	})
+
+	for(let i = 0; i < this.state.tags.length; i++){
+
+		let header = {
+	      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+	      params: {'tag_name': this.state.tags[i]}
+	    }
+		axios.get(this.props.serviceIP + '/tag_term', header)
+		.then( res => {
+
+			let tempTagFilteredTerms = this.state.tagFilteredTerms;
+
+			res.data.map((term) => {
+				if(tempTagFilteredTerms.indexOf(term.front) === -1){
+					tempTagFilteredTerms.push(term.front)
+				}
+			})
+			
+			this.setState({
+				tagFilteredTerms: tempTagFilteredTerms
+			})
+
+		})
+		.catch(error => {console.log("updateTagFilteredTerms error: ", error)})
+	}
+
+}
+
+updatePreviousTags = (currentTagList) => {
+	this.setState({previousTags: currentTagList});
+}
+
+
 render () {
+	let filterFunction = (term) => {
+      let termFront = term.front;
+      let namePrefix = termFront.substr(0,this.state.search.length);
+
+      if(namePrefix.toLowerCase() === this.state.search.toLowerCase()){
+  		console.log("In filterFunction, namePrefix: ", namePrefix, "tagFilteredTerms: ", 
+  			this.state.tagFilteredTerms, "term: ", term, "this.state.tags: ", this.state.tags);
+
+  		console.log("In filterFunction, this.state.tagFilteredTerms.indexOf(term.front)", this.state.tagFilteredTerms.indexOf(term.front))
+      	
+      	if(this.state.tagFilteredTerms.indexOf(term.front) !== -1 || this.state.tagFilteredTerms.length === 0){
+      		return true;
+      	} else {
+      		return false;
+      	}
+
+      } else {
+        return false;
+      }
+    }
+
+	let dynamicTerms = "";
+
+	let currentTagList = this.state.tags;
+	
+	if(currentTagList.length !== this.state.previousTags.length){
+		console.log("UPDATING TAGFILTEREDTERMS, currentTagList: ", currentTagList, "previousTags: ", this.state.previousTags)
+		
+		this.updatePreviousTags(currentTagList)
+		this.updateTagFilteredTerms()
+	}
+
+
+	if(this.props.allAnswers !== []){
+		dynamicTerms = this.props.allAnswers.filter(filterFunction);
+	}
+
+
+
+	console.log("this.state.addedTerms: ", this.state.addedTerms)
     return (
 		<div>
 		
@@ -158,7 +284,7 @@ render () {
 						<Input type="text"
 						name="search"
 						onChange={e => this.change(e)}
-						value={this.state.front}
+						value={this.state.search}
 						id="search"
 						placeholder="Search" 
 						autoComplete="off"/>
@@ -203,8 +329,48 @@ render () {
 
 			<Row>
 				<Col>
+					<Card color="info" style={{overflow:"scroll", height:"35vh", width:"100%"}}>
+						{dynamicTerms.filter(
+							(answer) => {
+								let tempAddedTermsIDArray = this.state.addedTerms.map((term) => {return (term.id)});
+								return(tempAddedTermsIDArray.indexOf(answer.id) === -1);
+								})
+							.map((answer) => { 
+								return (
+									<Button 
+										style={{backgroundColor:"dodgerBlue"}} 
+
+										onClick={ () =>
+											this.handleAddExistingTerm({front:answer.front, id:answer.id})
+											}
+									>
+										{answer.front}
+									</Button>
+								)
+							}
+						)}
+					</Card>
+				</Col>
+				<Col>
+					<Alert style={{backgroundColor:"deepSkyBlue", overflow:"scroll", height:"35vh", width:"100%"}}>
+						
+							<AnswerButtonList
+								answers={this.state.addedTerms.map((answer) => { 
+										return(answer.front)}
+								)}
+								
+	    						handleDeleteAnswer={this.handleDeleteAnswer}
+	    						deletable={true}
+							/>
+						
+					</Alert>
+				</Col>
+			</Row>
+
+			<Row>
+				<Col>
 					<Button style={{backgroundColor: '#004085'}} type="submit" block>
-						Create
+						Add
 					</Button>
 					<Button style={{backgroundColor: 'crimson'}} onClick={this.props.toggleExistingCard} block>
 						Cancel

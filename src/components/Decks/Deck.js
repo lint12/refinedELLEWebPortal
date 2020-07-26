@@ -255,6 +255,7 @@ class Deck extends React.Component {
                   deleteTag={this.deleteTag}
                   addTag={this.addTag}
                   allTags={this.state.allTags}
+                  allAnswers={this.props.allAnswers}
                   toggleExistingCard={this.toggleExistingCard}
                   />        
               </Collapse>
