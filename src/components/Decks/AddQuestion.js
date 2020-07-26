@@ -336,8 +336,8 @@ class AddQuestion extends React.Component {
 
 	render () {
 	    return (
-			<div>
-			{this.state.id !== "" ? 
+		
+			
 			<div>
 			<Form onSubmit={e => this.submitQuestion(e)}>
 				<input type="hidden" value="prayer" />
@@ -443,10 +443,14 @@ class AddQuestion extends React.Component {
 					</Col>
 				</Row>
 				
+				
 				<Row>
 					<Col>
 						<Button style={{backgroundColor: '#004085'}} type="submit" block>
 							Create
+						</Button>
+						<Button style={{backgroundColor: 'crimson'}} onClick={() => this.props.setOpenForm(0)} block>
+							Cancel
 						</Button>
 					</Col>
 				</Row>
@@ -476,7 +480,7 @@ class AddQuestion extends React.Component {
 				</ModalBody>
 							
 			</Modal>
-			</div>: null  }</div>
+			</div>
 	)
 	}
 }

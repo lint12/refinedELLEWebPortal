@@ -143,7 +143,8 @@ class AddAnswer extends React.Component {
 								onChange={e => this.change(e)}
 								value={this.state.back}
 								id="back"
-								placeholder="Translated Word" />
+								placeholder="Translated Word"
+								autoComplete="off" />
 							</FormGroup>
 						</Col>
 					</Row>

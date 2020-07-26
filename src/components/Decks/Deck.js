@@ -16,8 +16,6 @@ import AddPhrase from './AddPhrase';
 class Deck extends React.Component {
   constructor(props) {
     super(props);
-    this.toggleNewCard = this.toggleNewCard.bind(this);
-    this.toggleNewPhrase = this.toggleNewPhrase.bind(this);
     this.toggleTab = this.toggleTab.bind(this); 
 
     this.state = {
@@ -31,6 +29,7 @@ class Deck extends React.Component {
 
       collapseTab: -1, //determines whether or not a tab is collapsed, maybe should be a number
       tabs: [0,1,2],
+      openForm: 0,
 
       allTags: [], //contains all the tags in the database. for autocomplete purposes
       allAnswers: this.props.allAnswers, //contains all of the terms in the database. For autocomplete on longform questions
@@ -83,21 +82,7 @@ class Deck extends React.Component {
     this.setState({ searchCard: e.target.value.substr(0,20) });
   }
 
-  closeAllOtherForms = (openForm) => {
-    
-  }
-  //toggles whether or not the new card form is visible
-  toggleNewCard() {
-    this.setState({ collapseNewCard: !this.state.collapseNewCard });
-  }
 
-  toggleNewPhrase() {
-    this.setState({ collapseNewPhrase: !this.state.collapseNewPhrase });
-  }
-
-  toggleNewQuestion = () => {
-    this.setState({ collapseNewQuestion: !this.state.collapseNewQuestion });
-  }
 
   toggleTab(e) {
     let event = e.target.dataset.event; 
@@ -113,11 +98,7 @@ class Deck extends React.Component {
     })
   }
 
-  toggleExistingCard = () => {
-    this.setState({
-      collapseExistingCard: !this.state.collapseExistingCard
-    })
-  }
+  
 
   //gets all the tags in the database
   getAllTags = () => {
@@ -143,6 +124,18 @@ class Deck extends React.Component {
       })
   }
 
+  setOpenForm = (openedForm) => {
+    if(this.state.openForm === openedForm){
+      this.setState({
+        openForm: 0
+      })
+      return;
+    }
+
+    this.setState({
+      openForm: openedForm
+    })
+  }
 
 
   render () {
@@ -214,28 +207,28 @@ class Deck extends React.Component {
                     Add Term
                   </DropdownToggle>
                   <DropdownMenu>
-                    <DropdownItem onClick={this.toggleExistingCard}> Add Existing</DropdownItem>
-                    <DropdownItem onClick={this.toggleNewCard}> Add New</DropdownItem>
+                    <DropdownItem onClick={() => this.setOpenForm(1)}> Add Existing</DropdownItem>
+                    <DropdownItem onClick={() => this.setOpenForm(2)}> Add New</DropdownItem>
                   </DropdownMenu>
                 </ButtonDropdown>
 
               </InputGroupAddon>
 
               <InputGroupAddon addonType="append">
-                <Button style={{backgroundColor:'#3e6184'}} onClick={this.toggleNewPhrase}>
+                <Button style={{backgroundColor:'#3e6184'}} onClick={() => this.setOpenForm(3)}>
                   Add Phrase
                 </Button>
               </InputGroupAddon>
 
               <InputGroupAddon addonType="append">
-                <Button style={{backgroundColor:'#3e6184'}} onClick={this.toggleNewQuestion}>
+                <Button style={{backgroundColor:'#3e6184'}} onClick={() => this.setOpenForm(4)}>
                   Add Question
                 </Button>
               </InputGroupAddon>
             </InputGroup>
 
             <Col>
-              <Collapse isOpen={this.state.collapseNewCard}>     
+              <Collapse isOpen={this.state.openForm === 2}>     
                 <AddTerm
                   curModule={this.props.curModule} 
                   updateCurrentModule={this.props.updateCurrentModule}
@@ -243,11 +236,11 @@ class Deck extends React.Component {
                   deleteTag={this.deleteTag}
                   addTag={this.addTag}
                   allTags={this.state.allTags}
-                  toggleNewCard={this.toggleNewCard}
+                  setOpenForm={this.setOpenForm}
                   />        
               </Collapse>
 
-              <Collapse isOpen={this.state.collapseExistingCard}>     
+              <Collapse isOpen={this.state.openForm === 1}>     
                 <AddExistingTerm
                   curModule={this.props.curModule} 
                   updateCurrentModule={this.props.updateCurrentModule}
@@ -256,19 +249,20 @@ class Deck extends React.Component {
                   addTag={this.addTag}
                   allTags={this.state.allTags}
                   allAnswers={this.props.allAnswers}
-                  toggleExistingCard={this.toggleExistingCard}
+                  setOpenForm={this.setOpenForm}
                   />        
               </Collapse>
 
-              <Collapse isOpen={this.state.collapseNewPhrase}>
+              <Collapse isOpen={this.state.openForm === 3}>
                 <AddPhrase
                   curModule={this.props.curModule} 
                   updateCurrentModule={this.props.updateCurrentModule}
                   serviceIP={this.props.serviceIP}
+                  setOpenForm={this.setOpenForm}
                 />
               </Collapse>
 
-              <Collapse isOpen={this.state.collapseNewQuestion}>
+              <Collapse isOpen={this.state.openForm === 4}>
                 <AddQuestion
                   curModule={this.props.curModule} 
                   updateCurrentModule={this.props.updateCurrentModule}
@@ -279,6 +273,7 @@ class Deck extends React.Component {
                   deleteTag={this.deleteTag}
                   addTag={this.addTag}
                   allTags={this.state.allTags}
+                  setOpenForm={this.setOpenForm}
                   />
               </Collapse>
             </Col>

@@ -39,63 +39,31 @@ class AddExistingTerm extends React.Component {
   	}
 
   	//function that submits the data
-	submitTerm = (e) => {
-		console.log("FRONT: ", this.state.front)
-		console.log("BACK: ", this.state.back)
-		console.log("TAGS: ", this.state.tags)
-		console.log("TYPE: ", this.state.type)
-		console.log("GENDER: ", this.state.gender)
-		console.log("IMG: ", this.state.selectedImgFile)
-		console.log("Audio: " ,this.state.selectedAudioFile)
-		console.log("language: ", this.props.curModule.language)
-		console.log("id: ", this.props.curModule.moduleID)
+	submitExistingTerms = (e) => {
+		e.preventDefault();
 
-		if (this.state.front.length !== 0 && this.state.back.length !== 0)
-		{   
-			e.preventDefault();
-			const data = new FormData(); 
-			let header = {
-				headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-				};
+		let header = {
+	      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+	    }
 
-			//required fields for adding a term
-			data.append('front', this.state.front); 
-			data.append('back', this.state.back); 
-			data.append('moduleID', this.props.curModule.moduleID); 
-			data.append('language', this.props.curModule.language); 
+	    for(let i = 0; i < this.state.addedTerms.length; i++){
+	    	let data = {
+	    		termID: this.state.addedTerms[i].id,
+	    		moduleID: this.props.curModule.moduleID
+	    	}
 
-			//optional fields for adding a term
-			if (this.state.type.length !== 0)
-				data.append('type', this.state.type); 
-
-			if (this.state.gender.length !== 0)
-				data.append('gender', this.state.gender); 
-
-			//map through all the tags and make a tag field object for them 
-			this.state.tags.map((label) => {
-				return ( data.append('tag', label) )
-			})
-
-			if (this.state.selectedImgFile !== null || this.state.selectedImgFile !== undefined)
-				data.append('image', this.state.selectedImgFile);
-
-			if (this.state.selectedAudioFile !== null || this.state.selectedAudioFile !== undefined)
-				data.append('audio', this.state.selectedAudioFile);
-
-			console.log("in submitTerm for AddExistingTerm. input data: ", data);
-			axios.post(this.props.serviceIP + '/term', data, header)
-				.then(res => {
-					console.log(res.data); 
-					this.resetFields(); 
-					this.props.updateCurrentModule({ module: this.props.curModule });
-				}) 
-				.catch(function (error) {
-					console.log("submitTerm error: ", error);
-				});
-		} else {
-			e.preventDefault();
-			alert("Please fill all inputs!");
-		}
+	    	axios.post(this.props.serviceIP + '/attachterm', data, header)
+	    	.then(res => {
+	    		if(i === (this.state.addedTerms.length - 1)){
+	    			//this.props.updateCurrentModule({module: this.props.curModule});
+	    		}
+	    	})
+	    	.catch( error => {
+	    		console.log("submitExistingTerms error: ", error)
+	    	})
+	    	
+	    }
+	    
   }
 
   resetFields = () => {
@@ -129,7 +97,6 @@ class AddExistingTerm extends React.Component {
   //function that adds a new tag from user input to list of tags on this form
   createTag = (tag) => {
 
-  	console.log("Got into createTag, tag: ", tag);
 
   	let tempTags = this.state.tags;
   	tempTags.push(tag);
@@ -174,7 +141,6 @@ class AddExistingTerm extends React.Component {
 
 handleAddExistingTerm = (event) => {
 
-	console.log("Got into handleAddExistingTerm, front: ", event.front, "id: ", event.id);
 	
 	let tempAddedTerms = this.state.addedTerms;
 	tempAddedTerms.push({front: event.front, id: event.id});
@@ -230,11 +196,7 @@ render () {
       let namePrefix = termFront.substr(0,this.state.search.length);
 
       if(namePrefix.toLowerCase() === this.state.search.toLowerCase()){
-  		console.log("In filterFunction, namePrefix: ", namePrefix, "tagFilteredTerms: ", 
-  			this.state.tagFilteredTerms, "term: ", term, "this.state.tags: ", this.state.tags);
 
-  		console.log("In filterFunction, this.state.tagFilteredTerms.indexOf(term.front)", this.state.tagFilteredTerms.indexOf(term.front))
-      	
       	if(this.state.tagFilteredTerms.indexOf(term.front) !== -1 || this.state.tagFilteredTerms.length === 0){
       		return true;
       	} else {
@@ -251,7 +213,6 @@ render () {
 	let currentTagList = this.state.tags;
 	
 	if(currentTagList.length !== this.state.previousTags.length){
-		console.log("UPDATING TAGFILTEREDTERMS, currentTagList: ", currentTagList, "previousTags: ", this.state.previousTags)
 		
 		this.updatePreviousTags(currentTagList)
 		this.updateTagFilteredTerms()
@@ -264,11 +225,10 @@ render () {
 
 
 
-	console.log("this.state.addedTerms: ", this.state.addedTerms)
     return (
 		<div>
 		
-		<Form onSubmit={e => this.submitTerm(e)}>
+		<Form onSubmit={e => this.submitExistingTerms(e)}>
 			<input type="hidden" value="prayer" />
 			
 			<br/>
@@ -339,7 +299,7 @@ render () {
 								return (
 									<Button 
 										style={{backgroundColor:"dodgerBlue"}} 
-
+										key={answer.id}
 										onClick={ () =>
 											this.handleAddExistingTerm({front:answer.front, id:answer.id})
 											}
@@ -372,7 +332,7 @@ render () {
 					<Button style={{backgroundColor: '#004085'}} type="submit" block>
 						Add
 					</Button>
-					<Button style={{backgroundColor: 'crimson'}} onClick={this.props.toggleExistingCard} block>
+					<Button style={{backgroundColor: 'crimson'}} onClick={() => this.props.setOpenForm(0)} block>
 						Cancel
 					</Button>
 				</Col>

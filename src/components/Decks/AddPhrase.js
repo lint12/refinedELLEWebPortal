@@ -166,7 +166,12 @@ class AddPhrase extends React.Component {
                 </Row>
                 <Row>
                     <Col>
-                        <Button style={{backgroundColor: '#004085'}} type="submit" block>Create</Button>
+                        <Button style={{backgroundColor: '#004085'}} type="submit" block>
+                            Create
+                        </Button>
+                        <Button style={{backgroundColor: 'crimson'}} onClick={() => this.props.setOpenForm(0)} block>
+                            Cancel
+                        </Button>
                     </Col>
                 </Row>
             </Alert>
