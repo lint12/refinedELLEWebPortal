@@ -130,8 +130,6 @@ export default class Modules extends Component {
 
         let cards = res.data;
 
-        console.log("updateCurrentModule has been called and the new cards are: ", cards); 
-
         this.setState({
           id: event.module.termID,
           module: event.module,
@@ -160,7 +158,7 @@ export default class Modules extends Component {
       .then(res => {
         allAnswersInDB = res.data;
 
-
+        //gets rid of responses that have type "PH", for phrases
         allAnswersInDB = allAnswersInDB.filter((answer) => {
           if(answer.type !== 'PH'){
             return true;
@@ -169,8 +167,22 @@ export default class Modules extends Component {
           }
         });
 
+        //TODO: consider deleting this
+        //gets rid of duplicates. 
+        //If allAnswersInDB.indexOF(answer) != answerIndex, 
+        //then the answer in question isn't the first appearance
+        allAnswersInDB = allAnswersInDB.filter((answer, answerIndex) => {
+          if(allAnswersInDB.indexOf(answer) === answerIndex){
+            return true;
+          } else{
+            return false;
+          }
+        })
+
+        //gets tje information we'll actually use from the get response
         allAnswersInDB = allAnswersInDB.map((answer) => {
-          return ({ front: answer.front,
+          return ({ front: answer.front, //Foreign version of the word
+                    back: answer.back, //English version of the word
                     id: answer.termID
                   })
         });
@@ -178,7 +190,7 @@ export default class Modules extends Component {
         //---
         //removes duplicates
         let frontArray = [];
-        let allAnswersMinusDupes = []
+        let allAnswersMinusDupes = [];
         for(let i = 0; i < allAnswersInDB.length; i++){
           if(frontArray.indexOf(allAnswersInDB[i].front) === -1){
             frontArray.push(allAnswersInDB[i].front);
@@ -255,7 +267,10 @@ export default class Modules extends Component {
   //function for making the searchbar for the module list work
   updateSearchDeck(e) {
 
+    //returns true if first part of module name matches the search string
+    //TODO: consider changing it so that search string can be any substring of module name
     let filterFunction = (module) => {
+      /*
       let moduleName = module.name;
       let namePrefix = moduleName.substr(0,e.target.value.length);
 
@@ -264,6 +279,15 @@ export default class Modules extends Component {
       } else {
         return false;
       }
+      */
+
+      
+      if(module){
+        return(module.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)
+      } else{
+        return false;
+      }
+      
     }
 
     let newModuleList = this.state.modules.filter(filterFunction);
@@ -295,6 +319,7 @@ export default class Modules extends Component {
     <Row className="Seperated Col">
       <Col className="Left Column" xs="3">
         
+        {/*Search Bar for module list*/}
         <InputGroup style={{borderRadius: '12px'}}>
           <Input 
             placeholder="Search" 
@@ -310,6 +335,7 @@ export default class Modules extends Component {
 
         <br/>
 
+        {/*Form for adding a new module*/}
         <Collapse isOpen={this.state.collapseNewModule}>
           <AddModule  
             serviceIP={this.props.serviceIP} 
@@ -320,6 +346,7 @@ export default class Modules extends Component {
         <Row>
           <Col>
             
+            {/*Module list on the left side of the page*/}
             <Card color="info" style={{overflow:"scroll", height:"65vh"}}>
               {
                 this.state.dynamicModules.map((deck, i)=> (
@@ -341,6 +368,8 @@ export default class Modules extends Component {
       <Col className="Right Column">
         <Row>
           <Col>
+
+            {/*Either the contents of current module, or alert saying there are no modules*/}
             {
               this.state.modules.length !== 0 ? 
               <Deck

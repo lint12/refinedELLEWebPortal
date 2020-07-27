@@ -27,8 +27,8 @@ class Card extends React.Component {
       audioTooltipOpen: false, 
 
       editMode: false, //determines whether or not the editable version of the card is showing
-      editedFront: this.props.card.front, //contains the English word that can be edited
-      editedBack: this.props.card.back, //contains the foreign word that can be edited
+      editedFront: this.props.card.front, //contains the foreign word that can be edited
+      editedBack: this.props.card.back, //contains the English word that can be edited
       editedType: this.props.card.type, //contains the type of 
       editedGender: this.props.card.gender, //contains the gender of the card in question
       collapseTags: false, //determines whether or not the tags are displayed on the card
@@ -227,6 +227,8 @@ class Card extends React.Component {
 
   }
 
+
+
   //function that cancels the edit and sets everything back to what it was initially
   handleCancelEdit = (event) => {
     this.setState({
@@ -259,8 +261,8 @@ class Card extends React.Component {
       return (
         <Fragment>
         <tr onClick={this.toggleCollapsedTags}>
-          <td>{editedFront}</td>
           <td>{editedBack}</td>
+          <td>{editedFront}</td>
           <td>{editedType}</td>
           <td>{editedGender}</td>
           <td>
@@ -348,18 +350,18 @@ class Card extends React.Component {
         <td>
         <Input 
           type="value" 
-          name="editedFront"
+          name="editedBack"
           onChange={e => this.change(e)} 
-          value={this.state.editedFront} 
+          value={this.state.editedBack} 
           />
         </td>
 
         <td>
           <Input 
             type="value" 
-            name="editedBack"
+            name="editedFront"
             onChange={e => this.change(e)} 
-            value={this.state.editedBack} 
+            value={this.state.editedFront} 
             />
         </td>
 

@@ -7,6 +7,7 @@ import AnswerButton from './AnswerButton';
 import Autocomplete from './Autocomplete';
 import AnswerButtonList from './AnswerButtonList';
 import AddAnswer from './AddAnswer';
+import SearchAnswersByTag from './SearchAnswersByTag'
 
 class AddQuestion extends React.Component {
 	constructor(props) {
@@ -24,14 +25,23 @@ class AddQuestion extends React.Component {
 			selectedAudioFile: null, //file location of the audio selected
 			type: [],
 
+			validAnswers: [],
+			prevValidAnswers: [],
+
 			imgLabel: "Pick an image for the question", 
 			audioLabel: "Pick an audio for the question",
 
 			submittingAnswer: false, //determines whether or not the AddAnswer form will be shown
 			userCreatedAnswer: "", //what the user put in the field when they clicked create answer
 
+			searchingByTag: false,
+
 			questionID: "",
 		};
+	};
+
+	componentDidMount() {
+		this.setValidAnswers();
 	}
 
 	imgFileChangedHandler = (event) => {
@@ -224,12 +234,25 @@ class AddQuestion extends React.Component {
 				}
 			});
 
+		if(answerObject === undefined){
+			answerObject = this.props.allAnswers.find(
+				(answer) => {
+					if(answer.back === event.answer){
+						return true;
+					} else{
+						return false;
+					}
+				})
+		}
+
 		list.push(answerObject);
 		console.log("answerObject in handleAddAnswer: ", answerObject);
 
 		this.setState({
 			answers: list
 		})
+
+		this.setValidAnswers();
 	}
 
 	//function that adds a new answer from user input to list of answers on this form
@@ -241,6 +264,12 @@ class AddQuestion extends React.Component {
 			submittingAnswer: true,
 			userCreatedAnswer: answer
 		});
+	}
+
+	toggleSearchByTagForm = () => {
+		this.setState({
+			searchingByTag: !this.state.searchingByTag
+		})
 	}
 
 	//function that allows user to cancel AddAnswer form
@@ -284,6 +313,8 @@ class AddQuestion extends React.Component {
 		this.setState({
 			answers: tempAnswerButtonList
 		})
+
+		this.setValidAnswers();
 
 	}
 
@@ -332,9 +363,60 @@ class AddQuestion extends React.Component {
 			submittingAnswer: false, 
 			userCreatedAnswer: "", 
 		})
+
+		this.setValidAnswers();
+
+	}
+
+	arraysEqual = (array1, array2) => {
+	  if (array1 === array2) return true;
+	  if (array1 == null || array2 == null) return false;
+	  if (array1.length !== array2.length) return false;
+
+	  for (var i = 0; i < array2.length; ++i) {
+	    if (array1[i] !== array2[i]) return false;
+	  }
+	  return true;
+	}
+
+	setValidAnswers = () => {
+		console.log("in addQuestion, setting autocomplete suggstions, this.props.allAnswers: ", this.props.allAnswers)
+		let tempValidAnswers = this.props.allAnswers;
+		tempValidAnswers.filter(
+			(suggestion) => {
+				if(this.state.answers.indexOf(suggestion) === -1){
+					return true;
+				} else{
+					return false;
+				}
+			}
+		)
+
+		this.setState({
+			validAnswers: tempValidAnswers,
+		})
 	}
 
 	render () {
+		console.log("in addQuestion, this.state.validAnswers: ", this.state.validAnswers)
+	    
+		let newValidAnswers = this.props.allAnswers.filter(
+			(suggestion) => {
+				if(this.state.answers.indexOf(suggestion) === -1){
+					return true;
+				} else{
+					return false;
+				}
+			}
+		)
+
+		if(!this.arraysEqual(newValidAnswers, this.state.prevValidAnswers)){
+			this.setState({
+				validAnswers: newValidAnswers,
+				prevValidAnswers: newValidAnswers
+			})
+		}
+
 	    return (
 		
 			
@@ -364,6 +446,7 @@ class AddQuestion extends React.Component {
 				</Row>
 
 				<Row>
+
 					<Col>
 						<Label for="answers">
 							Answers:
@@ -371,22 +454,44 @@ class AddQuestion extends React.Component {
 
 						<br/>
 						
-						<FormGroup width="50%">
-							<Autocomplete 
-								name={"answers"}
-								id={"answers"}
-								placeholder={"Answer"}
-								handleAddAnswer={this.handleAddAnswer}
-								createAnswer={this.createAnswer}
-								renderButton={true}
+							<FormGroup width="200%">
+								<Autocomplete 
+									name={"answers"}
+									id={"answers"}
+									placeholder={"Answer"}
+									handleAddAnswer={this.handleAddAnswer}
+									createAnswer={this.createAnswer}
+									renderButton={true}
+									autoCompleteStyle={{borderWidth: '0px', borderStyle: "none", width: "100%"}}
 
-								suggestions={this.props.allAnswers.map((answer) => {return(answer.front)})} 
-						    />
-					    </FormGroup>
+									suggestions={this.state.validAnswers
+												.map((answer) => {return(answer.front)})
+													.concat(this.state.validAnswers
+														.map((answer) => {return(answer.back)})
+														)
+														.filter((answer, i, allAnswers) => {
+															if(allAnswers.indexOf(answer) !== i){
+																return false;
+															} else{
+																return true;
+															}
+														})
+												}
+							    />
+						    </FormGroup>
+					</Col>
+						    
+					<Col>
+						<br/>
+						    <Button onClick={this.toggleSearchByTagForm}>
+						    	Search By Tag
+						    </Button>
+				   	</Col>
+	
+				</Row>
 
-
-					    
-					    {/*Lists all of the answers on this question, displayed as buttons*/}
+				<Row>
+					<Col>
 						<Alert color="warning">
 							<Label> Answers: </Label>
 							<AnswerButtonList 
@@ -405,7 +510,6 @@ class AddQuestion extends React.Component {
 							deletable={true}
 							/>
 						</Alert>
-					
 					</Col>
 				</Row>
 
@@ -479,6 +583,29 @@ class AddQuestion extends React.Component {
 					/>
 				</ModalBody>
 							
+			</Modal>
+
+			<Modal isOpen={this.state.searchingByTag}>
+
+				<ModalHeader>
+					Search By Tag
+				</ModalHeader>
+
+				<ModalBody>
+					<SearchAnswersByTag
+						curModule={this.props.curModule} 
+						updateCurrentModule={this.props.updateCurrentModule}
+						serviceIP={this.props.serviceIP}
+						deleteTag={this.props.deleteTag}
+						addTag={this.props.addTag}
+						allTags={this.props.allTags}
+						allAnswers={this.props.allAnswers}
+						
+
+					>
+					</SearchAnswersByTag>
+				</ModalBody>
+
 			</Modal>
 			</div>
 	)

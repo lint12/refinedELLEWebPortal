@@ -7,7 +7,7 @@ import TagList from './TagList';
 import Autocomplete from './Autocomplete';
 import AnswerButtonList from './AnswerButtonList'
 
-class AddExistingTerm extends React.Component {
+class SearchAnswersByTag extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -39,30 +39,12 @@ class AddExistingTerm extends React.Component {
   	}
 
   	//function that submits the data
-	submitExistingTerms = (e) => {
+	submitSearchedAnswers = (e) => {
 		e.preventDefault();
 
-		let header = {
-	      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
-	    }
-
-	    for(let i = 0; i < this.state.addedTerms.length; i++){
-	    	let data = {
-	    		termID: this.state.addedTerms[i].id,
-	    		moduleID: this.props.curModule.moduleID
-	    	}
-
-	    	axios.post(this.props.serviceIP + '/attachterm', data, header)
-	    	.then(res => {
-	    		if(i === (this.state.addedTerms.length - 1)){
-	    			//this.props.updateCurrentModule({module: this.props.curModule});
-	    		}
-	    	})
-	    	.catch( error => {
-	    		console.log("submitExistingTerms error: ", error)
-	    	})
-	    	
-	    }
+		for(let i = 0; i < this.state.addedTerms.length; i++){
+			this.props.handleAddAnswer({answer: this.state.addedTerms[i]})
+		}
 	    
   }
 
@@ -228,38 +210,15 @@ render () {
     return (
 		<div>
 		
-		<Form onSubmit={e => this.submitExistingTerms(e)}>
+		<Form onSubmit={e => this.submitSearchedAnswers(e)}>
 			<input type="hidden" value="prayer" />
 			
 			<br/>
 
 			<Alert style={{color: '#004085', backgroundColor: 'deepskyblue'}}>
+						
 			<Row>
 				<Col>
-					<FormGroup>			
-						<Label for="search">
-							Search:
-						</Label>
-
-						<Input type="text"
-						name="search"
-						onChange={e => this.change(e)}
-						value={this.state.search}
-						id="search"
-						placeholder="Search" 
-						autoComplete="off"/>
-					</FormGroup>
-				</Col>
-			</Row>
-			
-			
-			<Row>
-				<Col>
-					<Label for="tags">
-						Tags:
-					</Label>
-
-					<br/>
 					
 					<FormGroup width="50%">
 						<Autocomplete 
@@ -269,7 +228,8 @@ render () {
 							handleAddTag={this.handleAddTag}
 							createTag={this.createTag}
 							renderButton={false}
-							autoCompleteStyle={{borderWidth: '0px', borderStyle: "none", width: "40%"}}
+
+							autoCompleteStyle={{borderWidth: '0px', borderStyle: "none", width: "100%"}}
 
 							suggestions={this.props.allTags} 
 					    />
@@ -345,4 +305,4 @@ render () {
 }
 }
 
-export default AddExistingTerm;
+export default SearchAnswersByTag;

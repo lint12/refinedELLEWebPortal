@@ -29,7 +29,7 @@ class Deck extends React.Component {
 
       collapseTab: -1, //determines whether or not a tab is collapsed, maybe should be a number
       tabs: [0,1,2],
-      openForm: 0,
+      openForm: 0, //determines which input form is open. Is 0 if no form is open
 
       allTags: [], //contains all the tags in the database. for autocomplete purposes
       allAnswers: this.props.allAnswers, //contains all of the terms in the database. For autocomplete on longform questions
@@ -47,6 +47,7 @@ class Deck extends React.Component {
     this.getAllTags();
   }
 
+  //TODO: consider moving this stub of a function into the components that use them
   //function for adding a tag to a list of tags
   addTag = (tagList, tag) => {
     let tempTagList = tagList;
@@ -57,7 +58,7 @@ class Deck extends React.Component {
   }
 
 
-
+  //TODO: consider moving this into the components that actually have access to the tags in question
   //fumction for deleting a tag from a list of tags
   deleteTag = (tagList, tag) => {
 
@@ -92,13 +93,13 @@ class Deck extends React.Component {
     this.setState({ collapseTab: this.state.collapseTab === Number(event) ? -1 : Number(event) })
   }
 
+  //function that determines if the Add Term button is open
   toggleAddTermButton = () => {
     this.setState({
       addTermButtonOpen: !this.state.addTermButtonOpen
     })
   }
 
-  
 
   //gets all the tags in the database
   getAllTags = () => {
@@ -124,6 +125,7 @@ class Deck extends React.Component {
       })
   }
 
+  //function that determines which form is open
   setOpenForm = (openedForm) => {
     if(this.state.openForm === openedForm){
       this.setState({
@@ -139,14 +141,18 @@ class Deck extends React.Component {
 
 
   render () {
-      let terms = this.props.cards.filter(card => card.type.toLowerCase() === "match").map((card, i) => {return card.answers[0]});
+
+      //Variables that store the differnt types of cards in the module
+      let terms = this.props.cards.filter(card => card.type.toLowerCase() === "match" && card.answers[0] !== undefined).map((card, i) => {return card.answers[0]});
       let phrases = this.props.cards.filter(card => card.type.toLowerCase() === "phrase").map((card, i) => {return card.answers[0]}); 
       let questions = this.props.cards.filter(card => card.type.toLowerCase() === "longform").map((card, i) => {return card}); 
+      
       console.log("Got into Deck.js render()")
       console.log("terms: ", terms);
       console.log("phrases: ", phrases); 
       console.log("questions: ", questions); 
 
+      ////Variable that stores all of the terms that contain a substring that matches searchCard
       let filteredTerms = terms.filter(
           (term) => { 
             if (term) 
@@ -157,8 +163,8 @@ class Deck extends React.Component {
           }
       );
 
-      console.log("filteredTerms: ", filteredTerms);
 
+      //Variable that stores all of the phrases that contain a substring that matches searchCard
       let filteredPhrases = phrases.filter(
         (phrase) => { 
           if (phrase) 
@@ -169,6 +175,7 @@ class Deck extends React.Component {
         }
      );
 
+      //Variable that stores all of the questions that contain a substring that matches searchCard
       let filteredQuestions = questions.filter(
         (question) => {
           if(question){
@@ -182,6 +189,7 @@ class Deck extends React.Component {
         <Container className='Deck'>
           <Row className='Header' style={{marginBottom: '25px'}}>
             
+            {/*Search Bar for all cards in a deck, with the buttons for adding new items as appendages*/}
             <InputGroup style={{borderRadius: '12px'}}>          
               <InputGroupAddon addonType="prepend">
                 <InputGroupText>
@@ -193,11 +201,11 @@ class Deck extends React.Component {
                 type="text" 
                 placeholder="Search" 
                 value={this.state.searchCard} 
-                onChange={this.updateSearchCard.bind(this)}/>
+                onChange={this.updateSearchCard.bind(this)}
+              />
               
-
+              {/*The button for the Add Term forms*/}
               <InputGroupAddon addonType="append">
-
                 <ButtonDropdown 
                   style={{backgroundColor:'#3e6184'}} 
                   isOpen={this.state.addTermButtonOpen}
@@ -211,15 +219,16 @@ class Deck extends React.Component {
                     <DropdownItem onClick={() => this.setOpenForm(2)}> Add New</DropdownItem>
                   </DropdownMenu>
                 </ButtonDropdown>
-
               </InputGroupAddon>
 
+              {/*The button for the Add Phrase form*/}
               <InputGroupAddon addonType="append">
                 <Button style={{backgroundColor:'#3e6184'}} onClick={() => this.setOpenForm(3)}>
                   Add Phrase
                 </Button>
               </InputGroupAddon>
 
+              {/*The button for the Add Question form*/}
               <InputGroupAddon addonType="append">
                 <Button style={{backgroundColor:'#3e6184'}} onClick={() => this.setOpenForm(4)}>
                   Add Question
@@ -248,7 +257,17 @@ class Deck extends React.Component {
                   deleteTag={this.deleteTag}
                   addTag={this.addTag}
                   allTags={this.state.allTags}
-                  allAnswers={this.props.allAnswers}
+                  allAnswers={this.props.allAnswers
+                    .filter(answer =>{
+                      let termIDArray = terms.map(term => term.termID);
+
+                      if(termIDArray.indexOf(answer.id) === -1){
+                        return true;
+                      } else{
+                        return false;
+                      }
+                    })
+                  }
                   setOpenForm={this.setOpenForm}
                   />        
               </Collapse>

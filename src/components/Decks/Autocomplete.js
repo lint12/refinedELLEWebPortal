@@ -164,6 +164,7 @@ class Autocomplete extends Component {
   };
 
   render() {
+    console.log("Suggestions sent to autoComplete.js: ", this.props.suggestions)
     const {
       onChange,
       onClick,
@@ -220,7 +221,7 @@ class Autocomplete extends Component {
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={userInput}
-          style={{borderWidth: '0px', borderStyle: "none", width: "40%"}}
+          style={this.props.autoCompleteStyle}
           name={this.state.name}
           id={this.state.id}
           placeholder={this.state.placeholder}

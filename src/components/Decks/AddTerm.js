@@ -12,8 +12,8 @@ class AddTerm extends React.Component {
 		this.change = this.change.bind(this);
 
 		this.state = {
-			front: "", //english translation of the word
-			back: "", //foreign version of the word
+			front: "", //foreign version of the word
+			back: "", //english translation of the word
 			type: "", //NN, VR, AJ, AV, PH
 			gender: "", //MA, FE, NA
 			tags: [], //array of tags associated with word
@@ -178,15 +178,15 @@ render () {
 			<Row>
 				<Col>
 					<FormGroup>			
-						<Label for="front">
+						<Label for="back">
 							English Word:
 						</Label>
 
 						<Input type="text"
-						name="front"
+						name="back"
 						onChange={e => this.change(e)}
-						value={this.state.front}
-						id="front"
+						value={this.state.back}
+						id="back"
 						placeholder="English Word" 
 						autoComplete="off"/>
 					</FormGroup>
@@ -196,15 +196,15 @@ render () {
 			<Row>
 				<Col>
 					<FormGroup>
-						<Label for="back">
+						<Label for="front">
 							Translated Word:
 						</Label>
 
 						<Input type="text"
-						name="back"
+						name="front"
 						onChange={e => this.change(e)}
-						value={this.state.back}
-						id="back"
+						value={this.state.front}
+						id="front"
 						placeholder="Translated Word" />
 					</FormGroup>
 				</Col>
@@ -274,6 +274,7 @@ render () {
 							handleAddTag={this.handleAddTag}
 							createTag={this.createTag}
 							renderButton={true}
+							autoCompleteStyle={{borderWidth: '0px', borderStyle: "none", width: "40%"}}
 
 							suggestions={this.props.allTags} 
 					    />
