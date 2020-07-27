@@ -11,6 +11,7 @@ import Login from './pages/Login'
 import Logout from './pages/Logout'
 import Signup from './pages/Signup';
 import UserList from './pages/UserList';
+import Stats from './pages/Stats';
 import AuthUser from './components/Auth/AuthUser';
 import AuthAdmin from './components/Auth/AuthAdmin';
 
@@ -42,6 +43,7 @@ class App extends Component {
               <Route path="/modules" render={(props)=><Modules {...props} serviceIP={flaskIP}/>}/>
               <Route path="/profile" render={(props)=><Profile {...props} serviceIP={flaskIP}/>}/>
               <Route path="/sessions" render={(props)=><Sessions {...props} serviceIP={flaskIP}/>}/>
+              <Route path="/stats" render={(props)=><Stats {...props} serviceIP={flaskIP}/>}/>
               <AuthAdmin>
                 <Route path="/userlist" render={(props)=><UserList {...props} serviceIP={flaskIP}/>}/>
               </AuthAdmin>
