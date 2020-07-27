@@ -292,6 +292,7 @@ render () {
 
 			<Row>
 				<Col>
+					<h5 style={{color:"black"}}>All Terms:</h5>
 					<Card color="info" style={{overflow:"scroll", height:"35vh", width:"100%"}}>
 						{dynamicTerms.filter(
 							(answer) => {
@@ -315,6 +316,7 @@ render () {
 					</Card>
 				</Col>
 				<Col>
+					<h5 style={{color:"black"}}>Added Terms:</h5>
 					<Alert style={{backgroundColor:"deepSkyBlue", overflow:"scroll", height:"35vh", width:"100%"}}>
 						
 							<AnswerButtonList

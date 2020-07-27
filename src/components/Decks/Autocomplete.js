@@ -20,7 +20,6 @@ class Autocomplete extends Component {
   constructor(props) {
     super(props);
 
-    console.log("this.props.suggestions: ", this.props.suggestions);
 
     this.state = {
       // The active selection's index
@@ -50,7 +49,6 @@ class Autocomplete extends Component {
 
   handleCreateTag = () => {
 
-    console.log("Got into handleCreateTag!");
 
     this.props.createTag(this.state.userInput);
     this.setState({
@@ -134,8 +132,7 @@ class Autocomplete extends Component {
             (suggestion) => {return suggestion.toLowerCase().indexOf(tempUserInput.toLowerCase()) > -1}
           );
 
-        console.log("in Autocomplete, tempUserInput: ", tempUserInput, "tempFilteredSuggestions: ", tempFilteredSuggestions);
-
+       
         this.setState({
           activeSuggstion: 0,
           showSuggestions: true,
@@ -164,7 +161,6 @@ class Autocomplete extends Component {
   };
 
   render() {
-    console.log("Suggestions sent to autoComplete.js: ", this.props.suggestions)
     const {
       onChange,
       onClick,
