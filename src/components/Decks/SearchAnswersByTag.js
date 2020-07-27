@@ -31,7 +31,7 @@ class SearchAnswersByTag extends React.Component {
 	}
 
 
-
+	//TODO: this is unused in this component, consider deleting
 	change(e) {
 	    this.setState({
 	      [e.target.name]: e.target.value
@@ -41,12 +41,15 @@ class SearchAnswersByTag extends React.Component {
   	//function that submits the data
 	submitSearchedAnswers = (e) => {
 		e.preventDefault();
+		console.log("in submitsearchedanswers, this.state.addedTerms: ", this.state.addedTerms)
 
 		for(let i = 0; i < this.state.addedTerms.length; i++){
-			this.props.handleAddAnswer({answer: this.state.addedTerms[i]})
+			this.props.handleAddAnswer({answer: this.state.addedTerms[i].front})
 		}
+
+		this.props.toggleSearchByTagForm();
 	    
-  }
+  	}
 
   resetFields = () => {
 	  this.setState({
@@ -293,7 +296,7 @@ render () {
 					<Button style={{backgroundColor: '#004085'}} type="submit" block>
 						Add
 					</Button>
-					<Button style={{backgroundColor: 'crimson'}} onClick={() => this.props.setOpenForm(0)} block>
+					<Button style={{backgroundColor: 'crimson'}} onClick={this.props.toggleSearchByTagForm} block>
 						Cancel
 					</Button>
 				</Col>

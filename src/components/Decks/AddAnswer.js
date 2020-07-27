@@ -13,8 +13,8 @@ class AddAnswer extends React.Component {
 
 		this.state = {
 			
-			front: this.props.initialFront, //english translation of the word
-			back: "", //foreign version of the word
+			front: this.props.initialFront, //foreign version of the word
+			back: "", //english translation of the word
 			tags: [], //array of tags associated with word
 
 		};
@@ -116,16 +116,16 @@ class AddAnswer extends React.Component {
 					<Row>
 						<Col>
 							<FormGroup>			
-								<Label for="front">
+								<Label for="back">
 									English Word:
 								</Label>
 
 								<Input type="text"
-								name="front"
+								name="back"
 								onChange={e => this.change(e)}
-								value={this.state.front}
-								id="front"
-								placeholder={this.props.front} 
+								value={this.state.back}
+								id="back"
+								placeholder={this.props.back} 
 								autoComplete="off"/>
 							</FormGroup>
 						</Col>
@@ -134,15 +134,15 @@ class AddAnswer extends React.Component {
 					<Row>
 						<Col>
 							<FormGroup>
-								<Label for="back">
+								<Label for="front">
 									Translated Word:
 								</Label>
 
 								<Input type="text"
-								name="back"
+								name="front"
 								onChange={e => this.change(e)}
-								value={this.state.back}
-								id="back"
+								value={this.state.front}
+								id="front"
 								placeholder="Translated Word"
 								autoComplete="off" />
 							</FormGroup>
@@ -164,6 +164,7 @@ class AddAnswer extends React.Component {
 									placeholder={"Tag"}
 									handleAddTag={this.handleAddTag}
 									createTag={this.createTag}
+									renderButton={true}
 
 									suggestions={this.props.allTags} 
 							    />

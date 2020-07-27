@@ -25,8 +25,8 @@ class AddQuestion extends React.Component {
 			selectedAudioFile: null, //file location of the audio selected
 			type: [],
 
-			validAnswers: [],
-			prevValidAnswers: [],
+			validAnswers: [], //all of the terms not in the module and not already added
+			prevValidAnswers: [], //used to see if an answer was added or removed
 
 			imgLabel: "Pick an image for the question", 
 			audioLabel: "Pick an audio for the question",
@@ -44,6 +44,7 @@ class AddQuestion extends React.Component {
 		this.setValidAnswers();
 	}
 
+	//function that sets the image file to the one selected
 	imgFileChangedHandler = (event) => {
 		this.setState({
 			selectedImgFile: event.target.files[0],
@@ -51,6 +52,7 @@ class AddQuestion extends React.Component {
 		})
 	}
 
+	//function that sets the audio file to the one selected
 	audioFileChangedHandler = (event) => {
 		this.setState({
 			selectedAudioFile: event.target.files[0],
@@ -58,18 +60,17 @@ class AddQuestion extends React.Component {
 		})
 	}
 
+	//function used by question field change state
 	change(e) {
 		this.setState({
 			[e.target.name]: e.target.value
 		})
 	}
 
-	//TODO: Make this actually work
+
 	//function that submits the data
 	//needs to submit the question, and then make a request to add answers to question
-
 	submitQuestion = (e) => {
-		console.log("Got into submitQuestion")
 
 		if (this.state.questionText.length !== 0)
 		{   
@@ -80,15 +81,11 @@ class AddQuestion extends React.Component {
 				};
 
 			//required fields for adding a question
-			data.append('questionText', this.state.questionText);
-
-			//optional fields for adding a question
-			
+			data.append('questionText', this.state.questionText);		
 			data.append('type', "LONGFORM"); 
-
 			data.append('moduleID', this.props.curModule.moduleID)
 
-
+			//optional fields for adding a question
 			if (this.state.selectedImgFile !== null || this.state.selectedImgFile !== undefined)
 				data.append('image', this.state.selectedImgFile);
 
@@ -98,8 +95,6 @@ class AddQuestion extends React.Component {
 
 			axios.post(this.props.serviceIP + '/question', data, header)
 				.then(res => {
-					console.log("res.data in submitQuestion: ", res.data);
-					//TODO: change the backend so this is how it actually works
 					this.setState({
 						questionID: res.data.questionID
 					})
@@ -109,7 +104,6 @@ class AddQuestion extends React.Component {
 					}
 
 					this.submitAnswers();
-
 					this.resetFields();
 					this.props.updateCurrentModule({ module: this.props.curModule });
 				}) 
@@ -118,25 +112,68 @@ class AddQuestion extends React.Component {
 				});
 		} else {
 			e.preventDefault();
-			alert("Please fill all inputs!sdfasfdasf");
+			alert("Please fill all inputs!");
 		}
 	}
 
+	//function for adding a new term to the database, used to add newly created answers
+	createNewAnswer = (answer) => {
+			let header = {
+				headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+				};
 
+
+			if (answer.front.length !== 0 && answer.back.length !== 0)
+			{   
+				
+				const data = new FormData(); 
+
+				//required fields for adding a term
+				data.append('front', answer.front); 
+				data.append('back', answer.back); 
+				data.append('moduleID', this.props.curModule.moduleID); 
+				data.append('language', this.props.curModule.language); 
+
+				//map through all the tags and make a tag field object for them 
+				answer.tags.map((label) => {
+					return ( data.append('tag', label) )
+				})
+
+				axios.post(this.props.serviceIP + '/term', data, header)
+					.then(async res => {
+
+						let data = {
+							questionID: this.state.questionID,
+							termID: res.data.termID
+						}
+				
+						await axios.post(this.props.serviceIP + '/addAnswer', data, header)
+							.then(res => {
+								this.props.updateCurrentModule({module: this.props.curModule})
+							})
+							.catch(error => {
+								console.log("createNewAnswer /addAnswer error: ", error)
+						})
+
+					}) 
+					.catch(function (error) {
+						console.log("createNewAnswer /term error: ", error);
+					});
+			} else {
+				//e.preventDefault();
+				alert("Please fill all inputs!");
+			}
+		}
+
+	//function that loops through all of the answers and attaches them to the question, one by one
 	submitAnswers = () => {
-		console.log("Got into submitAnswers");
-
 		for(let i = 0; i < this.state.answers.length; i++){
-			console.log("going into submitIndividualAnswer, this.state.answers[i]: ", this.state.answers[i])
 			this.submitIndividualAnswer(this.state.answers[i]);
 		}
 	}
 
+	//function that attaches an answer to a question
 	submitIndividualAnswer = (answer) => {
-
-		console.log("questionID in submitIndividualAnswer: ", this.state.questionID);
-		console.log("answerID in submitIndividualAnswer: ", answer.id);
-
 		let header = {
 			headers: {'Authorization': 'Bearer ' + localStorage.getItem('jwt')}
 		}
@@ -155,76 +192,14 @@ class AddQuestion extends React.Component {
 			})
 	}
 
-	createNewAnswer = (answer) => {
-		let header = {
-			headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-			};
-
-		console.log("in createNewAnswer")
-		console.log("FRONT: ", answer.front)
-		console.log("BACK: ", answer.back)
-		console.log("TAGS: ", answer.tags)
-
-
-		if (answer.front.length !== 0 && answer.back.length !== 0)
-		{   
-			//e.preventDefault();
-			const data = new FormData(); 
-			
-
-			//required fields for adding a term
-			data.append('front', answer.front); 
-			data.append('back', answer.back); 
-			data.append('moduleID', this.props.curModule.moduleID); 
-			data.append('language', this.props.curModule.language); 
-
-
-			//map through all the tags and make a tag field object for them 
-			answer.tags.map((label) => {
-				return ( data.append('tag', label) )
-			})
-
-			console.log("in createNewAnswer for addQuestion. input data: ", data);
-			axios.post(this.props.serviceIP + '/term', data, header)
-				.then(async res => {
-					console.log("res.data in createNewAnswer: ", res.data); 
-
-					//this.submitIndividualAnswer({ id: res.data.termID })
-
-					let data = {
-						questionID: this.state.questionID,
-						termID: res.data.termID
-					}
-
-					console.log("Nested data: ", data); 
-			
-					await axios.post(this.props.serviceIP + '/addAnswer', data, header)
-						.then(res => {
-							console.log("res.data in nested axios request: ", res.data)
-							this.props.updateCurrentModule({module: this.props.curModule})
-						})
-						.catch(error => {
-							console.log("error in nested axios request: ", error)
-					})
-
-				}) 
-				.catch(function (error) {
-					console.log("createNewAnswer error: ", error);
-				});
-		} else {
-			//e.preventDefault();
-			alert("Please fill all inputs!");
-		}
-	}
-
 
 	//TODO: handleAddAnswer and createAnswer kinda do the same thing. Maybe they should be one thing?
-	//function that adds an existing term as an answer
+	//function that takes a string and adds the corresponding answer object to this.state.answers
 	handleAddAnswer = (event) => {
 		
-		//let list = this.props.addAnswer(this.state.answers, event.answer);
 
 		let list = this.state.answers;
+		
 		let answerObject = this.props.allAnswers.find(
 			(answer) => {
 				if(answer.front === event.answer){
@@ -245,14 +220,46 @@ class AddQuestion extends React.Component {
 				})
 		}
 
-		list.push(answerObject);
-		console.log("answerObject in handleAddAnswer: ", answerObject);
+		if(answerObject !== undefined){
+			list.push(answerObject);
+		}
 
 		this.setState({
 			answers: list
 		})
 
 		this.setValidAnswers();
+	}
+
+	//sets this.state.validAnswers to be all of the answers not already added to this form
+	setValidAnswers = () => {
+		console.log("Going into setValidAnswers, this.state.validAnswers: ", this.state.validAnswers)
+		let tempValidAnswers = this.props.allAnswers;
+
+		console.log("this.state.answers: ", this.state.answers);
+		
+		console.log("tempValidAnswers before filter: ", tempValidAnswers);
+
+		let frontArray = this.state.answers.map(answer => {return answer.front});
+		let backArray = this.state.answers.map(answer => {return answer.back});
+
+		tempValidAnswers = tempValidAnswers.filter(
+			(answer) => {
+
+				if(frontArray.indexOf(answer.front) === -1
+					&& backArray.indexOf(answer.back) === -1){
+					return true;
+				} else{
+					return false;
+				}
+			}
+		)
+		console.log("tempValidAnswers after filter: ", tempValidAnswers);
+
+		this.setState({
+			validAnswers: tempValidAnswers,
+		})
+		console.log("Leaving setValidAnswers, this.state.validAnswers: ", this.state.validAnswers)
 	}
 
 	//function that adds a new answer from user input to list of answers on this form
@@ -267,6 +274,9 @@ class AddQuestion extends React.Component {
 	}
 
 	toggleSearchByTagForm = () => {
+
+		this.setValidAnswers();
+
 		this.setState({
 			searchingByTag: !this.state.searchingByTag
 		})
@@ -379,37 +389,14 @@ class AddQuestion extends React.Component {
 	  return true;
 	}
 
-	setValidAnswers = () => {
-		console.log("in addQuestion, setting autocomplete suggstions, this.props.allAnswers: ", this.props.allAnswers)
-		let tempValidAnswers = this.props.allAnswers;
-		tempValidAnswers.filter(
-			(suggestion) => {
-				if(this.state.answers.indexOf(suggestion) === -1){
-					return true;
-				} else{
-					return false;
-				}
-			}
-		)
-
-		this.setState({
-			validAnswers: tempValidAnswers,
-		})
-	}
+	
 
 	render () {
 		console.log("in addQuestion, this.state.validAnswers: ", this.state.validAnswers)
 	    
-		let newValidAnswers = this.props.allAnswers.filter(
-			(suggestion) => {
-				if(this.state.answers.indexOf(suggestion) === -1){
-					return true;
-				} else{
-					return false;
-				}
-			}
-		)
+		let newValidAnswers = this.props.allAnswers;
 
+		//TODO: try to find a way to do this outside of the render() function
 		if(!this.arraysEqual(newValidAnswers, this.state.prevValidAnswers)){
 			this.setState({
 				validAnswers: newValidAnswers,
@@ -469,8 +456,8 @@ class AddQuestion extends React.Component {
 													.concat(this.state.validAnswers
 														.map((answer) => {return(answer.back)})
 														)
-														.filter((answer, i, allAnswers) => {
-															if(allAnswers.indexOf(answer) !== i){
+														.filter((answer, i, validAnswers) => {
+															if(validAnswers.indexOf(answer) !== i){
 																return false;
 															} else{
 																return true;
@@ -599,7 +586,9 @@ class AddQuestion extends React.Component {
 						deleteTag={this.props.deleteTag}
 						addTag={this.props.addTag}
 						allTags={this.props.allTags}
-						allAnswers={this.props.allAnswers}
+						allAnswers={this.state.validAnswers}
+						handleAddAnswer={this.handleAddAnswer}
+						toggleSearchByTagForm={this.toggleSearchByTagForm}
 						
 
 					>

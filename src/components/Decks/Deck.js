@@ -32,8 +32,7 @@ class Deck extends React.Component {
       openForm: 0, //determines which input form is open. Is 0 if no form is open
 
       allTags: [], //contains all the tags in the database. for autocomplete purposes
-      allAnswers: this.props.allAnswers, //contains all of the terms in the database. For autocomplete on longform questions
-
+      
 
       //state properties below this point are never used, and we should probably delete them
       id: this.props.curModule.moduleID,
@@ -143,9 +142,33 @@ class Deck extends React.Component {
   render () {
 
       //Variables that store the differnt types of cards in the module
-      let terms = this.props.cards.filter(card => card.type.toLowerCase() === "match" && card.answers[0] !== undefined).map((card, i) => {return card.answers[0]});
-      let phrases = this.props.cards.filter(card => card.type.toLowerCase() === "phrase").map((card, i) => {return card.answers[0]}); 
-      let questions = this.props.cards.filter(card => card.type.toLowerCase() === "longform").map((card, i) => {return card}); 
+      let terms = this.props.cards
+        .filter(card => card.type.toLowerCase() === "match" && card.answers[0] !== undefined)
+          .map((card, i) => {return card.answers[0]});
+
+
+      
+      let phrases = this.props.cards
+        .filter(card => card.type.toLowerCase() === "phrase")
+          .map((card, i) => {return card.answers[0]}); 
+      
+      let questions = this.props.cards
+        .filter(card => card.type.toLowerCase() === "longform")
+          .map((card, i) => {return card}); 
+
+
+      //Gets all answers not in this module
+      let termIDArray = terms.map(term => term.termID);
+
+      let allAnswersNotInThisModule = this.props.allAnswers.filter(
+                                      answer =>{                                   
+                                        if(termIDArray.indexOf(answer.id) === -1){
+                                          return true;
+                                        } else{
+                                          return false;
+                                        }
+                                      })
+
       
       console.log("Got into Deck.js render()")
       console.log("terms: ", terms);
@@ -237,6 +260,8 @@ class Deck extends React.Component {
             </InputGroup>
 
             <Col>
+
+              {/*Form for adding a new Term*/}
               <Collapse isOpen={this.state.openForm === 2}>     
                 <AddTerm
                   curModule={this.props.curModule} 
@@ -249,6 +274,7 @@ class Deck extends React.Component {
                   />        
               </Collapse>
 
+              {/*Form for adding an existing Term*/}
               <Collapse isOpen={this.state.openForm === 1}>     
                 <AddExistingTerm
                   curModule={this.props.curModule} 
@@ -257,21 +283,12 @@ class Deck extends React.Component {
                   deleteTag={this.deleteTag}
                   addTag={this.addTag}
                   allTags={this.state.allTags}
-                  allAnswers={this.props.allAnswers
-                    .filter(answer =>{
-                      let termIDArray = terms.map(term => term.termID);
-
-                      if(termIDArray.indexOf(answer.id) === -1){
-                        return true;
-                      } else{
-                        return false;
-                      }
-                    })
-                  }
+                  allAnswers={allAnswersNotInThisModule}
                   setOpenForm={this.setOpenForm}
                   />        
               </Collapse>
 
+            {/*Form for adding a new Phrase*/}
               <Collapse isOpen={this.state.openForm === 3}>
                 <AddPhrase
                   curModule={this.props.curModule} 
@@ -281,6 +298,7 @@ class Deck extends React.Component {
                 />
               </Collapse>
 
+            {/*Form for adding a new Question*/}
               <Collapse isOpen={this.state.openForm === 4}>
                 <AddQuestion
                   curModule={this.props.curModule} 
@@ -288,6 +306,7 @@ class Deck extends React.Component {
                   serviceIP={this.props.serviceIP}
                         
                   allAnswers={this.props.allAnswers}
+                  allAnswersNotInThisModule={allAnswersNotInThisModule}
                   
                   deleteTag={this.deleteTag}
                   addTag={this.addTag}
@@ -300,8 +319,9 @@ class Deck extends React.Component {
 
           {this.state.tabs.map((index,i) => { 
             if (index === 0) {
+              //Terms Accordion
               return (
-                <Card key={i} style={{ marginBottom: '1rem' }}>
+                <Card  key={i} style={{ marginBottom: '1rem' }}>
                   <CardHeader onClick={this.toggleTab} data-event={index}>
                     Terms
                   </CardHeader>
@@ -321,7 +341,8 @@ class Deck extends React.Component {
               )
             }
             else if (index === 1) {
-              return (
+              //Phrases Accordion
+              return (                
                 <Card key={i} style={{ marginBottom: '1rem' }}>
                   <CardHeader onClick={this.toggleTab} data-event={index}>
                     Phrases
@@ -339,6 +360,7 @@ class Deck extends React.Component {
               )
             }
             else {
+              //Questions Accordion
               return (
                 <Card key={i} style={{ marginBottom: '1rem' }}>
                   <CardHeader onClick={this.toggleTab} data-event={index}>

@@ -52,6 +52,8 @@ class AddExistingTerm extends React.Component {
 	    		moduleID: this.props.curModule.moduleID
 	    	}
 
+	    	console.log("submitting existing term, data: ", data);
+	    	
 	    	axios.post(this.props.serviceIP + '/attachterm', data, header)
 	    	.then(res => {
 	    		if(i === (this.state.addedTerms.length - 1)){
