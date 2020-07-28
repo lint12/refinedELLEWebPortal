@@ -230,12 +230,11 @@ class Deck extends React.Component {
               
               {/*The button for the Add Term forms*/}
               <InputGroupAddon addonType="append">
-                <ButtonDropdown 
-                  style={{backgroundColor:'#3e6184'}} 
+                <ButtonDropdown  
                   isOpen={this.state.addTermButtonOpen}
                   toggle={this.toggleAddTermButton}
                   >
-                  <DropdownToggle caret>
+                  <DropdownToggle style={{backgroundColor:'#3e6184'}} caret>
                     Add Term
                   </DropdownToggle>
                   <DropdownMenu>

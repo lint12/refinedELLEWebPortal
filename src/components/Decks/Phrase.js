@@ -95,6 +95,7 @@ class Phrase extends React.Component {
 
     deletePhrase = () => {
         console.log("call api to delete phrase");
+        console.log("deleting this phrase: ", this.state.card)
 
         this.toggleModal(); 
 
@@ -105,12 +106,13 @@ class Phrase extends React.Component {
     
         axios.delete(this.props.serviceIP + '/term', header)
           .then( res => {
-            console.log(res.data);
+            console.log("deletePhrase res.data: ", res.data)
             this.props.updateCurrentModule({ module: this.props.curModule });  
           })
           .catch(error => {
-            console.log("deleteCard in Phrase.js error: ", error);
+            console.log("deletePhrase error: ", error);
           });
+        console.log("now leaving deletePhrase")
     }
 
     change(e) {
