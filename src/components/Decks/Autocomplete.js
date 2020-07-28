@@ -114,7 +114,7 @@ class Autocomplete extends Component {
     // User pressed the enter key, update the input and close the
     // suggestions
     if (e.keyCode === 13) {
-
+      e.preventDefault(); 
       if(filteredSuggestions.length === 1){
         this.setState({
           activeSuggestion: 0,
@@ -122,7 +122,12 @@ class Autocomplete extends Component {
           userInput: ""
         });
 
-        this.props.handleAddTag({tag: filteredSuggestions[0]});
+        if(this.props.handleAddTag !== undefined){
+          this.props.handleAddTag({tag: filteredSuggestions[0]});
+        } 
+        else if(this.props.handleAddAnswer !== undefined){
+          this.props.handleAddAnswer({answer: filteredSuggestions[0]});
+        }
       
       } else if(filteredSuggestions.length > 1) {
         
@@ -132,7 +137,6 @@ class Autocomplete extends Component {
             (suggestion) => {return suggestion.toLowerCase().indexOf(tempUserInput.toLowerCase()) > -1}
           );
 
-       
         this.setState({
           activeSuggstion: 0,
           showSuggestions: true,

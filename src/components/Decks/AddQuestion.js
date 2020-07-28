@@ -588,7 +588,7 @@ class AddQuestion extends React.Component {
 						allTags={this.props.allTags}
 						allAnswers={this.state.validAnswers}
 						handleAddAnswer={this.handleAddAnswer}
-						toggleSearchByTagForm={this.toggleSearchByTagForm}
+						toggleSearchByTagForm={this.toggleSearchByTagForm}   
 						
 
 					>

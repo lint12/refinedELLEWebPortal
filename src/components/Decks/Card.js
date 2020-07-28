@@ -29,8 +29,8 @@ class Card extends React.Component {
       editMode: false, //determines whether or not the editable version of the card is showing
       editedFront: this.props.card.front, //contains the foreign word that can be edited
       editedBack: this.props.card.back, //contains the English word that can be edited
-      editedType: this.props.card.type, //contains the type of 
-      editedGender: this.props.card.gender, //contains the gender of the card in question
+      editedType: this.props.card.type === null ? "" : this.props.card.type, //contains the type of 
+      editedGender: this.props.card.gender === null ? "" : this.props.card.gender, //contains the gender of the card in question
       collapseTags: false, //determines whether or not the tags are displayed on the card
       
       selectedImgFile: this.props.card.imageLocation, //contains the location of the image for the card
@@ -136,9 +136,10 @@ class Card extends React.Component {
       .then(res => {
         this.setState({
           changedImage: false, 
-          changedAudio: false
+          changedAudio: false, 
         });
 
+        this.getTermTags(this.props.card.termID); 
         this.props.updateCurrentModule({ module: this.props.curModule });  
       })
       .catch(error => {
@@ -343,16 +344,17 @@ class Card extends React.Component {
       )
     } 
     else{
+      console.log("GENDER: ", editedGender)
       return (
       <Fragment>
-
+        
       <tr>
         <td>
         <Input 
           type="value" 
           name="editedBack"
           onChange={e => this.change(e)} 
-          value={this.state.editedBack} 
+          value={editedBack} 
           />
         </td>
 
@@ -361,7 +363,7 @@ class Card extends React.Component {
             type="value" 
             name="editedFront"
             onChange={e => this.change(e)} 
-            value={this.state.editedFront} 
+            value={editedFront} 
             />
         </td>
 
@@ -370,7 +372,7 @@ class Card extends React.Component {
 							type="select" 
 							name="editedType" 
 							id="selectType"
-							value={this.state.editedType} 
+							value={editedType} 
 							onChange={e => this.change(e)}>
 
 							<option value="">Select</option>
@@ -386,13 +388,13 @@ class Card extends React.Component {
 							type="select" 
 							name="editedGender" 
 							id="selectGender"
-							value={this.state.editedGender} 
+							value={editedGender} 
 							onChange={e => this.change(e)}>
 
 							<option value="">Select</option>
-							<option value="MA">MA (Male)</option>
-							<option value="FE">FE (Female)</option>
-							<option value="NA">NA (Nongendered)</option>
+							<option value="M">MA (Male)</option>
+							<option value="F">FE (Female)</option>
+							<option value="N">NA (Nongendered)</option>
 					</CustomInput>
         </td>
 
