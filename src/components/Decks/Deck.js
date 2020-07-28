@@ -171,6 +171,7 @@ class Deck extends React.Component {
 
       
       console.log("Got into Deck.js render()")
+      console.log("cards: ", this.props.cards)
       console.log("terms: ", terms);
       console.log("phrases: ", phrases); 
       console.log("questions: ", questions); 
