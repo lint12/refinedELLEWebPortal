@@ -159,8 +159,6 @@ class Question extends React.Component {
           changedAudio: false
         });
 
-
-
         this.props.updateCurrentModule({ module: this.props.curModule });  
       })
       .catch(error => {
@@ -411,7 +409,7 @@ class Question extends React.Component {
         <td style={{border:"none"}} colSpan="8">
           Answers: 
           <AnswerButtonList 
-            answers={this.state.answers} //this.props.question.map(answers ...) maybe?
+            answers={this.props.question.answers.map((answer) => {return answer.front})} 
             handleDeleteAnswer={this.handleDeleteAnswer} 
             deletable={true}
             />

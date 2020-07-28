@@ -27,7 +27,7 @@ export default class Modules extends Component {
 
 
     this.state = {
-
+      moduleName: "", //for changing moduleNAME after a module edit 
       modules: [], //list of all modules in the database
       dynamicModules: [], //list of modules filtered by search bar
 
@@ -40,16 +40,6 @@ export default class Modules extends Component {
       searchDeck: '', //what gets typed in the search bar that filters the module list
       collapseNewModule: false, //determines whether or not the new module form is open
       emptyCollection: false, //true when there are no modules, false otherwise
-
-      //state properties below this point are never used, and we should probably delete them
-      userID: "",
-      username: "",
-
-      audio: [],
-      image: [],
-
-      deckID: "", //for deleting a deck
-      deckName: "" //for adding a new deck
     };
   }
 
@@ -76,7 +66,8 @@ export default class Modules extends Component {
           this.toggleEmptyCollectionAlert(); 
         }
         else {
-          this.setState({ currentModule: modules[0],
+          this.setState({ moduleName: modules[0].name, 
+                          currentModule: modules[0],
                           modules : modules,
                           dynamicModules: modules });
 
@@ -133,7 +124,7 @@ export default class Modules extends Component {
         this.setState({
           id: event.module.termID,
           module: event.module,
-          deckName: event.module.name, //where are we using this?
+          moduleName: event.module.name, 
           cards: cards,
           currentModule: event.module
         });
@@ -220,6 +211,8 @@ export default class Modules extends Component {
       complexity: 2 //all modules will have complexity 2
     }
 
+    console.log("EDIT MODULE DATA: ", data)
+
     let header = {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }
@@ -228,6 +221,11 @@ export default class Modules extends Component {
       .then( res => {
 
         this.updateModuleList(); 
+ 
+        if (this.state.currentModule.name === event.module.name) {
+          console.log("CURRENTLY SHOWING THE SAME MODULE AS THE ONE YOUVE EDITED")
+          this.setState({moduleName: editedName}); 
+        }
 
       })
       .catch(function (error) {
@@ -373,6 +371,7 @@ export default class Modules extends Component {
             {
               this.state.modules.length !== 0 ? 
               <Deck
+                moduleName={this.state.moduleName}
                 curModule={this.state.currentModule}
                 cards={this.state.cards}
                 serviceIP={this.props.serviceIP}

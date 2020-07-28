@@ -217,7 +217,7 @@ class Deck extends React.Component {
             <InputGroup style={{borderRadius: '12px'}}>          
               <InputGroupAddon addonType="prepend">
                 <InputGroupText>
-                  {this.props.curModule.name}
+                  {this.props.moduleName}
                 </InputGroupText>
               </InputGroupAddon>
               
