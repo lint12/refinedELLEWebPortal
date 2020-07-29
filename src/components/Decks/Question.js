@@ -229,11 +229,30 @@ class Question extends React.Component {
     })
   }
 
+  arraysEqual = (array1, array2) => {
+    if (array1 === array2) return true;
+    if (array1 == null || array2 == null) return false;
+    if (array1.length !== array2.length) return false;
+
+    for (var i = 0; i < array2.length; ++i) {
+      if (array1[i] !== array2[i]) return false;
+    }
+    return true;
+  }
 
   render() {
     let {selectedImgFile, selectedAudioFile, question, editedQuestionText} = this.state;
     let imgLink = "http://34.239.123.94/Images/" + selectedImgFile;
     let audioLink = "http://34.239.123.94/Audios/" + selectedAudioFile;
+
+/*
+    let newAnswers = this.props.question.answers;
+    if(!this.arraysEqual(newAnswers,this.state.answser)){
+      this.setState({
+        answers: newAnswers
+      })
+    }
+*/
 
     if (this.state.editMode === false){
       return (

@@ -146,7 +146,7 @@ class AddQuestion extends React.Component {
 							questionID: this.state.questionID,
 							termID: res.data.termID
 						}
-				
+						
 						await axios.post(this.props.serviceIP + '/addAnswer', data, header)
 							.then(res => {
 								this.props.updateCurrentModule({module: this.props.curModule})
@@ -170,6 +170,8 @@ class AddQuestion extends React.Component {
 		for(let i = 0; i < this.state.answers.length; i++){
 			this.submitIndividualAnswer(this.state.answers[i]);
 		}
+
+		//this.props.updateCurrentModule();
 	}
 
 	//function that attaches an answer to a question
@@ -185,6 +187,7 @@ class AddQuestion extends React.Component {
 
 		axios.post(this.props.serviceIP + '/addAnswer', data, header)
 			.then(res => {
+
 				console.log("res.data in submitIndividualAnswer: ", res.data)
 			})
 			.catch(error => {

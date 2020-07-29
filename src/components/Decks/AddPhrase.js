@@ -114,7 +114,8 @@ class AddPhrase extends React.Component {
                             onChange={e => this.change(e)}
                             value={this.state.phFront}
                             id="phFront"
-                            placeholder="Phrase in English" />
+                            placeholder="Phrase in English"
+                            autoComplete="off" />
                         </FormGroup>
                     </Col>
                 </Row>
@@ -127,7 +128,8 @@ class AddPhrase extends React.Component {
                             onChange={e => this.change(e)}
                             value={this.state.phBack}
                             id="phBack"
-                            placeholder="Phrase Translated" />
+                            placeholder="Phrase Translated"
+                            autoComplete="off" />
                         </FormGroup>
                     </Col>
                 </Row>

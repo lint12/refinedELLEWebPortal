@@ -52,7 +52,16 @@ export default class ModuleChart extends Component {
 		let chartColors = this.getColors(0);
 
 		let tempScoreData = {
-			labels: this.props.chartData.map(data => data.platform),
+			labels: this.props.chartData.map(data => {
+				if(data.platform == "cp"){
+					return "PC"
+				} else if(data.platform == "mb"){
+					return "Mobile"
+				} else{
+					return data.platform
+				}
+
+			}),
 			datasets: [
 				{
 					label: this.props.moduleName + " (Average Score)",
@@ -74,7 +83,16 @@ export default class ModuleChart extends Component {
 		let chartColors = this.getColors(1);
 
 		let tempSessionLengthData = {
-			labels: this.props.chartData.map(data => data.platform),
+			labels: this.props.chartData.map(data => {
+				if(data.platform == "cp"){
+					return "PC"
+				} else if(data.platform == "mb"){
+					return "Mobile"
+				} else{
+					return data.platform
+				}
+
+			}),
 			datasets: [
 				{
 					label: this.props.moduleName + " (Average Session Length)",

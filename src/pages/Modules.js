@@ -313,7 +313,7 @@ export default class Modules extends Component {
 
     <br/><br/>
 
-    <h4>Your Elle VR Modules:</h4>
+    <h4>Your Elle Modules:</h4>
     <Row className="Seperated Col">
       <Col className="Left Column" xs="3">
         

@@ -184,6 +184,15 @@ export default class Stats extends Component {
     return moduleButtonArray;
   }
 
+  getPlatformName = (platform) => {
+    if(platform == "cp"){
+              return "PC"
+            }else if (platform === "mb"){
+              return "Mobile"
+            }else{
+              return platform
+            }
+  }
   getGameChartButtons = () => {
     console.log("getGameChartButtons this.state.platformList: ", this.state.platformList)
     let gameButtonArray = this.state.platformList.map(
@@ -194,7 +203,7 @@ export default class Stats extends Component {
             key={platform}
             onClick={() => this.getGameChartData(platform)}
           >
-            {platform}
+            {this.getPlatformName(platform)}
           </Button>
           )
       }
