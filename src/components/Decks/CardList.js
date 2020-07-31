@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table } from 'reactstrap';
+import { Table, Alert } from 'reactstrap';
 
 import Card from './Card';
 import Phrase from './Phrase';
@@ -24,9 +24,14 @@ const CardList = (props) => {
     }
 
     let list = removeDuplicates(); 
+    let len = list.length; 
 
     if (props.type === 0) {
 	    return (
+        <div>
+        {len === 0 ? 
+          <Alert> There are currently no terms in this module. </Alert>
+        : 
         <Table hover className="tableList">
           <thead>
             <tr>
@@ -56,10 +61,16 @@ const CardList = (props) => {
             })}
           </tbody>
         </Table>
+        }
+        </div>
       )
     }
     else if(props.type === 1) {
       return (
+        <div>
+        {len === 0 ? 
+          <Alert> There are currently no phrases in this module. </Alert>
+        : 
         <Table hover className="tableList">
 
           <thead>
@@ -85,10 +96,16 @@ const CardList = (props) => {
             })}
           </tbody>
         </Table>
+        }
+        </div>
       )
     }
     else if(props.type === 2) {
       return (
+        <div>
+        {props.cards.length === 0 ? 
+          <Alert> There are currently no custom questions in this module. </Alert>
+        : 
         <Table hover className="tableList">
           <thead>
             <tr>
@@ -115,6 +132,8 @@ const CardList = (props) => {
           </tbody>
 
         </Table>
+        }
+        </div>
       )
     }
 }
