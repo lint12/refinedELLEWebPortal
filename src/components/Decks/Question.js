@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import AnswerButtonList from './AnswerButtonList';
 import Autocomplete from './Autocomplete';
+import AddAnswer from './AddAnswer'; 
 
 class Question extends React.Component {
   constructor(props){
@@ -37,7 +38,12 @@ class Question extends React.Component {
 
       //TODO: populate answers with API call instead of dummy data
       answers: this.props.question.answers.map((answer) => {return answer.front}), //contains the list of answers
-      originalAnswers: this.props.question.answers.map((answer) => {return answer.front})
+      originalAnswers: this.props.question.answers.map((answer) => {return answer.front}),
+      ids: this.props.question.answers.map((answer) => {return answer.termID}),
+
+      newlyCreatedAnswers : [], //array of answers the user created via this form
+      submittingAnswer: false, //determines whether or not the AddAnswer form will be shown
+			userCreatedAnswer: "", //what the user put in the field when they clicked create answer
     }
 
   }
@@ -46,28 +52,64 @@ class Question extends React.Component {
   //TODO: handleAddAnswer and createAnswer kinda do the same thing. Maybe they should be one thing?
   //function that adds a answer to list of answers on this question(only available when editmode is true)
   handleAddAnswer = (event) => {
-    let list = this.props.addAnswer(this.state.answers, event.answer);
+  //  let list = this.props.addAnswer(this.state.answers, event.answer);
+
+    console.log("EVENT being passed in: ", event); 
+    let ansList = this.state.answers; 
+    let idList = this.state.ids; 
+    ansList.push(event.answer); 
+    idList.push(event.answerID); 
 
     this.setState({
-      answers: list
+      answers: ansList, 
+      ids: idList
     })
   }
 
 
   //function that adds a new answer from user input to list of answers on this question(only when editmode is true)
   createAnswer = (answer) => {
+    console.log("CreateAnswer was pressed"); 
+    // let tempAnswers = this.state.answers;
+    // tempAnswers.push(answer);
+    // this.setState({
+    //   answers: tempAnswers
+    // });
 
-    let tempAnswers = this.state.answers;
-    tempAnswers.push(answer);
     this.setState({
-      answers: tempAnswers
-    });
+			submittingAnswer: true,
+			userCreatedAnswer: answer
+		});
   }
+
+	//function that adds a newly created answer to the list of answers on this question
+  addNewAnswerToList = (answer) => {
+		let tempNewlyCreatedAnswers = this.state.newlyCreatedAnswers;
+    tempNewlyCreatedAnswers.push(answer);
+    
+    let allAnswers = this.state.answers; 
+    allAnswers.push(answer.front); 
+
+		console.log("NEWLY CREATED ANSWERS: ", answer); 
+		this.setState({
+      newlyCreatedAnswers: tempNewlyCreatedAnswers,
+      answers: allAnswers, 
+			submittingAnswer: false
+		})
+	}
+
+  	//function that allows user to cancel AddAnswer form
+	cancelCreateAnswer = () => {
+		this.setState({
+			submittingAnswer: false
+		})
+	}
 
   handleDeleteAnswer = (event) => {
     console.log("Got into handleDeleteAnswer, event.answer: ", event.answer)
 
     let tempAnswerButtonList = this.state.answers;
+    let idList = this.state.ids; 
     
     let answerObject = this.state.answers.find((answer) => {
       if(answer === event.answer){
@@ -77,15 +119,16 @@ class Question extends React.Component {
       }
     });
 
-
     let answerIndex = tempAnswerButtonList.indexOf(answerObject);
 
     if(answerIndex !== -1){
       tempAnswerButtonList.splice(answerIndex, 1);
+      idList.splice(answerIndex, 1); 
     }
 
     this.setState({
-      answers: tempAnswerButtonList
+      answers: tempAnswerButtonList,
+      ids: idList
     })
 
   }
@@ -93,7 +136,9 @@ class Question extends React.Component {
   //function that gets called when the edit button is pushed. Sets editmode to true
   toggleEditMode = () => {
     this.setState({editMode: true,
-                  collapseAnswers: true})
+                  collapseAnswers: true, 
+                  answers: this.props.question.answers.map((answer) => {return answer.front}),
+                  ids: this.props.question.answers.map((answer) => {return answer.termID})})
   }
 
   //function that changes the state of front, back, type, and gender based off of the name given to the input objects
@@ -122,9 +167,29 @@ class Question extends React.Component {
   //function that submits all of the edited data put on a question 
   submitEdit = (event) => {
 
-    console.log("QUESTIONTEXT: ", this.state.editedQuestionText); 
+    console.log("QUESTIONTEXT: ", this.state.editedQuestionText)
+    console.log("WUESTIONID: ", this.props.question.questionID)
+    console.log("NEW ANSWERS IDS OF TERMS THAT EXIST IN THE DATABASE ALREADY: ", this.state.ids)
+    console.log("NEWLY CREATED ANSWERS INSIDE OF SUBMITEDIT: ", this.state.newlyCreatedAnswers)
 
     this.setState({editMode: false});
+
+    let NewlyCreatedAnswerJSONList = this.state.newlyCreatedAnswers.map((answer) => {
+      return {
+        "front": answer.front,
+        "back": answer.back,
+        "language": this.props.curModule.language,
+        "tags": answer.tags
+      }
+    })
+
+    console.log("JSON LIST: ", NewlyCreatedAnswerJSONList); 
+
+    let stringyAnswerList = JSON.stringify(NewlyCreatedAnswerJSONList.map((entry) => {return entry})); 
+    console.log("STRINGIFY: ", stringyAnswerList)
+
+    let stringifyIDList = JSON.stringify(this.state.ids.map((entry) => {return entry})); 
+    console.log("STRINGIFY ID: ", stringifyIDList);
 
     const data = new FormData(); 
     let header = {
@@ -133,12 +198,16 @@ class Question extends React.Component {
 
     //data.append('image', this.state.changedImage && this.state.selectedImgFile !== undefined ? this.state.selectedImgFile : null); 
     //data.append('audio', this.state.changedAudio && this.state.selectedAudioFile !== undefined ? this.state.selectedAudioFile : null); 
-    data.append('imageID', 3);
-    data.append('audioID', 3);
+    // data.append('imageID', 3); //optional
+    // data.append('audioID', 3); //optional
+    // data.append('type', "LONGFORM"); //optional
 
-    data.append('type', "LONGFORM");
     data.append('questionText', this.state.editedQuestionText); 
     data.append('questionID', this.props.question.questionID); //not editable
+    data.append('new_answers', stringifyIDList); 
+    data.append('arr_of_terms', stringyAnswerList); 
+    data.append('type', "LONGFORM");
+
 
     //map through all the answers and make a answer field object for them 
     /*
@@ -146,8 +215,6 @@ class Question extends React.Component {
       return ( data.append('answer', label) )
     })
     */
-
-    
     
     axios.post(this.props.serviceIP + '/modifyquestion', data, header)
       .then(res => {
@@ -225,20 +292,23 @@ class Question extends React.Component {
       changedImage: false, 
       changedAudio: false, 
 
-      answers: JSON.parse(JSON.stringify(this.state.originalAnswers))
+      answers: JSON.parse(JSON.stringify(this.state.originalAnswers)),
+      ids: JSON.parse(JSON.stringify(this.props.question.answers.map((answer) => {return answer.termID}))), 
+      newlyCreatedAnswers: [], 
+      userCreatedAnswer: ""
     })
   }
 
-  arraysEqual = (array1, array2) => {
-    if (array1 === array2) return true;
-    if (array1 == null || array2 == null) return false;
-    if (array1.length !== array2.length) return false;
+  // arraysEqual = (array1, array2) => {
+  //   if (array1 === array2) return true;
+  //   if (array1 == null || array2 == null) return false;
+  //   if (array1.length !== array2.length) return false;
 
-    for (var i = 0; i < array2.length; ++i) {
-      if (array1[i] !== array2[i]) return false;
-    }
-    return true;
-  }
+  //   for (var i = 0; i < array2.length; ++i) {
+  //     if (array1[i] !== array2[i]) return false;
+  //   }
+  //   return true;
+  // }
 
   render() {
     let {selectedImgFile, selectedAudioFile, question, editedQuestionText} = this.state;
@@ -253,7 +323,7 @@ class Question extends React.Component {
       })
     }
 */
-
+    //console.log("this.state.answers: ", this.state.answers, " ANS: ", this.props.question.answers, " IDS: ", this.state.ids, " Original Answers: ", this.state.originalAnswers); 
     if (this.state.editMode === false){
       return (
         <Fragment>
@@ -428,7 +498,7 @@ class Question extends React.Component {
         <td style={{border:"none"}} colSpan="8">
           Answers: 
           <AnswerButtonList 
-            answers={this.props.question.answers.map((answer) => {return answer.front})} 
+            answers={this.state.answers} 
             handleDeleteAnswer={this.handleDeleteAnswer} 
             deletable={true}
             />
@@ -440,14 +510,39 @@ class Question extends React.Component {
             handleAddAnswer={this.handleAddAnswer}
             createAnswer={this.createAnswer}
             renderButton={true}
-
-            suggestions={this.props.allAnswers} 
+            needID={1}
+            suggestions={this.props.allAnswers.map((answer) => {return answer.front})} 
+            termIDs={this.props.allAnswers.map((answer) => {return answer.id})}
             />
         </td>
 
       </tr>
+
+        <Modal isOpen={this.state.submittingAnswer}>
+            
+            <ModalHeader>
+              Add Answer: 
+            </ModalHeader>
+            <ModalBody>
+              <AddAnswer
+                curModule={this.props.curModule} 
+                updateCurrentModule={this.props.updateCurrentModule}
+                serviceIP={this.props.serviceIP}
+                deleteTag={this.props.deleteTag}
+                addTag={this.props.addTag}
+                allTags={this.props.allTags}
+                front={this.state.userCreatedAnswer}
+                initialFront={this.state.userCreatedAnswer}
+    
+                cancelCreateAnswer={this.cancelCreateAnswer}
+                addNewAnswerToList={this.addNewAnswerToList}
+              />
+            </ModalBody>
+                  
+          </Modal>
       </Fragment>
       );
+      
     }
     
   }

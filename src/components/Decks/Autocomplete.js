@@ -49,7 +49,6 @@ class Autocomplete extends Component {
 
   handleCreateTag = () => {
 
-
     this.props.createTag(this.state.userInput);
     this.setState({
       activeSuggestion: 0,
@@ -75,7 +74,7 @@ class Autocomplete extends Component {
 
     // Filter our suggestions that don't contain the user's input
     const filteredSuggestions = suggestions.filter(
-      suggestion =>
+      suggestion => 
         suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
     );
 
@@ -102,7 +101,14 @@ class Autocomplete extends Component {
     if(this.props.handleAddTag !== undefined){
       this.props.handleAddTag({tag: e.currentTarget.innerText});
     } else if(this.props.handleAddAnswer !== undefined){
-      this.props.handleAddAnswer({answer: e.currentTarget.innerText});
+
+      //console.log("SUGGESTIONS: ", this.props.suggestions, " INDEX", index, " TERM ID at INDEX: ", this.props.termIDs[index]); 
+      if (this.props.needID === 0)
+        this.props.handleAddAnswer({answer: e.currentTarget.innerText});
+      else {
+        let index = this.props.suggestions.findIndex((entry) => entry === e.currentTarget.innerText); 
+        this.props.handleAddAnswer({answer: e.currentTarget.innerText, answerID: this.props.termIDs[index]});
+      }
     }
   };
 

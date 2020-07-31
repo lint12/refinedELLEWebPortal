@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import MainTemplate from '../pages/MainTemplate';
+import MainTemplate from '../pages/MainTemplate'; 
+import Template from '../pages/Template';
 
 import '../stylesheets/style.css';
 import '../lib/bootstrap/css/bootstrap.min.css';
@@ -13,7 +14,7 @@ export default class Downloads extends Component {
 	render() {
 	return (
 	<div>
-		<MainTemplate/>
+		{localStorage.getItem('jwt') === null ? <MainTemplate /> : <Template />}
 		
 		<section id="intro">
 			<div className="intro-content">

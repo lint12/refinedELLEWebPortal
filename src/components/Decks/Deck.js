@@ -9,7 +9,7 @@ import axios from 'axios';
 import AddTerm from './AddTerm';
 import AddExistingTerm from './AddExistingTerm';
 
-import AddQuestion from './AddQuestion';
+import AddQuestion from './AddQuestion';   
 import AddPhrase from './AddPhrase'; 
 
 
@@ -374,6 +374,7 @@ class Deck extends React.Component {
                         serviceIP={this.props.serviceIP}
                         curModule={this.props.curModule} 
                         updateCurrentModule={this.props.updateCurrentModule}
+                        allAnswers={this.props.allAnswers}
                     />
                   </Collapse>
                 </Card>

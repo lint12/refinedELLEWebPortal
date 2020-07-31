@@ -268,8 +268,6 @@ class AddQuestion extends React.Component {
 	//function that adds a new answer from user input to list of answers on this form
 	createAnswer = (answer) => {
 
-		console.log("Got into createAnswer, answer: ", answer);
-
 		this.setState({
 			submittingAnswer: true,
 			userCreatedAnswer: answer
@@ -297,6 +295,7 @@ class AddQuestion extends React.Component {
 		let tempNewlyCreatedAnswers = this.state.newlyCreatedAnswers;
 		tempNewlyCreatedAnswers.push(answer);
 
+		console.log("NEWLY CREATED ANSWERS: ", answer); 
 		this.setState({
 			newlyCreatedAnswers: tempNewlyCreatedAnswers,
 			submittingAnswer: false
@@ -453,7 +452,7 @@ class AddQuestion extends React.Component {
 									createAnswer={this.createAnswer}
 									renderButton={true}
 									autoCompleteStyle={{borderWidth: '0px', borderStyle: "none", width: "100%"}}
-
+									needID={0}
 									suggestions={this.state.validAnswers
 												.map((answer) => {return(answer.front)})
 													.concat(this.state.validAnswers
@@ -553,7 +552,7 @@ class AddQuestion extends React.Component {
 
 		{/*TODO: make the screen focus on this after it gets opened*/}
 			<Modal isOpen={this.state.submittingAnswer}>
-				
+				   
 				<ModalHeader>
 					Add Answer: 
 				</ModalHeader>

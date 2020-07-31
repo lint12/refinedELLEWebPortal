@@ -99,7 +99,7 @@ const CardList = (props) => {
               <th style={{width: '9%'}}> </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody>    
             {props.cards.map((card) => {
               return(
                 <Question
@@ -108,6 +108,7 @@ const CardList = (props) => {
                   serviceIP={props.serviceIP}
                   curModule={props.curModule}
                   updateCurrentModule={props.updateCurrentModule}
+                  allAnswers={props.allAnswers}
                   />
               )
             })}
