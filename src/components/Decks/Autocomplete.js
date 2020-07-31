@@ -132,7 +132,12 @@ class Autocomplete extends Component {
           this.props.handleAddTag({tag: filteredSuggestions[0]});
         } 
         else if(this.props.handleAddAnswer !== undefined){
-          this.props.handleAddAnswer({answer: filteredSuggestions[0]});
+          if (this.props.needID === 0)
+            this.props.handleAddAnswer({answer: filteredSuggestions[0]});
+          else {
+            let index = this.props.suggestions.findIndex((entry) => entry === filteredSuggestions[0]); 
+            this.props.handleAddAnswer({answer: filteredSuggestions[0], answerID: this.props.termIDs[index]});
+          }
         }
       
       } else if(filteredSuggestions.length > 1) {
