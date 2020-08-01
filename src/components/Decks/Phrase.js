@@ -164,20 +164,20 @@ class Phrase extends React.Component {
                     <td>
                         {/* favicon is just a placeholder for now more testing needs to be done after deployment */}
                         <Button style={{backgroundColor: 'white', width: '100%'}} href="http://localhost:3000/favicon.ico" download>
-                        <img src={"./../../../image.png"} alt="frame icon" style={{width: '25px', height: '25px'}}/>
+                        <img src={require('../../Images/image.png')} alt="frame icon" style={{width: '25px', height: '25px'}}/>
                         </Button>
                     </td>
                     <td>
                         {/* audio has to be in the same domain */}
                         <Button style={{backgroundColor: 'white', width: '100%'}} href={audioLink} download> 
-                        <img src={"./../../../headphones.png"} alt="headphones icon" style={{width: '25px', height: '25px'}}/>
+                        <img src={require('../../Images/headphones.png')} alt="headphones icon" style={{width: '25px', height: '25px'}}/>
                         </Button>
                     </td>
                     <td>{id}</td>
                     <td>
                         <ButtonGroup>
-                        <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.editPhrase()}><img src={"./../../../tools.png"} alt="edit icon" style={{width: '25px', height: '25px'}}/></Button>
-                        <Button style={{backgroundColor: 'lightcoral'}} onClick={this.handleDelete.bind()}><img src={"./../../../delete.png"} alt="trash can icon" style={{width: '25px', height: '25px'}}/></Button>
+                        <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.editPhrase()}><img src={require('../../Images/tools.png')} alt="edit icon" style={{width: '25px', height: '25px'}}/></Button>
+                        <Button style={{backgroundColor: 'lightcoral'}} onClick={this.handleDelete.bind()}><img src={require('../../Images/delete.png')} alt="trash can icon" style={{width: '25px', height: '25px'}}/></Button>
                         </ButtonGroup>
                         <Modal isOpen={this.state.modal} toggle={this.toggleModal}> 
                         <ModalHeader toggle={this.toggleModal}>Delete</ModalHeader>
@@ -201,7 +201,7 @@ class Phrase extends React.Component {
                         <Button style={{backgroundColor: 'lightseagreen', width: '100%', fontSize: 'small'}} 
                             id="uploadImage" onClick={() => this.imgInput.click()}>
                             <img 
-                                src={"./../../../uploadImage.png"} 
+                                src={require('../../Images/uploadImage.png')} 
                                 alt="Icon made by Pixel perfect from www.flaticon.com" 
                                 style={{width: '25px', height: '25px'}}
                             />
@@ -230,14 +230,14 @@ class Phrase extends React.Component {
                     <ButtonGroup>
                         <Button style={{backgroundColor: 'lightcyan', width: '50%', height: '100%', color: 'black'}} onClick = {this.submitEdit}>
                         <img 
-                            src={"./../../../submit.png"} 
+                            src={require('../../Images/submit.png')} 
                             alt="Icon made by Becris from www.flaticon.com" 
                             style={{width: '25px', height: '25px'}}
                         />
                         </Button>
                         <Button style={{backgroundColor: 'lightcyan', width: '50%', height: '100%', color: 'black'}} onClick = {this.handleCancelEdit}>
                         <img 
-                            src={"./../../../cancel.png"} 
+                            src={require('../../Images/cancel.png')} 
                             alt="Icon made by Freepik from www.flaticon.com" 
                             style={{width: '25px', height: '25px'}}
                         />

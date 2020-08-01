@@ -337,7 +337,7 @@ class Question extends React.Component {
               download
               >
               <img 
-                src={"./../../../image.png"} 
+                src={require('../../Images/image.png')} 
                 alt="frame icon" 
                 style={{width: '25px', height: '25px'}}
                 />
@@ -351,7 +351,7 @@ class Question extends React.Component {
               download
               > 
               <img 
-                src={"./../../../headphones.png"} 
+                src={require('../../Images/headphones.png')} 
                 alt="headphones icon" 
                 style={{width: '25px', height: '25px'}}
                 />
@@ -362,14 +362,14 @@ class Question extends React.Component {
             <ButtonGroup>
               <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.toggleEditMode()}>
                 <img 
-                  src={"./../../../tools.png"} 
+                  src={require('../../Images/tools.png')} 
                   alt="edit icon" 
                   style={{width: '25px', height: '25px'}}
                   />
               </Button>
               <Button style={{backgroundColor: 'lightcoral'}} onClick={this.handleDelete.bind()}>
                 <img 
-                  src={"./../../../delete.png"} 
+                  src={require('../../Images/delete.png')} 
                   alt="trash can icon" 
                   style={{width: '25px', height: '25px'}}
                   />
@@ -433,7 +433,7 @@ class Question extends React.Component {
             onClick={() => this.imgInput.click()}
             >
             <img 
-              src={"./../../../uploadImage.png"} 
+              src={require('../../Images/uploadImage.png')} 
               alt="Icon made by Pixel perfect from www.flaticon.com" 
               style={{width: '25px', height: '25px'}}
             />
@@ -455,7 +455,7 @@ class Question extends React.Component {
             onClick={() => this.audioInput.click()}
             >
             <img 
-              src={"./../../../uploadAudio.png"} 
+              src={require('../../Images/uploadAudio.png')} 
               alt="Icon made by Srip from www.flaticon.com" 
               style={{width: '25px', height: '25px'}}
             />
@@ -474,7 +474,7 @@ class Question extends React.Component {
               onClick = {this.submitEdit}
               > 
               <img 
-                src={"./../../../submit.png"} 
+                src={require('../../Images/submit.png')} 
                 alt="Icon made by Becris from www.flaticon.com" 
                 style={{width: '25px', height: '25px'}}
               />
@@ -484,7 +484,7 @@ class Question extends React.Component {
               onClick = {this.handleCancelEdit}
               > 
               <img 
-                src={"./../../../cancel.png"} 
+                src={require('../../Images/cancel.png')} 
                 alt="Icon made by Freepik from www.flaticon.com" 
                 style={{width: '25px', height: '25px'}}
               />

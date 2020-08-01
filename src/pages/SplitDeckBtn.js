@@ -48,10 +48,10 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Pop
         <DropdownMenu style={{minWidth: '50px', padding: '0px', backgroundColor: 'gray'}}>
             <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightcyan', color: 'black', outline: 'none'}}
               onClick={ () => { togglePopover() }}>
-              <img src={"./../../../tools.png"} alt="edit icon" style={{width: '18px', height: '18px'}}/> Edit</DropdownItem>
+              <img src={require('../Images/tools.png')} alt="edit icon" style={{width: '18px', height: '18px'}}/> Edit</DropdownItem>
             <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightcoral', color: 'black', outline: 'none'}}
               onClick={ () => { toggleModal() }}>
-              <img src={"./../../../delete.png"} alt="trash can icon" style={{width: '18px', height: '20px'}}/> Delete</DropdownItem>
+              <img src={require('../Images/delete.png')} alt="trash can icon" style={{width: '18px', height: '20px'}}/> Delete</DropdownItem>
         </DropdownMenu>
         <Modal isOpen={modalOpen}> 
           <ModalHeader toggle={toggleModal}>Delete</ModalHeader>
