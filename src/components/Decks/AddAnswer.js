@@ -77,7 +77,6 @@ class AddAnswer extends React.Component {
   	
   	let list = this.props.addTag(this.state.tags, event.tag);
 
-
   	this.setState({
   		tags: list
   	})

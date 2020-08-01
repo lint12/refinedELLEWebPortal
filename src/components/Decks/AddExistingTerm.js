@@ -192,13 +192,16 @@ updatePreviousTags = (currentTagList) => {
 	this.setState({previousTags: currentTagList});
 }
 
+// updateSearch(e) {
+//     this.setState({ search: e.target.value.substr(0,20) });
+// }
 
 render () {
 	let filterFunction = (term) => {
-      let termFront = term.front;
-      let namePrefix = termFront.substr(0,this.state.search.length);
+	  let frontPrefix = term.front.trim().substr(0,this.state.search.length);
 
-      if(namePrefix.toLowerCase() === this.state.search.toLowerCase()){
+	  //if(term.front.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1)
+      if(frontPrefix.toLowerCase() === this.state.search.toLowerCase()) {
 
       	if(this.state.tagFilteredTerms.indexOf(term.front) !== -1 || this.state.tagFilteredTerms.length === 0){
       		return true;
@@ -223,6 +226,7 @@ render () {
 
 
 	if(this.props.allAnswers !== []){
+		console.log("ALL ANS IN EXISTING TERM: ", this.props.allAnswers); 
 		dynamicTerms = this.props.allAnswers.filter(filterFunction);
 	}
 

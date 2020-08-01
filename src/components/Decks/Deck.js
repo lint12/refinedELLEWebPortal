@@ -234,7 +234,7 @@ class Deck extends React.Component {
                   isOpen={this.state.addTermButtonOpen}
                   toggle={this.toggleAddTermButton}
                   >
-                  <DropdownToggle style={{backgroundColor:'#3e6184'}} caret>
+                  <DropdownToggle style={{backgroundColor:'#3e6184', borderRadius: '0px'}} caret>
                     Add Term
                   </DropdownToggle>
                   <DropdownMenu>
@@ -376,6 +376,9 @@ class Deck extends React.Component {
                         curModule={this.props.curModule} 
                         updateCurrentModule={this.props.updateCurrentModule}
                         allAnswers={this.props.allAnswers}
+                        deleteTag={this.deleteTag} 
+                        addTag={this.addTag} 
+                        allTags={this.state.allTags}
                     />
                   </Collapse>
                 </Card>

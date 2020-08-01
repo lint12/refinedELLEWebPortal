@@ -126,6 +126,9 @@ const CardList = (props) => {
                   curModule={props.curModule}
                   updateCurrentModule={props.updateCurrentModule}
                   allAnswers={props.allAnswers}
+                  deleteTag={props.deleteTag}
+                  addTag={props.addTag}
+                  allTags={props.allTags}
                   />
               )
             })}

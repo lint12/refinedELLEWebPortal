@@ -52,9 +52,7 @@ class Question extends React.Component {
   //TODO: handleAddAnswer and createAnswer kinda do the same thing. Maybe they should be one thing?
   //function that adds a answer to list of answers on this question(only available when editmode is true)
   handleAddAnswer = (event) => {
-  //  let list = this.props.addAnswer(this.state.answers, event.answer);
-
-    console.log("EVENT being passed in: ", event); 
+    //console.log("EVENT being passed in: ", event); 
     let ansList = this.state.answers; 
     let idList = this.state.ids; 
     ansList.push(event.answer); 
@@ -69,13 +67,7 @@ class Question extends React.Component {
 
   //function that adds a new answer from user input to list of answers on this question(only when editmode is true)
   createAnswer = (answer) => {
-    console.log("CreateAnswer was pressed"); 
-    // let tempAnswers = this.state.answers;
-    // tempAnswers.push(answer);
-    // this.setState({
-    //   answers: tempAnswers
-    // });
-
+    //console.log("CreateAnswer was pressed"); 
     this.setState({
 			submittingAnswer: true,
 			userCreatedAnswer: answer
@@ -90,7 +82,7 @@ class Question extends React.Component {
     let allAnswers = this.state.answers; 
     allAnswers.push(answer.front); 
 
-		console.log("NEWLY CREATED ANSWERS: ", answer); 
+		//console.log("NEWLY CREATED ANSWERS: ", answer); 
 		this.setState({
       newlyCreatedAnswers: tempNewlyCreatedAnswers,
       answers: allAnswers, 
@@ -106,7 +98,7 @@ class Question extends React.Component {
 	}
 
   handleDeleteAnswer = (event) => {
-    console.log("Got into handleDeleteAnswer, event.answer: ", event.answer)
+    //console.log("Got into handleDeleteAnswer, event.answer: ", event.answer)
 
     let tempAnswerButtonList = this.state.answers;
     let idList = this.state.ids; 
@@ -200,21 +192,12 @@ class Question extends React.Component {
     //data.append('audio', this.state.changedAudio && this.state.selectedAudioFile !== undefined ? this.state.selectedAudioFile : null); 
     // data.append('imageID', 3); //optional
     // data.append('audioID', 3); //optional
-    // data.append('type', "LONGFORM"); //optional
 
     data.append('questionText', this.state.editedQuestionText); 
     data.append('questionID', this.props.question.questionID); //not editable
     data.append('new_answers', stringifyIDList); 
     data.append('arr_of_terms', stringyAnswerList); 
     data.append('type', "LONGFORM");
-
-
-    //map through all the answers and make a answer field object for them 
-    /*
-    this.state.answers.map((label) => {
-      return ( data.append('answer', label) )
-    })
-    */
     
     axios.post(this.props.serviceIP + '/modifyquestion', data, header)
       .then(res => {
@@ -276,7 +259,6 @@ class Question extends React.Component {
   }
 
 
-
   //function that cancels the edit and sets everything back to what it was initially
   handleCancelEdit = (event) => {
     this.setState({
@@ -299,30 +281,11 @@ class Question extends React.Component {
     })
   }
 
-  // arraysEqual = (array1, array2) => {
-  //   if (array1 === array2) return true;
-  //   if (array1 == null || array2 == null) return false;
-  //   if (array1.length !== array2.length) return false;
-
-  //   for (var i = 0; i < array2.length; ++i) {
-  //     if (array1[i] !== array2[i]) return false;
-  //   }
-  //   return true;
-  // }
-
   render() {
     let {selectedImgFile, selectedAudioFile, question, editedQuestionText} = this.state;
     let imgLink = "http://34.239.123.94/Images/" + selectedImgFile;
     let audioLink = "http://34.239.123.94/Audios/" + selectedAudioFile;
 
-/*
-    let newAnswers = this.props.question.answers;
-    if(!this.arraysEqual(newAnswers,this.state.answser)){
-      this.setState({
-        answers: newAnswers
-      })
-    }
-*/
     //console.log("this.state.answers: ", this.state.answers, " ANS: ", this.props.question.answers, " IDS: ", this.state.ids, " Original Answers: ", this.state.originalAnswers); 
     if (this.state.editMode === false){
       return (
@@ -522,7 +485,7 @@ class Question extends React.Component {
             
             <ModalHeader>
               Add Answer: 
-            </ModalHeader>
+            </ModalHeader>   
             <ModalBody>
               <AddAnswer
                 curModule={this.props.curModule} 

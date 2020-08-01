@@ -130,6 +130,8 @@ export default class Modules extends Component {
         });
 
         this.getAllAnswers();
+
+        console.log("In update current module: ", res.data); 
       })
       .catch(function (error) {
         console.log("updateCurrentModule error: ", error);
