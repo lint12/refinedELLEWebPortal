@@ -312,6 +312,7 @@ class Deck extends React.Component {
                   addTag={this.addTag}
                   allTags={this.state.allTags}
                   setOpenForm={this.setOpenForm}
+                  getAllTags={this.getAllTags}
                   />
               </Collapse>
             </Col>

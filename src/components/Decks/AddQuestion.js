@@ -277,6 +277,7 @@ class AddQuestion extends React.Component {
 	toggleSearchByTagForm = () => {
 
 		this.setValidAnswers();
+		this.props.getAllTags();
 
 		this.setState({
 			searchingByTag: !this.state.searchingByTag
@@ -395,6 +396,7 @@ class AddQuestion extends React.Component {
 
 	render () {
 		console.log("in addQuestion, this.state.validAnswers: ", this.state.validAnswers)
+		console.log("ALL TAGS: ", this.props.allTags)
 	    
 		let newValidAnswers = this.props.allAnswers;
 
@@ -580,7 +582,7 @@ class AddQuestion extends React.Component {
 					Search By Tag
 				</ModalHeader>
 
-				<ModalBody>
+				<ModalBody>   
 					<SearchAnswersByTag
 						curModule={this.props.curModule} 
 						updateCurrentModule={this.props.updateCurrentModule}
