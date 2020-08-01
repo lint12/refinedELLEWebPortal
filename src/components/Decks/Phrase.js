@@ -228,14 +228,14 @@ class Phrase extends React.Component {
                     <td>{id}</td>
                     <td>
                     <ButtonGroup>
-                        <Button style={{backgroundColor: 'lightcyan', width: '50%', height: '100%', color: 'black'}} onClick = {this.submitEdit}>
+                        <Button style={{backgroundColor: 'lightcyan'}} onClick = {this.submitEdit}>
                         <img 
                             src={require('../../Images/submit.png')} 
                             alt="Icon made by Becris from www.flaticon.com" 
                             style={{width: '25px', height: '25px'}}
                         />
                         </Button>
-                        <Button style={{backgroundColor: 'lightcyan', width: '50%', height: '100%', color: 'black'}} onClick = {this.handleCancelEdit}>
+                        <Button style={{backgroundColor: 'lightcyan'}} onClick = {this.handleCancelEdit}>
                         <img 
                             src={require('../../Images/cancel.png')} 
                             alt="Icon made by Freepik from www.flaticon.com" 

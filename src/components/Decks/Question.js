@@ -470,7 +470,7 @@ class Question extends React.Component {
         <td>
           <ButtonGroup>
             <Button 
-              style={{backgroundColor: 'lightcyan', width: '25%', height: '100%', color: 'black'}} 
+              style={{backgroundColor: 'lightcyan'}} 
               onClick = {this.submitEdit}
               > 
               <img 
@@ -480,7 +480,7 @@ class Question extends React.Component {
               />
             </Button>
             <Button 
-              style={{backgroundColor: 'lightcyan', width: '25%', height: '100%', color: 'black'}} 
+              style={{backgroundColor: 'lightcyan'}} 
               onClick = {this.handleCancelEdit}
               > 
               <img 
