@@ -216,7 +216,7 @@ class Phrase extends React.Component {
                         <Button style={{backgroundColor: 'lightseagreen', width: '100%', fontSize: 'small'}} 
                             id="uploadAudio" onClick={() => this.audioInput.click()}>
                             <img 
-                                src={"./../../../uploadAudio.png"} 
+                                src={require('../../Images/uploadAudio.png')} 
                                 alt="Icon made by Pixel perfect from www.flaticon.com" 
                                 style={{width: '25px', height: '25px'}}
                             />
