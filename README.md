@@ -5,14 +5,14 @@
 - [x] searchModules()
 - [x] searchCards()
 - [x] addModule() : all fields must be filled out otherwise highlight the field that is not filled out 
-- [ ] include dropdown list of languages (2 char format) that users can choose from 
+- [x] include dropdown list of languages (2 char format) that users can choose from 
 - [x] editModule() : modal popup for the user to edit the name of the module // editing the language is forbidden 
 - [x] deleteModule() : modal popup for user handling to double check if the user still wants to delete the module 
 
 ----Term----
-- [ ] addCard() : depends on module type, should include validation for the front/back field of the card, the tag, picture, and audio fields are optional. (3 different types of card forms need to be made.)
+- [x] addCard() : depends on module type, should include validation for the front/back field of the card, the tag, picture, and audio fields are optional. (3 different types of card forms need to be made.)
 - [x] include dropdown options for term types and gender 
-- [ ] addExistingTerms() : be able to add existing terms under the same language as the module to the term tab
+- [x] addExistingTerms() : be able to add existing terms under the same language as the module to the term tab
 - [x] editCard() : modal popup for the user to edit the front/back of the card, and to edit the picture/audio file. 
 - [x] editTags() : edit the tags for each term in edit mode  
 - [x] deleteCard() : modal popup for user handling to double check if the user still wants to delete the card 
@@ -20,11 +20,11 @@
 - [x] downloadAudio() needs more testing when site is deployed
 
 ----Phrase----
-- [ ] addPhrase() : add a new phrase 
-- [ ] editPhrase() : edit the fields of the phrase 
-- [ ] deletePhrase() : modal popup for user handling to double check if the user still wants to delete the phrase
-- [ ] downloadImage() needs more testing when site is deployed
-- [ ] downloadAudio() needs more testing when site is deployed
+- [x] addPhrase() : add a new phrase 
+- [x] editPhrase() : edit the fields of the phrase 
+- [x] deletePhrase() : modal popup for user handling to double check if the user still wants to delete the phrase
+- [x] downloadImage() needs more testing when site is deployed
+- [x] downloadAudio() needs more testing when site is deployed
 
 ----Form Validation when adding Modules and Terms---- 
 WILL THESE FUNCTIONS BE INEFFICIENT? 
@@ -32,8 +32,9 @@ WILL THESE FUNCTIONS BE INEFFICIENT?
 - [ ] traverse through the terms array for that specific module to see if it exists already
 
 ---- Question ----
+- [ ] Need to clear up the code for adding a Question, might need an API call to simplify this functionality 
 
-
+---- Other ----
 - [ ] Figure out new layout of organizing each individual Module to reflect the new database 
 - [x] Super tiny fix: include module name next to the search bar on the card list side 
 
@@ -42,6 +43,15 @@ WILL THESE FUNCTIONS BE INEFFICIENT?
 
 ### UserList Page Functions
 - TBD 
+
+### Profile Page 
+- [ ] Finish up word of the day 
+- [ ] Include class invite code for professors/TAs
+- [ ] Include add additional class functionality for students 
+
+### Register Page 
+- [ ] Create a randomizer for usernames, need an API call for this
+- [ ] Include add class functionality for students 
 
 ## Useful Resources 
 ### API 
