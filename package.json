@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@south-paw/react-vector-maps": "^3.0.0",
     "array-unique": "^0.3.2",
     "axios": "^0.18.0",
     "bootstrap": "^4.4.1",
@@ -14,6 +15,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^3.4.1",
+    "react-select": "^3.1.0",
     "reactstrap": "^6.5.0"
   },
   "scripts": {
@@ -30,5 +32,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "json-loader": "^0.5.7"
+  }
 }

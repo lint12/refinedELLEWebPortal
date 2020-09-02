@@ -87,9 +87,9 @@ class Deck extends React.Component {
   toggleTab(e) {
     let event = e.target.dataset.event; 
 
-    console.log("event in toggleTab: ", event)
-    console.log("this.state.collapseTab: ", this.state.collapseTab === Number(event) ? -1 : Number(event))
-    this.setState({ collapseTab: this.state.collapseTab === Number(event) ? -1 : Number(event) })
+    //if the accordion clicked on is equal to the current accordion that's open then close the current accordion,
+    //else open the accordion you just clicked on 
+    this.setState({ collapseTab: this.state.collapseTab === Number(event) ? -1 : Number(event) }) 
   }
 
   //function that determines if the Add Term button is open

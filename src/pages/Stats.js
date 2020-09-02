@@ -1,12 +1,9 @@
 import React, { Component, Fragment } from 'react';
-import { Collapse, Button, Card, Input, InputGroup,
-   InputGroupAddon, Container, Row, Col, Alert } from 'reactstrap';
+import { Collapse, Button, Card, CardHeader, CardBody, CardText, Input, InputGroup,
+   InputGroupAddon, Container, Row, Col, Alert, ListGroup, ListGroupItem} from 'reactstrap';
 import axios from 'axios';
   
-import AddModule from '../components/Decks/AddModule';
-import Deck from '../components/Decks/Deck';
 import Template from './Template';
-import SplitDeckBtn from './SplitDeckBtn';
 import GameChart from '../components/Stats/GameChart';
 import ModuleChart from '../components/Stats/ModuleChart';
 
@@ -15,6 +12,7 @@ import '../lib/bootstrap/css/bootstrap.min.css';
 import '../lib/font-awesome/css/font-awesome.min.css';
 import '../lib/owlcarousel/assets/owl.carousel.min.css';
 import '../lib/ionicons/css/ionicons.min.css';
+import { platform } from 'chart.js';
 
 export default class Stats extends Component {
   constructor(props) {
@@ -35,7 +33,13 @@ export default class Stats extends Component {
 
       moduleChartOpen: false,
 
-      gameChartOpen: false
+      gameChartOpen: false, 
+
+      isHoveringMobile: false, 
+      isHoveringPC: false, 
+      isHoveringVR: false, 
+      displayChart: false, 
+      selectedChartInfo: ""
     };
   }
 
@@ -229,14 +233,91 @@ export default class Stats extends Component {
             />)
   }
 
+  renderLanguageList = () => {
+    //needs API call to retrieve # of languages 
+    return (
+      <Card style={{overflow:"scroll", height: "20vh"}}>
+        <ListGroup flush>
+          <ListGroupItem disabled style={{backgroundColor: "grey", color: "white"}}>Total # of Languages: </ListGroupItem>
+          <ListGroupItem style={{color: "black"}}>Spanish</ListGroupItem>
+          <ListGroupItem style={{color: "black"}}>Portugese</ListGroupItem>
+          <ListGroupItem style={{color: "black"}}>German</ListGroupItem>
+          <ListGroupItem style={{color: "black"}}>French</ListGroupItem>
+        </ListGroup>
+      </Card>
+    )
+  }
+
+  platformContainer(props) {
+    if (props.platform === 0 || props.platform === 1) {
+      return (
+        <Container style={{paddingTop: "80px"}}>
+          <CardText>
+            <Button block style={{backgroundColor: "#1fbfb8",borderRadius: "20px"}}
+              onClick={() => props.toggleChart(props.platform, "playtime")}>
+              Average Playtime
+            </Button>
+            <Button block style={{backgroundColor: "#1fbfb8", borderRadius: "20px"}}>Average Utilization</Button>
+            <Button block style={{backgroundColor: "#1fbfb8", borderRadius: "20px"}}>Average Score</Button>
+          </CardText>
+        </Container>
+      )
+    }
+    else {
+      return (
+        <Container style={{paddingTop: "60px"}}>
+          <CardText>
+            <Button block style={{backgroundColor: "#1fbfb8",borderRadius: "20px"}}>Average Playtime</Button>
+            <Button block style={{backgroundColor: "#1fbfb8", borderRadius: "20px"}}>Average Utilization</Button>
+            <Button block style={{backgroundColor: "#1fbfb8", borderRadius: "20px"}}>Average Score</Button>
+            <Button block style={{backgroundColor: "#1fbfb8", borderRadius: "20px"}}>Most Interacted Item</Button>
+          </CardText>
+        </Container>
+      )
+    } 
+  }
+
+  handleMouseHover(platform) {
+    if (platform === 0) 
+      this.setState({ isHoveringMobile: !this.state.isHoveringMobile });
+    else if (platform === 1)
+      this.setState({ isHoveringPC: !this.state.isHoveringPC });
+    else 
+      this.setState({ isHoveringVR: !this.state.isHoveringVR });
+  }
+
+  toggleChart = (platform, info) => {
+    console.log("in toggleChart: ", platform, " ", info); 
+    this.setState({
+      displayChart : !this.state.displayChart, 
+      currentPlatform: platform, 
+      selectedChartInfo: info
+    }); 
+  }
+
   render() {
+    // let chart; 
+    // if (this.currentPlatform === 0) {
+    //   //render Game chart 
+    //   //chart=<GameChart platform="Mobile" selectedInfo="playtime || utilization || score">
+    // }
+    // else if (this.currentPlatform === 1) {
+    //   //render Game chart 
+    //   //chart=<GameChart platform="PC" selectedInfo="playtime || utilization || score">
+    // }
+    // else {
+    //   //render Game chart 
+    //   //chart=<GameChart platform="VR" selectedInfo="playtime || utilization || score">
+    // }
+
+
     return (
     <Container>
     <Template/>
 
     <br/><br/>
 
-    <Row>
+    {/* <Row>
       <h3>Statistics for Modules: </h3>
       {this.getModuleChartButtons()}
     </Row>
@@ -254,12 +335,94 @@ export default class Stats extends Component {
       <Card>
         {this.renderGameChart()}
       </Card>
-    </Collapse>
-      
+    </Collapse> */}
+    <Row>
+      <Col>
+      <Card color="info" style={{color: "white"}}>
+        <CardHeader>Overview</CardHeader>
+        <CardBody>
+          <Row>
+            <Col>Best Performing Platform</Col>
+            <Col>Most Utilized Platform</Col>
+            <Col>Best Performing Module</Col>
+            <Col>{this.renderLanguageList()}</Col>
+          </Row>
+        </CardBody>
+      </Card>
+      </Col>
+    </Row>
 
+    <br/><br/>
+
+    <Row> 
+      <Col>
+        <Card body className="text-center" style={{backgroundColor: "#05716c", height: "45vh"}}
+          onMouseEnter={() => this.handleMouseHover(0)}
+          onMouseLeave={() => this.handleMouseHover(0)}
+        > 
+        {this.state.isHoveringMobile ?
+          <this.platformContainer platform={0} toggleChart={this.toggleChart}/>
+          :
+          <Container style={{paddingTop: "125px"}}>
+            <CardText style={{fontFamily: "auto", fontSize: "35px", fontWeight: "bold", color: "white"}}>
+              <img src={require('../Images/phone.png')} style={{width: "35px", height: "35px", marginRight: "10px"}}/>
+              Mobile
+            </CardText>
+          </Container>
+        }
+        </Card>
+      </Col>
+      <Col>
+        <Card body className="text-center" style={{backgroundColor: "#05716c", height: "45vh"}}
+          onMouseEnter={() => this.handleMouseHover(1)}
+          onMouseLeave={() => this.handleMouseHover(1)}
+        > 
+        {this.state.isHoveringPC ?
+          <this.platformContainer platform={1} toggleChart={this.toggleChart}/>
+          :
+          <Container style={{paddingTop: "125px"}}>
+            <CardText style={{fontFamily: "auto", fontSize: "35px", fontWeight: "bold", color: "white"}}>
+              <img src={require('../Images/computer.png')} style={{width: "35px", height: "35px", marginRight: "10px"}}/>
+              PC
+            </CardText>
+          </Container>
+        }
+        </Card>
+      </Col>
+      <Col>
+        <Card body className="text-center" style={{backgroundColor: "#05716c", height: "45vh"}}
+          onMouseEnter={() => this.handleMouseHover(2)}
+          onMouseLeave={() => this.handleMouseHover(2)}
+        > 
+        {this.state.isHoveringVR ?
+          <this.platformContainer platform={2} toggleChart={this.toggleChart}/>
+          :
+          <Container style={{paddingTop: "125px"}}>
+            <CardText style={{fontFamily: "auto", fontSize: "35px", fontWeight: "bold", color: "white"}}>
+              <img src={require('../Images/vr-glasses.png')} style={{width: "35px", height: "35px", marginRight: "10px"}}/>
+              VR
+            </CardText>
+          </Container>
+        }
+        </Card>
+      </Col>
+    </Row>
+
+    <br/><br/>
     
+    <Collapse isOpen={this.state.displayChart}>
+      <Card>
+        <CardBody>
+        Anim pariatur cliche reprehenderit,
+          enim eiusmod high life accusamus terry richardson ad squid. Nihil
+          anim keffiyeh helvetica, craft beer labore wes anderson cred
+          nesciunt sapiente ea proident.
+          {/* <GameChart platform={this.state.currentPlatform} selectedInfo={this.state.selectedChartInfo} /> */}
+        </CardBody>
+      </Card>
+    </Collapse>
 
-
+    <br/><br/>
     
     </Container>
     )

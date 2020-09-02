@@ -72,9 +72,8 @@ export default class Modules extends Component {
                           dynamicModules: modules });
 
           this.updateCurrentModule({module: this.state.currentModule});
+          this.getAllAnswers();
         }
-
-        this.getAllAnswers();
 
       })
       .catch(function (error) {
@@ -315,7 +314,7 @@ export default class Modules extends Component {
 
     <br/><br/>
 
-    <h4>Your Elle Modules:</h4>
+    <h4>Your ELLE Modules:</h4>
     <Row className="Seperated Col">
       <Col className="Left Column" xs="3">
         
@@ -340,7 +339,7 @@ export default class Modules extends Component {
           <AddModule  
             serviceIP={this.props.serviceIP} 
             updateModuleList={this.updateModuleList}
-            />
+          />
         </Collapse>
 
         <Row>

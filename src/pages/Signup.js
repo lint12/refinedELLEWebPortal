@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, FormGroup, Label, Input, FormFeedback, Button, Container } from 'reactstrap';
+import { Form, FormGroup, Label, Input, InputGroupAddon, FormFeedback, Button, Container, InputGroup } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import MainTemplate from '../pages/MainTemplate';
@@ -13,24 +13,19 @@ export default class Signup extends React.Component {
   constructor() {
     super();
     this.state = {
-      username: '',
-      age: '',
-      sex: '',
-      password: '',
-      motivation: '',
+      username: "",
+      password: "",
+      confirmation: "",
+      validConfirm: false,
+      invalidConfirm: false,
+      hiddenPassword: true,
+      hiddenConfirm: true, 
+      classCode: "",
       permission: 'User',
-      message: '',
     }
-    this.handleChange = this.handleChange.bind(this);
     this.change = this.change.bind(this);
     this.submit = this.submit.bind(this);
   };
-
-  handleChange(event) {
-    this.setState({
-      sex: event.target.value,
-    })
-  }
 
   change(e) {
     this.setState({
@@ -38,16 +33,77 @@ export default class Signup extends React.Component {
     })
   }
 
+  validatePassword = (e) => {
+    let id = e.target.name === "password" ? 0 : 1; 
+
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+
+    if (id === 0) {
+      if ((e.target.value.length === 0 && this.state.confirmation.length === 0)|| 
+        (e.target.value.length > 0 && this.state.confirmation.length === 0)) {
+        this.setState({
+          validConfirm: false, 
+          invalidConfirm: false
+        })
+      }
+      else if (e.target.value.localeCompare(this.state.confirmation) === 0) {
+        this.setState({
+          validConfirm: true, 
+          invalidConfirm: false
+        })
+      }
+      else {
+        this.setState({
+          validConfirm: false, 
+          invalidConfirm: true
+        })
+      }
+    }
+    else {
+      if ((e.target.value.length === 0 && this.state.password.length === 0)) {
+        this.setState({
+          validConfirm: false, 
+          invalidConfirm: false
+        })
+      }
+      else if (e.target.value.localeCompare(this.state.password) === 0) {
+        this.setState({
+          validConfirm: true, 
+          invalidConfirm: false
+        })
+      }
+      else {
+        this.setState({
+          validConfirm: false, 
+          invalidConfirm: true
+        })
+      }
+    }
+  }
+
+  togglePWPrivacy = (e) => {
+    console.log(e.target)
+    if (e.target.name === "hiddenPassword") {
+      this.setState({
+        hiddenPassword: !this.state.hiddenPassword
+      })
+    }
+    else {
+      this.setState({
+        hiddenConfirm: !this.state.hiddenConfirm
+      })
+    }
+  }
+
   submit(e) {
-    console.log(this.state.username);
-    console.log(this.state.sex);
+    console.log(this.state.username + " " + this.state.password + " " + this.state.confirmation + " " + this.state.classCode);
     e.preventDefault();
     axios.post(this.props.serviceIP + '/register', {
       username: this.state.username,
       password: this.state.password,
-      age: this.state.age,
-      sex: this.state.sex,
-      motivation: this.state.motivation
+      password_confirm: this.state.confirmation 
     }).then(res => {
       localStorage.setItem('jwt', res.data);
       this.props.history.push('/login');
@@ -55,75 +111,119 @@ export default class Signup extends React.Component {
   }
 
   render() {
-    console.log("here here");
-  return (
-  <Container>
-    <MainTemplate/>
-		
-		<div className="row main">
-      <div className="main-login main-center">
-        <h4 style={{textAlign: 'center'}}>Start your ELLE experience today.</h4>
-        <Form onSubmit={e => this.submit(e)}>
-          <FormGroup>
-            <Label for="userName">Username:</Label>
-            <Input value={this.state.username}
-              onChange={e => this.change(e)}
-              id="username"
-              name="username"
-              placeholder="Username"
-            />
-            <FormFeedback>You will not be able to see this</FormFeedback>
-          </FormGroup>
-          <FormGroup>
-            <Label for="age">Age:</Label>
-            <Input value={this.state.age}
-              onChange={e => this.change(e)}
-              id="age"
-              name="age"
-              placeholder="18">
-            </Input>
-          </FormGroup>
-          <FormGroup>
-            <Label for="sex">Sex:</Label>
-            <Input value={this.state.sex}
-              onChange={(e) => this.handleChange(e)}
-              type="select"
-              id="sex"
-              name="sex">
-              <option value="F">Male</option>
-              <option value="M">Female</option>
-            </Input>
-          </FormGroup>
-          <FormGroup>
-            <Label for="motivation">Motivation:</Label>
-            <Input value={this.state.motivation}
-              onChange={e => this.change(e)}
-              type="textarea"
-              name="motivation"
-              id="motivation"
-              placeholder="Why are you playing ELLE?">
-            </Input>
-          </FormGroup>
-          <FormGroup>
+    return (
+    <Container>
+      <MainTemplate/>
+      
+      <div>
+        <div className="main-login main-center">
+          <h4 style={{textAlign: 'center'}}>Start your ELLE experience today.</h4>
+          <Form onSubmit={e => this.submit(e)}>
+            <FormGroup>
+              <Label for="userName">Username:</Label>
+              <Input value={this.state.username}
+                onChange={e => this.change(e)}
+                id="username"
+                name="username"
+                placeholder="Username"
+                autoComplete="off"
+              />
+            </FormGroup>
+            <FormGroup>
             <Label for="password">Password:</Label>
-            <Input value={this.state.password}
-              onChange={e => this.change(e)}
-              type="text"
-              id="password"
-              name="password"
-              placeholder="*********">
-            </Input>
-          </FormGroup>
-          <Button color="primary" type="submit" className="btn-block">Signup</Button>
-        </Form>
-        <br></br>
-        <p>
-          Already have an account? &nbsp;
-          <Link to ='/Login' style={{color: 'white', textDecoration: 'underline'}}>Log in.</Link>
-        </p>
+            <InputGroup>
+              <Input 
+                value={this.state.password}
+                onChange={e => this.validatePassword(e)}
+                type={this.state.hiddenPassword ? 'password' : 'text'}
+                id="password"
+                name="password"
+                placeholder="*********"
+                autoComplete="new-password"
+                style={{border: "none"}} 
+              />
+              <InputGroupAddon addonType="append">
+                <Button 
+                  style={{backgroundColor: "white", border: "none"}}
+                  name="hiddenPassword"
+                  onClick={e => this.togglePWPrivacy(e)}
+                >
+                  <img 
+                    src={require('../Images/hide.png')} 
+                    alt="Icon made by Pixel perfect from www.flaticon.com" 
+                    name="hiddenPassword"
+                    style={{width: '24px', height: '24px'}}
+                  />
+                </Button>
+              </InputGroupAddon>
+            </InputGroup>
+            </FormGroup>
+            <FormGroup>
+              <Label for="confirmation">Confirm Password:</Label>
+              <InputGroup>
+                <Input 
+                  value={this.state.confirmation}
+                  valid={this.state.validConfirm}
+                  invalid={this.state.invalidConfirm}
+                  onChange={e => this.validatePassword(e)}
+                  type={this.state.hiddenConfirm ? 'password' : 'text'}
+                  id="confirmation"
+                  name="confirmation"
+                  placeholder="*********" 
+                  autoComplete="new-password"
+                  style={{border: "none"}} 
+                />
+                <InputGroupAddon addonType="append">
+                  <Button 
+                    style={{backgroundColor: "white", border: "none"}} 
+                    name="hiddenConfirm"
+                    onClick={e => this.togglePWPrivacy(e)}
+                  >
+                    <img 
+                      src={require('../Images/hide.png')} 
+                      alt="Icon made by Pixel perfect from www.flaticon.com" 
+                      name="hiddenConfirm"
+                      style={{width: '24px', height: '24px'}}
+                    />
+                  </Button>
+                </InputGroupAddon>
+                <FormFeedback valid>
+                  The passwords match!
+                </FormFeedback>
+                <FormFeedback invalid={this.state.invalidConfirm.toString()}>
+                  The passwords do not match, please try again.
+                </FormFeedback>
+              </InputGroup>
+            </FormGroup>
+            <FormGroup>
+              <Label for="classCode">Class Code:</Label>
+              <Input 
+                value={this.state.classCode}
+                onChange={e => this.change(e)}
+                type="text"
+                id="classCode"
+                name="classCode"
+                placeholder="Optional"
+                autoComplete="off"
+              />
+            </FormGroup>
+            <Button 
+              color="primary" 
+              type="submit" 
+              className="btn-block"
+              disabled={this.state.username.length > 0 && this.state.validConfirm ? false : true}
+            >
+              Signup
+            </Button>
+          </Form>
+          <br></br>
+          <p>
+            Already have an account? &nbsp;
+            <Link to ='/Login' style={{color: 'white', textDecoration: 'underline'}}>Log in.</Link>
+          </p>
+        </div>
       </div>
-    </div>
-  </Container>
-  );
+    </Container>
+    );
+    }
   }
-}

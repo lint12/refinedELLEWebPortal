@@ -19,9 +19,10 @@ class AuthAdmin extends Component {
     console.log("per: " + per);
     if(!jwt) {
       this.props.history.push('/home');
-    }else if (per === 'ad' || per === 'us') {
-      this.props.history.push('/sessions');
     }
+    // else if (per === 'ad' || per === 'us') {
+    //   this.props.history.push('/sessions');
+    // }
   }
 
   render () {

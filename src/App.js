@@ -16,7 +16,8 @@ import AuthUser from './components/Auth/AuthUser';
 import AuthAdmin from './components/Auth/AuthAdmin';
 
 let flaskIP = 'https://endlesslearner.com:5000';
-//flaskIP = 'http://34.239.123.94:3000'; 
+flaskIP = 'http://54.158.210.144:3000'; 
+//flaskIP = 'http://45.55.61.182:5000/api';
 
 class App extends Component {
   constructor() {
@@ -37,15 +38,15 @@ class App extends Component {
             <Route path="/logout" render={(props)=><Logout {...props} serviceIP={flaskIP}/>}/>
             <Route path="/login" render={(props)=><Login {...props} serviceIP={flaskIP}/>}/>
             <Route path="/register" render={(props)=><Signup {...props} serviceIP={flaskIP}/>}/>
-            <AuthUser>
+            <AuthUser>   
               <Route exact path="/" component={Template} />
               <Route path="/groups" render={(props)=><Groups {...props} serviceIP={flaskIP}/>}/>
               <Route path="/modules" render={(props)=><Modules {...props} serviceIP={flaskIP}/>}/>
               <Route path="/profile" render={(props)=><Profile {...props} serviceIP={flaskIP}/>}/>
               <Route path="/sessions" render={(props)=><Sessions {...props} serviceIP={flaskIP}/>}/>
-              <Route path="/stats" render={(props)=><Stats {...props} serviceIP={flaskIP}/>}/>
               <AuthAdmin>
                 <Route path="/userlist" render={(props)=><UserList {...props} serviceIP={flaskIP}/>}/>
+                <Route path="/stats" render={(props)=><Stats {...props} serviceIP={flaskIP}/>}/>
               </AuthAdmin>
             </AuthUser>
           </Switch>

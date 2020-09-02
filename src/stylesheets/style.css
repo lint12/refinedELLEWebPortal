@@ -896,6 +896,36 @@ table.tableList tfoot td {
   font-size: 14px;
 }
 
+/*--------------------------------------------------------------
+# UserList Tables
+--------------------------------------------------------------*/
+table.userListTable {
+  border-collapse: collapse;
+  border-radius: 8px;
+  border-style: hidden; /* hide standard table (collapsed) border */
+  box-shadow: 0 0 0 1px #666; /* this draws the table border  */ 
+}
+
+table.userListTable thead th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #dee2e6;
+  border-right-style: hidden;
+}
+
+table.userListTable thead tr {
+  background-color: lightskyblue;
+}
+
+table.userListTable td {
+  vertical-align: bottom;
+  border-bottom: 2px solid #dee2e6;
+  border-right-style: hidden;
+}
+
+
+
+
+
 .no-suggestions {
   color: #999;
   padding: 0.5rem;
@@ -926,4 +956,19 @@ table.tableList tfoot td {
 
 .suggestions li:not(:last-of-type) {
   border-bottom: 1px solid #999;
+}
+
+.profileTabs {
+  font-weight: 700;
+}
+
+.profileTabs a {
+  color: white;
+}
+
+.userListTabs a.active {
+  z-index: 2;
+  color: #fff;
+  background-color: lightslategray;
+  border-color: dimgray;
 }

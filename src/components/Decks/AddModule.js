@@ -1,6 +1,8 @@
 import React from 'react';
-import { Button, Form, FormGroup, Label, Input, Row, Col, Alert} from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, CustomInput, Row, Col, Alert} from 'reactstrap';
+import Select from 'react-select';
 import axios from 'axios';
+import languageCodes from '../../languageCodes3.json';
 
 class AddModule extends React.Component {
     constructor(props) {
@@ -10,13 +12,25 @@ class AddModule extends React.Component {
         name: "",
         language: "", 
         status : false, 
-        success : false
+        success : false, 
+        languageCodes: []
       }; 
 
       this.submitModule = this.submitModule.bind(this); 
       this.updateName = this.updateName.bind(this); 
       this.updateLanguage = this.updateLanguage.bind(this); 
 }
+
+  componentDidMount() {
+    let tempCodeList = []; 
+
+    for (var key in languageCodes) {
+        console.log(key + " -> " + languageCodes[key]); 
+        tempCodeList.push({label: languageCodes[key], value:key});
+    }
+
+    this.setState({languageCodes: tempCodeList})
+  }
 
   submitModule = (e) => {
     e.preventDefault();
@@ -25,11 +39,12 @@ class AddModule extends React.Component {
 
     var data = {
         name: this.state.name,
-        language: this.state.language, 
+        language: this.state.language.value, 
         complexity: 2
     }
 
     console.log("MODULE CREATION DATA: ", data); 
+    console.log(localStorage.getItem('jwt'));
 
     axios.post(this.props.serviceIP + '/module', data, 
         {headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
@@ -49,8 +64,8 @@ class AddModule extends React.Component {
       this.setState({name: e.target.value}); 
   } 
 
-  updateLanguage = (e) => {
-    this.setState({language: e.target.value}); 
+  updateLanguage = (value) => {
+    this.setState({language: value}); 
   } 
 
   onShowStatus = () => {
@@ -96,15 +111,23 @@ class AddModule extends React.Component {
           <Col>
             <FormGroup>
               <Label for="moduleLang">Language:</Label>
-              <Input type="text" placeholder="Language"
-                     value={this.state.language} onChange={this.updateLanguage}/>
+              <Select
+                name="languageCode"
+                options={this.state.languageCodes}
+                className="basic-single"
+                classNamePrefix="select"
+                isClearable={true}
+                value={this.state.language}
+                onChange={this.updateLanguage}
+              />
             </FormGroup>
           </Col>
           </Row>
           <Row>
           <Col>
-            <Button style={{backgroundColor: '#004085'}} type="submit" block
-              >Create</Button>
+            <Button style={{backgroundColor: '#004085'}} type="submit" block>
+              Create
+            </Button>
           </Col>
           </Row>
           </Form>

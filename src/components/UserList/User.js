@@ -5,16 +5,16 @@ class User extends Component {
 		super(props);
 
 		this.state = {
-			users: this.props.users
+			user: this.props.user
 		}
 	}
 
 	render() {
 	    return (
-				<tr>
-					<td>{this.state.users.id}</td>
-					<td>{this.state.users.username}</td>
-		      <td>{this.state.users.permissions}</td>
+			<tr>
+				<td>{this.state.user.userID}</td>
+				<td>{this.state.user.username}</td>
+				<td>{this.state.user.permissionGroup}</td>
 		    </tr>
 	    )
 	}
