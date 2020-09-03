@@ -17,6 +17,7 @@ export default class Template extends React.Component {
     });
   }
   render() {
+	  console.log("MAIN TEMPLATE IS RENDERED");
     return (
       <header id="header">
 			<div className="container">
@@ -29,8 +30,8 @@ export default class Template extends React.Component {
 
 				<nav id="nav-menu-container">
 					<ul className="nav-menu">
-						<li><Link to='/downloads'>Download</Link></li>
-						<li><Link to='/profile'>Home</Link></li>
+						<li><Link to='/downloads'>Downloads</Link></li>
+						<li><Link to='/home'>Home</Link></li>
 						<li><Link to='/login'>Log In</Link></li>
 						<li><Link to='/register'>Sign Up</Link></li>
 						<li><a href="https://www.github.com/ItsNotRick/elle" className="github"><i className="fa fa-github fa-lg"></i></a></li>

@@ -7,22 +7,18 @@ class AuthAdmin extends Component {
 
     this.state = {
       userID: undefined,
-      perm: undefined
+      per: undefined
 
     };
   }
 
   componentDidMount() {
     const jwt = localStorage.getItem('jwt');;
-    const per = localStorage.getItem('per');;
     console.log("jwt: " + jwt); 
-    console.log("per: " + per);
+
     if(!jwt) {
-      this.props.history.push('/home');
-    }
-    // else if (per === 'ad' || per === 'us') {
-    //   this.props.history.push('/sessions');
-    // }
+      this.props.history.push('/');
+    }    
   }
 
   render () {

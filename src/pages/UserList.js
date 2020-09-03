@@ -8,6 +8,7 @@ import '../stylesheets/style.css';
 
 import User from '../components/UserList/User';
 import Template from './Template';
+import AccessDenied from './AccessDenied'; 
 
 class UserList extends Component {
 
@@ -166,6 +167,7 @@ class UserList extends Component {
       <Modal isOpen={this.state.elevateModalOpen} toggle={() => this.toggleElevateModal()} backdrop={true}>
         <ModalHeader toggle={() => this.toggleElevateModal()}>Modify Permission</ModalHeader>
         <ModalBody>
+          Select a user to promote them to {this.state.currentGroup === "su" ? "super admin" : "professor"} privileges: 
           <Select
             name="nonAdminList"
             options={nonAdminList}
@@ -214,6 +216,16 @@ class UserList extends Component {
   }
 
   render() {
+    if (localStorage.getItem('per') === "pf" || localStorage.getItem('per') === "st") {
+      return (
+        <Container>
+          <Template/>
+          <br></br>
+          <AccessDenied message={"Access Denied :("} />
+        </Container>
+      )
+    }
+
     return (
       <Container className="user-list">
         <Template/>

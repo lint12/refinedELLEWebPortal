@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, FormGroup, Label, Input, InputGroupAddon, FormFeedback, Button, Container, InputGroup } from 'reactstrap';
+import { Form, FormGroup, Label, Input, InputGroupAddon, FormFeedback, Button, Container, InputGroup, Card } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import MainTemplate from '../pages/MainTemplate';
@@ -22,6 +22,8 @@ export default class Signup extends React.Component {
       hiddenConfirm: true, 
       classCode: "",
       permission: 'User',
+      registerErr: false, 
+      errorMsg: ""
     }
     this.change = this.change.bind(this);
     this.submit = this.submit.bind(this);
@@ -100,14 +102,37 @@ export default class Signup extends React.Component {
   submit(e) {
     console.log(this.state.username + " " + this.state.password + " " + this.state.confirmation + " " + this.state.classCode);
     e.preventDefault();
-    axios.post(this.props.serviceIP + '/register', {
+
+    var data = {
       username: this.state.username,
       password: this.state.password,
       password_confirm: this.state.confirmation 
-    }).then(res => {
+    }
+
+    axios.post(this.props.serviceIP + '/register', data)
+    .then(res => {
       localStorage.setItem('jwt', res.data);
+      this.setState({registerErr: false}); 
       this.props.history.push('/login');
+    })
+    .catch(error => {
+      if (error.response.data !== undefined) {
+        console.log("signup error", error.response.data); 
+
+        this.setState({
+          registerErr : true,
+          errorMsg : error.response.data.Error
+        }); 
+      }
     });
+  }
+
+  generateErrorMsg = () => {
+    return (
+      <Card color="danger" style={{paddingLeft: "12px"}}>
+        {this.state.errorMsg}
+      </Card>
+    )
   }
 
   render() {
@@ -118,6 +143,7 @@ export default class Signup extends React.Component {
       <div>
         <div className="main-login main-center">
           <h4 style={{textAlign: 'center'}}>Start your ELLE experience today.</h4>
+          {this.state.registerErr ? this.generateErrorMsg() : null}
           <Form onSubmit={e => this.submit(e)}>
             <FormGroup>
               <Label for="userName">Username:</Label>

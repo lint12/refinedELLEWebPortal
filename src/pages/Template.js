@@ -17,6 +17,7 @@ export default class Template extends React.Component {
     });
   }
   render() {
+    console.log("USING TEMPLATE"); 
     return (
       <header id="header">
       <div className="container">
@@ -28,12 +29,34 @@ export default class Template extends React.Component {
         </div>
         <nav id="nav-menu-container">
           <ul className="nav-menu">
-            <li><Link to='/downloads'>Download</Link></li>
-            <li><Link to='/profile'>Profile</Link></li>
-            <li><Link to='/modules'>Modules</Link></li>
-						<li><Link to='/sessions'>Sessions</Link></li>
-            <li><Link to='/userlist'>User List</Link></li>
-            <li><Link to='/stats'>Stats</Link></li>
+            <li><Link to='/downloads'>Downloads</Link></li>
+            {localStorage.getItem('per') === "su" 
+            ? 
+              <>
+                <li><Link to='/superadminprofile'>Profile</Link></li>
+                <li><Link to='/modules'>Modules</Link></li>
+                <li><Link to='/sessions'>Sessions</Link></li>
+                <li><Link to='/userlist'>User List</Link></li>
+                <li><Link to='/stats'>Stats</Link></li>
+              </>
+            : null}
+            {localStorage.getItem('per') === "pf" 
+            ? 
+              <>
+                <li><Link to='/profile'>Profile</Link></li>
+                <li><Link to='/modules'>Modules</Link></li>
+                <li><Link to='/sessions'>Sessions</Link></li>
+                <li><Link to='/classroster'>Class Roster</Link></li>
+              </>
+            : null}
+            {localStorage.getItem('per') === "st" 
+            ? 
+              <>
+                <li><Link to='/profile'>Profile</Link></li>
+                <li><Link to='/modules'>Modules</Link></li>
+                <li><Link to='/sessions'>Sessions</Link></li>
+              </>
+            : null}
             <li><Link to='/logout'>Sign Out</Link></li>
 						<li><a href="https://www.github.com/ItsNotRick/elle" className="github"><i className="fa fa-github fa-lg"></i></a></li>
           </ul>

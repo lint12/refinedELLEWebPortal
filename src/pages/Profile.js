@@ -1,10 +1,12 @@
 import React from 'react';
 import { Button, Form, FormGroup, FormFeedback, Label, Input, InputGroupAddon, Container, Row, 
-  Col, Card, CardSubtitle, CardBody, Badge, Alert, Tooltip, Modal, ModalHeader, ModalFooter, ListGroup, ListGroupItem, InputGroup } from 'reactstrap';
+  Col, Card, CardSubtitle, CardBody, Badge, Alert, Tooltip, Modal, ModalHeader, ModalBody, ModalFooter, 
+  ListGroup, ListGroupItem, InputGroup } from 'reactstrap';
 import {Tabs, Tab} from 'react-bootstrap';
 import axios from 'axios';
 import Template from './Template';
 import { Pie, Bar, HorizontalBar } from 'react-chartjs-2';
+import AccessDenied from './AccessDenied'; 
 
 export default class Profile extends React.Component {
   constructor(props) {
@@ -21,6 +23,9 @@ export default class Profile extends React.Component {
         invalidConfirm: false, 
         hiddenPassword: true,
         hiddenConfirm: true, 
+        classes: [],
+        currentClassDetails: {},
+        className: "", 
         classCode: "", 
         sessions: [],
         bestModule: "", 
@@ -32,7 +37,8 @@ export default class Profile extends React.Component {
         displayChart: 0, 
         emptySession: false,  
         tooltipOpen: false,
-        pwModal: false
+        pwModal: false, 
+        classDetailModalOpen: false
     };
 
     this.change = this.change.bind(this);
@@ -41,6 +47,7 @@ export default class Profile extends React.Component {
 
   componentDidMount() {
     this.getUserInfo(); 
+    this.getClass(); 
   }
 
   getUserInfo = () => {
@@ -77,6 +84,17 @@ export default class Profile extends React.Component {
     }).catch(function (error) {
       console.log(error);
     });
+  }
+
+  getClass = () => {
+    axios.get(this.props.serviceIP + '/searchusergroups', {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+    }).then(res => {
+      console.log(res.data); 
+      this.setState({ classes: res.data })
+    }).catch(error => {
+      console.log(error.response); 
+    })
   }
 
   //this is for the word/term of the day 
@@ -386,8 +404,81 @@ export default class Profile extends React.Component {
     }
   }
 
-  submitClassCode(e) {
+  revealClassDetails = (item) => {
+    console.log(item); 
+    return (
+      <Modal isOpen={this.state.classDetailModalOpen} toggle={this.toggleClassDetailModal}>
+        <ModalHeader toggle={this.toggleClassDetailModal}>Class Details</ModalHeader>
+        <ModalBody>
+          <Card>
+            <Row>
+              <Col style={{paddingLeft: "30px"}}>
+                <Label>Class Name: </Label>{' '}{item.groupName}
+              </Col>
+            </Row>
+            <Row>
+              <Col style={{paddingLeft: "30px"}}>
+              <Label>Class Code: </Label>{' '}{item.groupCode}
+              </Col>
+            </Row>
+          </Card>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" >Edit</Button>{' '}
+          <Button color="secondary" >Delete</Button>
+        </ModalFooter>
+      </Modal>
+    )
+  }
 
+  toggleClassDetailModal = (item) => {
+    this.setState({ 
+      classDetailModalOpen: !this.state.classDetailModalOpen, 
+      currentClassDetails: item
+    })
+  }
+
+  submitClassCode = (e) => {
+    e.preventDefault(); 
+    console.log("CODE: ", this.state.classCode); 
+    var data = {
+      groupCode: this.state.classCode
+    }
+
+    var headers = {
+      'Authorization': 'Bearer ' + localStorage.getItem('jwt')
+    }
+
+    axios.post(this.props.serviceIP + '/groupregister', data, {headers:headers}
+    ).then(res => {
+      console.log(res.data); 
+      this.getClass(); 
+      this.setState({ classCode: "" }); 
+    }).catch(error => {
+      console.log(error.response); 
+    })
+  }
+
+  createClass = (e) => {
+    e.preventDefault(); 
+    console.log("Class name: ", this.state.className);
+    var data = {
+      groupName: this.state.className
+    }
+
+    var headers = {
+      'Authorization': 'Bearer ' + localStorage.getItem('jwt')
+    }
+
+    axios.post(this.props.serviceIP + '/group', data, {headers:headers}
+    ).then(res => {
+      console.log(res.data); 
+      this.getClass(); 
+
+      this.setState({ className: "" }); 
+    }).catch(error => {
+      console.log(error.response); 
+    })
   }
 
   submitPassword = () => {
@@ -415,7 +506,7 @@ export default class Profile extends React.Component {
       newPassword: "", 
       confirmPassword: "", 
       validConfirm: false, 
-      invalidConfirm: false
+      invalidConfirm: false, 
     })
   }
 
@@ -434,6 +525,15 @@ export default class Profile extends React.Component {
   }
 
   render() { 
+    if (localStorage.getItem('per') === "su") {
+      return (
+        <Container>
+          <Template/>
+          <br></br>
+          <AccessDenied message={"Information Not Valid"} />
+        </Container>
+      )
+    }
     return (
       <Container>
       <Template/>
@@ -543,13 +643,38 @@ export default class Profile extends React.Component {
           <h6>Classes:</h6>
           <Card style={{overflow:"scroll", height: "20vh"}}>
             <ListGroup flush>
-              <ListGroupItem>Spanish I</ListGroupItem>
-              <ListGroupItem>Spanish II</ListGroupItem>
-              <ListGroupItem>German I</ListGroupItem>
+              {this.state.classes.length === 0 
+              ? <ListGroupItem> You currently are not part of any classes. </ListGroupItem>
+              : this.state.classes.map((item, i) => {
+                return(
+                  <ListGroupItem key={i}> 
+                    {item.groupName} 
+                    {localStorage.getItem('per') === "pf" 
+                    ? 
+                    <>
+                      <Button 
+                        style={{float: "right", backgroundColor: "white", border: "none", padding: "0"}}
+                        onClick={() => this.toggleClassDetailModal(item)}
+                      >
+                        <img 
+                          src={require('../Images/more.png')} 
+                          alt="Icon made by xnimrodx from www.flaticon.com" 
+                          name="more"
+                          style={{width: '24px', height: '24px'}}
+                        />
+                      </Button>
+                      {this.revealClassDetails(this.state.currentClassDetails)}
+                    </>
+                    : null}
+                  </ListGroupItem>)
+                })
+              }
             </ListGroup>
           </Card>
+          {localStorage.getItem('per') === "st" 
+          ?           
           <Form onSubmit={e => this.submitClassCode(e)}>
-          <h3 style={{marginTop: "8px"}}>Join a New Class</h3>
+            <h3 style={{marginTop: "8px"}}>Join a New Class</h3>
             <FormGroup>
               <Label for="classCode">Enter your class code below.</Label>
               <Input type="text"
@@ -560,6 +685,20 @@ export default class Profile extends React.Component {
             </FormGroup>
             <Button block type="submit">Submit Class Code</Button>
           </Form>
+          : 
+          <Form onSubmit={e => this.createClass(e)}>
+            <h4 style={{marginTop: "8px"}}>Create a New Class</h4>
+            <FormGroup>
+              <Label for="className">Class Name: </Label>
+              <Input type="text"
+              name="className"
+              id="className"
+              onChange={e => this.change(e)}
+              value={this.state.className} />
+            </FormGroup>
+            <Button block type="submit">Create</Button>
+          </Form>
+          }
           </CardBody>
           </Card>
         </Col>

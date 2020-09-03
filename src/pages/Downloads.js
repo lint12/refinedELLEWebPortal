@@ -12,6 +12,7 @@ import '../lib/ionicons/css/ionicons.min.css';
 export default class Downloads extends Component {
 
 	render() {
+		console.log("Downloads page: ",localStorage.getItem('jwt'));
 	return (
 	<div>
 		{localStorage.getItem('jwt') === null ? <MainTemplate /> : <Template />}

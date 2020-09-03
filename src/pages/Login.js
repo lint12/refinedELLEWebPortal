@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, FormGroup, Input, Container, Label } from 'reactstrap';
+import { Button, Form, FormGroup, Input, Container, Label, Card } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import MainTemplate from '../pages/MainTemplate';
@@ -15,6 +15,8 @@ export default class Login extends Component {
     this.state = {
       username: '',
       password: '',
+      loginErr: false, 
+      errorMsg: ""
     };
     this.change = this.change.bind(this);
     this.submit = this.submit.bind(this);
@@ -33,15 +35,46 @@ export default class Login extends Component {
     console.log(this.state.password);
     axios.post(this.props.serviceIP + '/login', {
       username: this.state.username,
-      password: this.state.password
+      password: this.state.password   
     }).then(res => {
+      var jwtDecode = require('jwt-decode');
       console.log(res.data);
       console.log(res.data.access_token);
-      console.log(res.data.permissions);
-      localStorage.setItem('jwt', res.data.access_token);
-      localStorage.setItem('per', res.data.permissions);
-      this.props.history.push('/modules');
+      localStorage.setItem('jwt', res.data.access_token); 
+
+      var decoded = jwtDecode(res.data.access_token);
+      console.log("JWT DECODED: ", decoded);
+  
+      localStorage.setItem('per', decoded.user_claims);
+      console.log("PERMISSION in Login: ", localStorage.getItem('per'));
+
+      this.setState({loginErr : false});
+
+      if (localStorage.getItem('per') === 'su') {
+        this.props.history.push('/superadminprofile');
+      }
+      else {
+        this.props.history.push('/profile');
+      }
+    }).catch(error => {
+      if (error.response !== undefined) {
+        console.log("login error", error.response.data); 
+
+        this.setState({
+          loginErr : true,
+          errorMsg : error.response.data.message
+        }); 
+
+      }
     });
+  }
+
+  generateErrorMsg = () => {
+    return (
+      <Card color="danger" style={{paddingLeft: "12px"}}>
+        {this.state.errorMsg}
+      </Card>
+    )
   }
 
   render() {
@@ -52,6 +85,7 @@ export default class Login extends Component {
       <div className="row main" >
         <div className="main-login main-center">
           <h4 style={{textAlign: 'center'}}>Welcome back to ELLE.</h4>
+          {this.state.loginErr ? this.generateErrorMsg() : null}
           <Form onSubmit={e => this.submit(e)}>
             <FormGroup>
               <Label for="userName">Username:</Label>
