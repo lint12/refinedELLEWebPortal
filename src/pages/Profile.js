@@ -47,7 +47,7 @@ export default class Profile extends React.Component {
 
   componentDidMount() {
     this.getUserInfo(); 
-    this.getClass(); 
+    this.getClasses(); 
   }
 
   getUserInfo = () => {
@@ -86,7 +86,7 @@ export default class Profile extends React.Component {
     });
   }
 
-  getClass = () => {
+  getClasses = () => {
     axios.get(this.props.serviceIP + '/searchusergroups', {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then(res => {
@@ -452,7 +452,7 @@ export default class Profile extends React.Component {
     axios.post(this.props.serviceIP + '/groupregister', data, {headers:headers}
     ).then(res => {
       console.log(res.data); 
-      this.getClass(); 
+      this.getClasses(); 
       this.setState({ classCode: "" }); 
     }).catch(error => {
       console.log(error.response); 
@@ -473,7 +473,7 @@ export default class Profile extends React.Component {
     axios.post(this.props.serviceIP + '/group', data, {headers:headers}
     ).then(res => {
       console.log(res.data); 
-      this.getClass(); 
+      this.getClasses(); 
 
       this.setState({ className: "" }); 
     }).catch(error => {

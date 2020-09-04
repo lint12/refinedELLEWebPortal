@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Collapse, Button, Card, Input, InputGroup,
-   InputGroupAddon, Container, Row, Col, Alert } from 'reactstrap';
+   InputGroupAddon, Container, Row, Col, Alert, Label } from 'reactstrap';
 import axios from 'axios';
+import Select from 'react-select';
   
 import AddModule from '../components/Decks/AddModule';
 import Deck from '../components/Decks/Deck';
@@ -40,21 +41,24 @@ export default class Modules extends Component {
       searchDeck: '', //what gets typed in the search bar that filters the module list
       collapseNewModule: false, //determines whether or not the new module form is open
       emptyCollection: false, //true when there are no modules, false otherwise
+      selectedClass: {value: 0, label: "All"},
+      classChanged: false,
+      classes: []
     };
   }
 
 
   componentDidMount() {
       this.initializeModulesPage();
+      this.getClasses();
   }
 
 
   //function for initializing module list on sidebar and setting current module to the first one
   initializeModulesPage = () => { 
-
     let header = { 
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') } 
-      };
+    };
     
     axios.get(this.props.serviceIP + '/modules', header)
       .then(res => {
@@ -83,39 +87,81 @@ export default class Modules extends Component {
 
   //function for updating the module list on the sidebar with what's in the database
   updateModuleList = () => {
-
     let header = {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     };
 
-    axios.get(this.props.serviceIP + '/modules', header)
+    console.log("UPDATING THE MODULE LIST: ", this.state.selectedClass); 
+
+    if (this.state.selectedClass === null) {
+      return; 
+    }
+
+    if (this.state.selectedClass.value === 0) {
+      axios.get(this.props.serviceIP + '/modules', header)
+        .then(res => {
+          
+          let modules = res.data;
+
+          if(modules.length === 0){
+            this.toggleEmptyCollectionAlert();
+          }
+          
+          this.setState({ modules : modules,
+                          dynamicModules: modules,
+                          classChanged: false
+                        });
+
+          console.log("FIRST MODULE: ", modules[0]);
+
+          this.updateCurrentModule({ module: modules[0] }); 
+        })
+        .catch(function (error) {
+          console.log("updateModuleList error: ", error.message);
+        });
+    }
+    else {
+      let config = {
+        params: {groupID: this.state.selectedClass.value}, 
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+      }
+      console.log("Config: ", config); 
+      axios.get(this.props.serviceIP + '/retrievegroupmodules', config)
       .then(res => {
-        
         let modules = res.data;
+
+        console.log("MODULES: ", modules);
 
         if(modules.length === 0){
           this.toggleEmptyCollectionAlert();
         }
         
         this.setState({ modules : modules,
-                        dynamicModules: modules });
+                        dynamicModules: modules, 
+                        classChanged: false 
+                      });
 
+        console.log("FIRST MODULE: ", modules[0]);
         
+        this.updateCurrentModule({ module: modules[0] }); 
       })
       .catch(function (error) {
-        console.log("updateModuleList error: ", error);
+        console.log("updateModuleList error: ", error.message);
       });
+    }
   }
 
   //function for getting the elements in the current module
   updateCurrentModule = (event) => {
+    var data = {
+      moduleID: event.module.moduleID
+    }
 
-    let header = { 
-      moduleID: event.module.moduleID, 
-      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-    };
-    
-    axios.post(this.props.serviceIP + '/modulequestions', header)
+    var headers = {
+      'Authorization': 'Bearer ' + localStorage.getItem('jwt')
+    }
+
+    axios.post(this.props.serviceIP + '/modulequestions', data, {headers:headers})
       .then( res => {
 
         let cards = res.data;
@@ -303,18 +349,68 @@ export default class Modules extends Component {
 
   //function that toggles whether or not the empty collection alert is shown
   toggleEmptyCollectionAlert() {
-    this.setState({ emptyCollection: !this.state.emptyCollection });
+    this.setState({ emptyCollection: true });
   }
 
+  getClasses = () => {
+    axios.get(this.props.serviceIP + '/searchusergroups', {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+    }).then(res => {
+      console.log(res.data); 
+      this.setState({ classes: res.data })
+    }).catch(error => {
+      console.log(error.response); 
+    })
+  }
+
+  updateClassContext = (value) => {
+    console.log("Selected Class: ", value);
+    this.setState({
+      selectedClass: value, 
+      classChanged: true
+    }); 
+  } 
 
   render() {
+    let classOptions = []; 
+    classOptions.push({value: 0, label: "All"}); 
+
+    this.state.classes.map((item) => {classOptions.push({value: item.groupID, label: item.groupName})}); 
+
+    console.log("EMPTY COLLECTIONS: ", this.state.emptyCollection); 
+
     return (
     <Container>
     <Template/>
 
     <br/><br/>
 
-    <h4>Your ELLE Modules:</h4>
+    <Row style={{marginBottom: "15px"}}>
+      <Col className="Left Column" xs="3">
+        <h3 style={{margin: "5px 0 0 0"}}>Your ELLE Modules:</h3>
+      </Col>
+      <Col className="Right Column" style={{display: "flex", justifyContent: "flex-end"}}>
+        {/*Class Context*/}
+          <Label style={{margin: "5px 8px 0 0", fontSize: "large"}}>Class: </Label>
+          <Select
+            name="selectedClass"
+            options={classOptions}
+            className="basic-single"
+            classNamePrefix="select"
+            isClearable={true}
+            value={this.state.selectedClass}
+            onChange={this.updateClassContext}
+            styles={{
+              valueContainer: () => ({width: '147px'}),
+              // Fixes the overlapping problem of the component
+              menu: provided => ({ ...provided, zIndex: 9999 }), 
+              singleValue: provided => ({ ...provided, margin: "0 0 0 10px"}),
+              input: provided => ({ ...provided, margin: "0 0 0 10px"})
+            }}
+          />
+          {this.state.classChanged ? this.updateModuleList() : null}
+      </Col>
+    </Row>
     <Row className="Seperated Col">
       <Col className="Left Column" xs="3">
         
@@ -339,6 +435,7 @@ export default class Modules extends Component {
           <AddModule  
             serviceIP={this.props.serviceIP} 
             updateModuleList={this.updateModuleList}
+            classOptions={classOptions}
           />
         </Collapse>
 
@@ -381,7 +478,7 @@ export default class Modules extends Component {
                 />
               : 
               <Alert isOpen={this.state.emptyCollection}>
-              You have no modules, please create one by clicking on the Add Module Button to your left.
+                You have no modules, please create one by clicking on the Add Module Button to your left.
               </Alert>
             }
 

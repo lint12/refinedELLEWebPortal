@@ -13,7 +13,8 @@ class AddModule extends React.Component {
         language: "", 
         status : false, 
         success : false, 
-        languageCodes: []
+        languageCodes: [], 
+        class: ""
       }; 
 
       this.submitModule = this.submitModule.bind(this); 
@@ -40,7 +41,8 @@ class AddModule extends React.Component {
     var data = {
         name: this.state.name,
         language: this.state.language.value, 
-        complexity: 2
+        complexity: 2, 
+        groupID: this.state.class.value
     }
 
     console.log("MODULE CREATION DATA: ", data); 
@@ -56,7 +58,7 @@ class AddModule extends React.Component {
       this.onShowStatus(); 
       this.props.updateModuleList();
     }).catch(function (error) {
-        console.log(error);
+      console.log(error);
     });
   }
 
@@ -68,6 +70,11 @@ class AddModule extends React.Component {
     this.setState({language: value}); 
   } 
 
+  updateClass = (value) => {
+    console.log("Selected Class: ", value); 
+    this.setState({class: value}); 
+  } 
+
   onShowStatus = () => {
     this.setState({ status: true }, ()=>{
       window.setTimeout(()=>{
@@ -75,7 +82,8 @@ class AddModule extends React.Component {
           status: false, 
           name: "", 
           language: "", 
-          success: false
+          class: "", 
+          success: false, 
         })
       },2000)
     }); 
@@ -119,6 +127,22 @@ class AddModule extends React.Component {
                 isClearable={true}
                 value={this.state.language}
                 onChange={this.updateLanguage}
+              />
+            </FormGroup>
+          </Col>
+          </Row>
+          <Row>
+          <Col>
+            <FormGroup>
+              <Label for="classContext">Class:</Label>
+              <Select
+                name="class"
+                options={this.props.classOptions}
+                className="basic-single"
+                classNamePrefix="select"
+                isClearable={true}
+                value={this.state.class}
+                onChange={this.updateClass}
               />
             </FormGroup>
           </Col>
