@@ -282,6 +282,9 @@ export default class Modules extends Component {
 
   //function for deleting a module
   deleteModule = (id) => {
+
+    console.log("in deleteModule, id: ", id);
+    
     let header = { 
       data: {moduleID: id }, 
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
@@ -290,6 +293,7 @@ export default class Modules extends Component {
     
     axios.delete(this.props.serviceIP + '/module', header)
       .then( res => {
+        console.log("in deleteModule, res.data: ", res.data);
 
         this.updateModuleList(); 
 

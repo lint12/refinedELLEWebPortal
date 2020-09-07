@@ -38,12 +38,21 @@ class AddModule extends React.Component {
     console.log("submit button has been pressed"); 
     console.log(this.props.serviceIP); 
 
-    var data = {
+    if (localStorage.getItem('per') === 'su'){
+      var data = {
+        name: this.state.name,
+        language: this.state.language.value, 
+        complexity: 2
+        }
+    } else {
+      var data = {
         name: this.state.name,
         language: this.state.language.value, 
         complexity: 2, 
         groupID: this.state.class.value
+        }
     }
+        
 
     console.log("MODULE CREATION DATA: ", data); 
     console.log(localStorage.getItem('jwt'));
