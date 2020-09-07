@@ -43,7 +43,9 @@ export default class Modules extends Component {
       emptyCollection: false, //true when there are no modules, false otherwise
       selectedClass: {value: 0, label: "All"},
       classChanged: false,
-      classes: []
+      classes: [], 
+      permissionLevels: [], 
+      currentPermissionLevel: localStorage.getItem('per')
     };
   }
 
@@ -51,6 +53,7 @@ export default class Modules extends Component {
   componentDidMount() {
       this.initializeModulesPage();
       this.getClasses();
+      this.getPermissionLevels();
   }
 
 
@@ -368,20 +371,35 @@ export default class Modules extends Component {
   }
 
   updateClassContext = (value) => {
-    console.log("Selected Class: ", value);
-    this.setState({
-      selectedClass: value, 
-      classChanged: true
-    }); 
+    if (value !== null) {
+      console.log("Selected Class: ", value);
+      let currentClass = this.state.permissionLevels.find((group) => group.groupID === value.value);
+      console.log("CURRENT CLASS: ", currentClass);
+
+      this.setState({
+        selectedClass: value, 
+        classChanged: true,
+        currentPermissionLevel: value.value === 0 ? localStorage.getItem('per') : currentClass.accessLevel
+      }); 
+    }
   } 
+
+  getPermissionLevels = () => {
+    axios.get(this.props.serviceIP + '/userlevels', {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+    }).then(res => {
+      console.log("PERMISSION LEVELS: ", res.data); 
+      this.setState({ permissionLevels: res.data })
+    }).catch(error => {
+      console.log(error.response); 
+    })
+  }
 
   render() {
     let classOptions = []; 
     classOptions.push({value: 0, label: "All"}); 
 
     this.state.classes.map((item) => {classOptions.push({value: item.groupID, label: item.groupName})}); 
-
-    console.log("EMPTY COLLECTIONS: ", this.state.emptyCollection); 
 
     return (
     <Container>
@@ -425,11 +443,14 @@ export default class Modules extends Component {
             value={this.state.searchDeck} 
             onChange={this.updateSearchDeck.bind(this)}
             />
-          <InputGroupAddon addonType="append">
-            <Button style={{backgroundColor:'#3e6184'}} onClick={this.toggleNewModule}>
-              Add Module
-            </Button>
-          </InputGroupAddon>
+          {this.state.currentPermissionLevel !== 'st' 
+          ? 
+            <InputGroupAddon addonType="append">
+              <Button style={{backgroundColor:'#3e6184'}} onClick={this.toggleNewModule}>
+                Add Module
+              </Button>
+            </InputGroupAddon>
+          : null}
         </InputGroup>
 
         <br/>
@@ -452,12 +473,13 @@ export default class Modules extends Component {
                 this.state.dynamicModules.map((deck, i)=> (
                   <SplitDeckBtn 
                     key={i}
+                    permissionLevel={this.state.currentPermissionLevel}
                     id={deck.moduleID} 
                     curModule={deck} 
                     updateCurrentModule={this.updateCurrentModule}
                     deleteModule={this.deleteModule}
                     editModule={this.editModule}
-                    />
+                  />
                 ))
               }
             </Card>
@@ -473,6 +495,7 @@ export default class Modules extends Component {
             {
               this.state.modules.length !== 0 ? 
               <Deck
+                permissionLevel={this.state.currentPermissionLevel}
                 moduleName={this.state.moduleName}
                 curModule={this.state.currentModule}
                 cards={this.state.cards}
@@ -482,7 +505,12 @@ export default class Modules extends Component {
                 />
               : 
               <Alert isOpen={this.state.emptyCollection}>
-                You have no modules, please create one by clicking on the Add Module Button to your left.
+                {this.state.currentPermissionLevel !== "st" 
+                ? 
+                  "You have no modules in this class, please create one by clicking on the Add Module Button to your left."
+                :
+                  "There are currently no modules in this class."
+                }
               </Alert>
             }
 

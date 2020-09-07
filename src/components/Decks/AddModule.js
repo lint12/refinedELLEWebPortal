@@ -67,7 +67,7 @@ class AddModule extends React.Component {
       this.onShowStatus(); 
       this.props.updateModuleList();
     }).catch(function (error) {
-      console.log(error);
+      console.log(error.message);
     });
   }
 

@@ -42,7 +42,7 @@ const CardList = (props) => {
               <th style={{width: '12%'}}>Picture</th>
               <th style={{width: '12%'}}>Audio</th>
 							<th style={{width: '12%'}}>ID</th>
-              <th style={{width: '32%'}}> </th> 
+              {props.permissionLevel !== "st" ? <th style={{width: '32%'}}> </th> : null}
             </tr>
           </thead>
           <tbody>
@@ -51,6 +51,7 @@ const CardList = (props) => {
                 <Card
                 key={card.termID}
                 card={card}
+                permissionLevel={props.permissionLevel}
                 serviceIP={props.serviceIP}
                 curModule={props.curModule}
                 updateCurrentModule={props.updateCurrentModule}
@@ -80,7 +81,7 @@ const CardList = (props) => {
               <th style={{width: '12%'}}>Picture</th>
               <th style={{width: '12%'}}>Audio</th>
               <th style={{width: '12%'}}>ID</th>
-              <th style={{width: '32%'}}> </th> 
+              {props.permissionLevel !== "st" ? <th style={{width: '32%'}}> </th> : null}
             </tr>
           </thead>
           <tbody>
@@ -89,6 +90,7 @@ const CardList = (props) => {
                 <Phrase                   
                   key={card.termID}
                   card={card}
+                  permissionLevel={props.permissionLevel}
                   serviceIP={props.serviceIP}
                   curModule={props.curModule}
                   updateCurrentModule={props.updateCurrentModule}/>
@@ -113,7 +115,7 @@ const CardList = (props) => {
               <th style={{width: '9%'}}>Picture</th>
               <th style={{width: '9%'}}>Audio</th>
               <th style={{width: '9%'}}>ID</th>
-              <th style={{width: '9%'}}> </th>
+              {props.permissionLevel !== "st" ? <th style={{width: '9%'}}> </th> : null}
             </tr>
           </thead>
           <tbody>    
@@ -122,6 +124,7 @@ const CardList = (props) => {
                 <Question
                   key={card.questionID}
                   question={card}
+                  permissionLevel={props.permissionLevel}
                   serviceIP={props.serviceIP}
                   curModule={props.curModule}
                   updateCurrentModule={props.updateCurrentModule}

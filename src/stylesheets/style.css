@@ -920,11 +920,19 @@ table.userListTable td {
   vertical-align: bottom;
   border-bottom: 2px solid #dee2e6;
   border-right-style: hidden;
+  padding: 8px 12px 8px 12px; 
+  width: 35%
 }
 
+table.userListTable tbody th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #dee2e6;
+  border-right-style: hidden;
+  padding: 2px 12px 2px 12px; 
+  background-color: lightsteelblue;
+}
 
-
-
+/*----------------------------------------*/
 
 .no-suggestions {
   color: #999;

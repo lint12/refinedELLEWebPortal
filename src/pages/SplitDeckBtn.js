@@ -16,13 +16,14 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Pop
       <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
         <Button 
           style={{display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", backgroundColor: "#5faeb5",
-                  border: "none", borderBottomLeftRadius: "0px", borderTopLeftRadius: "0px"}} 
+                  border: "none", borderRadius: '0px'}} 
           id={"deckButton" + props.id}
           type="button"
           onClick={ () => {
             console.log("SplitDeckBtn: ", props.curModule); 
             props.updateCurrentModule({ module: props.curModule })
-        }}>{props.curModule.name}
+        }}>
+          {props.curModule.name}
         </Button>
         <Popover trigger="legacy" placement="bottom" isOpen={popoverOpen} target={"deckButton" + props.id}>
           <PopoverHeader>
@@ -44,15 +45,21 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Pop
           </PopoverBody>
         </Popover>
         
-        <DropdownToggle caret color="info" style={{backgroundColor: '#5faeb5', border: 'none', borderRadius: '0px'}}/>
-        <DropdownMenu style={{minWidth: '50px', padding: '0px', backgroundColor: 'gray'}}>
-            <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightcyan', color: 'black', outline: 'none'}}
-              onClick={ () => { togglePopover() }}>
-              <img src={require('../Images/tools.png')} alt="edit icon" style={{width: '18px', height: '18px'}}/> Edit</DropdownItem>
-            <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightcoral', color: 'black', outline: 'none'}}
-              onClick={ () => { toggleModal() }}>
-              <img src={require('../Images/delete.png')} alt="trash can icon" style={{width: '18px', height: '20px'}}/> Delete</DropdownItem>
-        </DropdownMenu>
+        {props.permissionLevel !== "st" 
+        ? 
+          <>
+          <DropdownToggle caret color="info" style={{backgroundColor: '#5faeb5', border: 'none', borderRadius: '0px'}}/>
+          <DropdownMenu style={{minWidth: '50px', padding: '0px', backgroundColor: 'gray'}}>
+              <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightcyan', color: 'black', outline: 'none'}}
+                onClick={ () => { togglePopover() }}>
+                <img src={require('../Images/tools.png')} alt="edit icon" style={{width: '18px', height: '18px'}}/> Edit</DropdownItem>
+              <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightcoral', color: 'black', outline: 'none'}}
+                onClick={ () => { toggleModal() }}>
+                <img src={require('../Images/delete.png')} alt="trash can icon" style={{width: '18px', height: '20px'}}/> Delete</DropdownItem>
+          </DropdownMenu>
+          </>
+        : null}
+
         <Modal isOpen={modalOpen}> 
           <ModalHeader toggle={toggleModal}>Delete</ModalHeader>
           <ModalBody>
