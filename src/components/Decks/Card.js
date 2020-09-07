@@ -295,6 +295,9 @@ class Card extends React.Component {
             </Button>
           </td>
           <td>{this.state.card.termID}</td>
+
+          {this.props.permissionLevel !== "st" 
+          ? 
           <td>
             <ButtonGroup>
               <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.editCard()}>
@@ -312,6 +315,8 @@ class Card extends React.Component {
                   />
               </Button>
             </ButtonGroup>
+          </td>
+          : null}
 
             <Modal isOpen={this.state.modal} toggle={this.toggleModal}> 
               <ModalHeader toggle={this.toggleModal}>Delete</ModalHeader>
@@ -325,8 +330,6 @@ class Card extends React.Component {
                 <Button color="danger" onClick={this.deleteCard.bind()}>Delete</Button>
               </ModalFooter>
             </Modal>
-
-          </td>
         </tr>
 
         <tr>

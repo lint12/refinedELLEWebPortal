@@ -228,35 +228,40 @@ class Deck extends React.Component {
                 onChange={this.updateSearchCard.bind(this)}
               />
               
-              {/*The button for the Add Term forms*/}
-              <InputGroupAddon addonType="append">
-                <ButtonDropdown  
-                  isOpen={this.state.addTermButtonOpen}
-                  toggle={this.toggleAddTermButton}
-                  >
-                  <DropdownToggle style={{backgroundColor:'#3e6184', borderRadius: '0px'}} caret>
-                    Add Term
-                  </DropdownToggle>
-                  <DropdownMenu>
-                    <DropdownItem onClick={() => this.setOpenForm(1)}> Add Existing</DropdownItem>
-                    <DropdownItem onClick={() => this.setOpenForm(2)}> Add New</DropdownItem>
-                  </DropdownMenu>
-                </ButtonDropdown>
-              </InputGroupAddon>
+              {this.props.permissionLevel !== "st" 
+              ?
+              <>
+                {/* The button for the Add Term forms */}
+                <InputGroupAddon addonType="append">
+                  <ButtonDropdown  
+                    isOpen={this.state.addTermButtonOpen}
+                    toggle={this.toggleAddTermButton}
+                    >
+                    <DropdownToggle style={{backgroundColor:'#3e6184', borderRadius: '0px'}} caret>
+                      Add Term
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem onClick={() => this.setOpenForm(1)}> Add Existing</DropdownItem>
+                      <DropdownItem onClick={() => this.setOpenForm(2)}> Add New</DropdownItem>
+                    </DropdownMenu>
+                  </ButtonDropdown>
+                </InputGroupAddon>
 
-              {/*The button for the Add Phrase form*/}
-              <InputGroupAddon addonType="append">
-                <Button style={{backgroundColor:'#3e6184'}} onClick={() => this.setOpenForm(3)}>
-                  Add Phrase
-                </Button>
-              </InputGroupAddon>
+                {/* The button for the Add Phrase form */}
+                <InputGroupAddon addonType="append">
+                  <Button style={{backgroundColor:'#3e6184'}} onClick={() => this.setOpenForm(3)}>
+                    Add Phrase
+                  </Button>
+                </InputGroupAddon>
 
-              {/*The button for the Add Question form*/}
-              <InputGroupAddon addonType="append">
-                <Button style={{backgroundColor:'#3e6184'}} onClick={() => this.setOpenForm(4)}>
-                  Add Question
-                </Button>
-              </InputGroupAddon>
+                {/* The button for the Add Question form */}
+                <InputGroupAddon addonType="append">
+                  <Button style={{backgroundColor:'#3e6184'}} onClick={() => this.setOpenForm(4)}>
+                    Add Question
+                  </Button>
+                </InputGroupAddon>
+            </>
+            : null}
             </InputGroup>
 
             <Col>
@@ -330,6 +335,7 @@ class Deck extends React.Component {
                   <Collapse isOpen={this.state.collapseTab === index}>
                     <CardList 
                       type={0} 
+                      permissionLevel={this.props.permissionLevel}
                       cards = {filteredTerms} 
                       serviceIP={this.props.serviceIP} 
                       curModule={this.props.curModule} 
@@ -352,6 +358,7 @@ class Deck extends React.Component {
                   <Collapse isOpen={this.state.collapseTab === index}>
                     <CardList 
                       type={1} 
+                      permissionLevel={this.props.permissionLevel}
                       cards={filteredPhrases} 
                       serviceIP={this.props.serviceIP}
                       curModule={this.props.curModule} 
@@ -371,6 +378,7 @@ class Deck extends React.Component {
                   <Collapse isOpen={this.state.collapseTab === index}>
                     <CardList 
                         type={2} 
+                        permissionLevel={this.props.permissionLevel}
                         cards={filteredQuestions} 
                         serviceIP={this.props.serviceIP}
                         curModule={this.props.curModule} 

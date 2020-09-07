@@ -321,38 +321,41 @@ class Question extends React.Component {
             </Button>
           </td>
           <td>{this.state.question.questionID}</td>
-          <td>
-            <ButtonGroup>
-              <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.toggleEditMode()}>
-                <img 
-                  src={require('../../Images/tools.png')} 
-                  alt="edit icon" 
-                  style={{width: '25px', height: '25px'}}
-                  />
-              </Button>
-              <Button style={{backgroundColor: 'lightcoral'}} onClick={this.handleDelete.bind()}>
-                <img 
-                  src={require('../../Images/delete.png')} 
-                  alt="trash can icon" 
-                  style={{width: '25px', height: '25px'}}
-                  />
-              </Button>
-            </ButtonGroup>
 
-            <Modal isOpen={this.state.modal} toggle={this.toggleModal}> 
-              <ModalHeader toggle={this.toggleModal}>Delete</ModalHeader>
-              
-              <ModalBody>
-                <p>Are you sure you want to delete the question: {editedQuestionText}?</p>
-              </ModalBody>
+          {this.props.permissionLevel !== "st"
+          ?
+            <td>
+              <ButtonGroup>
+                <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.toggleEditMode()}>
+                  <img 
+                    src={require('../../Images/tools.png')} 
+                    alt="edit icon" 
+                    style={{width: '25px', height: '25px'}}
+                    />
+                </Button>
+                <Button style={{backgroundColor: 'lightcoral'}} onClick={this.handleDelete.bind()}>
+                  <img 
+                    src={require('../../Images/delete.png')} 
+                    alt="trash can icon" 
+                    style={{width: '25px', height: '25px'}}
+                    />
+                </Button>
+              </ButtonGroup>
+            </td>
+          : null}
 
-              <ModalFooter>
-                <Button onClick={this.toggleModal}>Cancel</Button>
-                <Button color="danger" onClick={this.deleteQuestion.bind()}>Delete</Button>
-              </ModalFooter>
-            </Modal>
+          <Modal isOpen={this.state.modal} toggle={this.toggleModal}> 
+            <ModalHeader toggle={this.toggleModal}>Delete</ModalHeader>
+            
+            <ModalBody>
+              <p>Are you sure you want to delete the question: {editedQuestionText}?</p>
+            </ModalBody>
 
-          </td>
+            <ModalFooter>
+              <Button onClick={this.toggleModal}>Cancel</Button>
+              <Button color="danger" onClick={this.deleteQuestion.bind()}>Delete</Button>
+            </ModalFooter>
+          </Modal>
         </tr>
 
         <tr>

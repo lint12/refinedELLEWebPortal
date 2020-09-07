@@ -174,11 +174,17 @@ class Phrase extends React.Component {
                         </Button>
                     </td>
                     <td>{id}</td>
-                    <td>
-                        <ButtonGroup>
-                        <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.editPhrase()}><img src={require('../../Images/tools.png')} alt="edit icon" style={{width: '25px', height: '25px'}}/></Button>
-                        <Button style={{backgroundColor: 'lightcoral'}} onClick={this.handleDelete.bind()}><img src={require('../../Images/delete.png')} alt="trash can icon" style={{width: '25px', height: '25px'}}/></Button>
-                        </ButtonGroup>
+                    
+                    {this.props.permissionLevel !== "st" 
+                    ? 
+                        <td>
+                            <ButtonGroup>
+                            <Button style={{backgroundColor: 'lightcyan'}} onClick={() => this.editPhrase()}><img src={require('../../Images/tools.png')} alt="edit icon" style={{width: '25px', height: '25px'}}/></Button>
+                            <Button style={{backgroundColor: 'lightcoral'}} onClick={this.handleDelete.bind()}><img src={require('../../Images/delete.png')} alt="trash can icon" style={{width: '25px', height: '25px'}}/></Button>
+                            </ButtonGroup>
+                        </td>
+                    : null}
+
                         <Modal isOpen={this.state.modal} toggle={this.toggleModal}> 
                         <ModalHeader toggle={this.toggleModal}>Delete</ModalHeader>
                         <ModalBody>
@@ -189,7 +195,6 @@ class Phrase extends React.Component {
                             <Button color="danger" onClick={this.deletePhrase.bind()}>Delete</Button>
                         </ModalFooter>
                         </Modal>
-                    </td>
                 </tr>
             : //else
                 <tr>
