@@ -19,7 +19,6 @@ export default class Modules extends Component {
   constructor(props) {
     super(props);
     this.toggleNewModule = this.toggleNewModule.bind(this);
-    this.change = this.change.bind(this);
     this.editModule = this.editModule.bind(this); 
     this.deleteModule = this.deleteModule.bind(this);
     this.updateModuleList = this.updateModuleList.bind(this);
@@ -44,7 +43,7 @@ export default class Modules extends Component {
       selectedClass: {value: 0, label: "All"},
       classChanged: false,
       classes: [], 
-      permissionLevels: [], 
+      permissionLevels: [], //TODO: consider renaming this to something more intuitive
       currentPermissionLevel: localStorage.getItem('per')
     };
   }
@@ -59,33 +58,14 @@ export default class Modules extends Component {
 
   //function for initializing module list on sidebar and setting current module to the first one
   initializeModulesPage = () => { 
-    let header = { 
-      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') } 
-    };
-    
-    axios.get(this.props.serviceIP + '/modules', header)
-      .then(res => {
-      
-        let modules = res.data;
 
+    this.updateModuleList();
+    if(this.state.modules.length > 0){
+      this.setState({ moduleName: this.state.modules[0].name,
+                      currentModule: this.state.modules[0]
+                    })
+    }
 
-        if (modules.length === 0) {
-          this.toggleEmptyCollectionAlert(); 
-        }
-        else {
-          this.setState({ moduleName: modules[0].name, 
-                          currentModule: modules[0],
-                          modules : modules,
-                          dynamicModules: modules });
-
-          this.updateCurrentModule({module: this.state.currentModule});
-          this.getAllAnswers();
-        }
-
-      })
-      .catch(function (error) {
-        console.log("initializeModulesPage error: ", error);
-      });
   }
 
   //function for updating the module list on the sidebar with what's in the database
@@ -94,12 +74,14 @@ export default class Modules extends Component {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     };
 
-    console.log("UPDATING THE MODULE LIST: ", this.state.selectedClass); 
-
+    //TODO: this shouldn't be possible, consider deleting
     if (this.state.selectedClass === null) {
       return; 
     }
 
+    //TODO: this would be neater if, when you make an API call to 
+    // /retrievegroupmodules, and the group value is 0, it returns all modules
+    // consider asking for a change
     if (this.state.selectedClass.value === 0) {
       axios.get(this.props.serviceIP + '/modules', header)
         .then(res => {
@@ -115,8 +97,6 @@ export default class Modules extends Component {
                           classChanged: false
                         });
 
-          console.log("FIRST MODULE: ", modules[0]);
-
           this.updateCurrentModule({ module: modules[0] }); 
         })
         .catch(function (error) {
@@ -128,12 +108,11 @@ export default class Modules extends Component {
         params: {groupID: this.state.selectedClass.value}, 
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
       }
-      console.log("Config: ", config); 
+
       axios.get(this.props.serviceIP + '/retrievegroupmodules', config)
       .then(res => {
         let modules = res.data;
 
-        console.log("MODULES: ", modules);
 
         if(modules.length === 0){
           this.toggleEmptyCollectionAlert();
@@ -144,7 +123,6 @@ export default class Modules extends Component {
                         classChanged: false 
                       });
 
-        console.log("FIRST MODULE: ", modules[0]);
         
         this.updateCurrentModule({ module: modules[0] }); 
       })
@@ -160,17 +138,16 @@ export default class Modules extends Component {
       moduleID: event.module.moduleID
     }
 
-    var headers = {
-      'Authorization': 'Bearer ' + localStorage.getItem('jwt')
+    var header = {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }
 
-    axios.post(this.props.serviceIP + '/modulequestions', data, {headers:headers})
+    axios.post(this.props.serviceIP + '/modulequestions', data, header)
       .then( res => {
 
         let cards = res.data;
 
         this.setState({
-          id: event.module.termID,
           module: event.module,
           moduleName: event.module.name, 
           cards: cards,
@@ -179,7 +156,6 @@ export default class Modules extends Component {
 
         this.getAllAnswers();
 
-        console.log("In update current module: ", res.data); 
       })
       .catch(function (error) {
         console.log("updateCurrentModule error: ", error);
@@ -207,18 +183,6 @@ export default class Modules extends Component {
             return false;
           }
         });
-
-        //TODO: consider deleting this
-        //gets rid of duplicates. 
-        //If allAnswersInDB.indexOF(answer) != answerIndex, 
-        //then the answer in question isn't the first appearance
-        allAnswersInDB = allAnswersInDB.filter((answer, answerIndex) => {
-          if(allAnswersInDB.indexOf(answer) === answerIndex){
-            return true;
-          } else{
-            return false;
-          }
-        })
 
         //gets tje information we'll actually use from the get response
         allAnswersInDB = allAnswersInDB.map((answer) => {
@@ -261,7 +225,6 @@ export default class Modules extends Component {
       complexity: 2 //all modules will have complexity 2
     }
 
-    console.log("EDIT MODULE DATA: ", data)
 
     let header = {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
@@ -273,7 +236,6 @@ export default class Modules extends Component {
         this.updateModuleList(); 
  
         if (this.state.currentModule.name === event.module.name) {
-          console.log("CURRENTLY SHOWING THE SAME MODULE AS THE ONE YOUVE EDITED")
           this.setState({moduleName: editedName}); 
         }
 
@@ -285,8 +247,6 @@ export default class Modules extends Component {
 
   //function for deleting a module
   deleteModule = (id) => {
-
-    console.log("in deleteModule, id: ", id);
     
     let header = { 
       data: {moduleID: id }, 
@@ -296,7 +256,6 @@ export default class Modules extends Component {
     
     axios.delete(this.props.serviceIP + '/module', header)
       .then( res => {
-        console.log("in deleteModule, res.data: ", res.data);
 
         this.updateModuleList(); 
 
@@ -309,40 +268,20 @@ export default class Modules extends Component {
       });
   }
 
-  //this never gets used and should probably be deleted
-  change(e) {
-    this.setState({
-      [e.target.name]: e.target.value
-    })
-  }
 
   //function for making the searchbar for the module list work
   updateSearchDeck(e) {
 
-    //returns true if first part of module name matches the search string
-    //TODO: consider changing it so that search string can be any substring of module name
-    let filterFunction = (module) => {
-      /*
-      let moduleName = module.name;
-      let namePrefix = moduleName.substr(0,e.target.value.length);
-
-      if(namePrefix.toLowerCase() === e.target.value.toLowerCase()){
-        return true;
-      } else {
-        return false;
+    //returns true if any part of module name matches the search string
+    let newModuleList = this.state.modules
+      .filter((module) => {
+        if(module){
+          return(module.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)
+        } else{
+          return false;
+        }
       }
-      */
-
-      
-      if(module){
-        return(module.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)
-      } else{
-        return false;
-      }
-      
-    }
-
-    let newModuleList = this.state.modules.filter(filterFunction);
+      );
 
     this.setState({ searchDeck: e.target.value.substr(0,20),
                     dynamicModules: newModuleList 
@@ -360,21 +299,22 @@ export default class Modules extends Component {
   }
 
   getClasses = () => {
-    axios.get(this.props.serviceIP + '/searchusergroups', {
+    let header = {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-    }).then(res => {
-      console.log(res.data); 
-      this.setState({ classes: res.data })
-    }).catch(error => {
-      console.log(error.response); 
-    })
+    }
+
+    axios.get(this.props.serviceIP + '/searchusergroups', header)
+      .then(res => {
+        this.setState({ classes: res.data })
+      })
+      .catch(error => {
+        console.log("getClasses error: ", error); 
+      })
   }
 
   updateClassContext = (value) => {
     if (value !== null) {
-      console.log("Selected Class: ", value);
       let currentClass = this.state.permissionLevels.find((group) => group.groupID === value.value);
-      console.log("CURRENT CLASS: ", currentClass);
 
       this.setState({
         selectedClass: value, 
@@ -391,7 +331,7 @@ export default class Modules extends Component {
       console.log("PERMISSION LEVELS: ", res.data); 
       this.setState({ permissionLevels: res.data })
     }).catch(error => {
-      console.log(error.response); 
+      console.log("getPermissionLevels error: ", error); 
     })
   }
 
