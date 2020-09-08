@@ -26,7 +26,6 @@ class AddModule extends React.Component {
     let tempCodeList = []; 
 
     for (var key in languageCodes) {
-        console.log(key + " -> " + languageCodes[key]); 
         tempCodeList.push({label: languageCodes[key], value:key});
     }
 
@@ -41,7 +40,8 @@ class AddModule extends React.Component {
     if (localStorage.getItem('per') === 'su'){
       var data = {
         name: this.state.name,
-        language: this.state.language.value, 
+        language: this.state.language.value,
+        groupID: 0,
         complexity: 2
         }
     } else {
@@ -53,14 +53,13 @@ class AddModule extends React.Component {
         }
     }
         
+    let header = {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+    }
 
-    console.log("MODULE CREATION DATA: ", data); 
-    console.log(localStorage.getItem('jwt'));
-
-    axios.post(this.props.serviceIP + '/module', data, 
-        {headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-    }).then(res => {
-      console.log(res.data);
+    axios.post(this.props.serviceIP + '/module', data, header)
+    .then(res => {
+      console.log("submitModule res.data: ", res.data);
       this.setState({
         success: true
       }); 

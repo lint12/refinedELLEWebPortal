@@ -282,7 +282,9 @@ class Question extends React.Component {
   }
 
   render() {
-    let {selectedImgFile, selectedAudioFile, question, editedQuestionText} = this.state;
+    let {selectedImgFile, selectedAudioFile, editedQuestionText} = this.state;
+    let {question} = this.props;
+    
     let imgLink = "http://34.239.123.94/Images/" + selectedImgFile;
     let audioLink = "http://34.239.123.94/Audios/" + selectedAudioFile;
 

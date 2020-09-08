@@ -68,134 +68,55 @@ class AddQuestion extends React.Component {
 	}
 
 
-	//function that submits the data
-	//needs to submit the question, and then make a request to add answers to question
 	submitQuestion = (e) => {
 
-		if (this.state.questionText.length !== 0)
-		{   
+		if(this.state.questionText.length !== 0){
 			e.preventDefault();
-			const data = new FormData(); 
+			let data = new FormData();
 			let header = {
 				headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-				};
+			};
 
-			//required fields for adding a question
+
 			data.append('questionText', this.state.questionText);		
 			data.append('type', "LONGFORM"); 
-			data.append('moduleID', this.props.curModule.moduleID)
+			data.append('moduleID', this.props.curModule.moduleID);
 
-			//optional fields for adding a question
 			if (this.state.selectedImgFile !== null || this.state.selectedImgFile !== undefined)
 				data.append('image', this.state.selectedImgFile);
 
 			if (this.state.selectedAudioFile !== null || this.state.selectedAudioFile !== undefined)
 				data.append('audio', this.state.selectedAudioFile);
 
+			data.append('answers', JSON.stringify(this.state.answers.map((answer) => {return answer.id})))
+
+			let NewlyCreatedAnswerJSONList = this.state.newlyCreatedAnswers.map((answer) => {
+		      return {
+		        "front": answer.front,
+		        "back": answer.back,
+		        "language": this.props.curModule.language,
+		        "tags": answer.tags
+		      }
+		    })
+
+
+    		let stringyAnswerList = JSON.stringify(NewlyCreatedAnswerJSONList.map((entry) => {return entry}));
+
+    		data.append('arr_of_terms', stringyAnswerList);
 
 			axios.post(this.props.serviceIP + '/question', data, header)
-				.then(res => {
-					this.setState({
-						questionID: res.data.questionID
-					})
-
-					for(let i = 0; i < this.state.newlyCreatedAnswers.length; i++){
-						this.createNewAnswer(this.state.newlyCreatedAnswers[i]);
-					}
-
-					this.submitAnswers();
-					this.resetFields();
-					this.props.updateCurrentModule({ module: this.props.curModule });
-				}) 
-				.catch(function (error) {
-					console.log("submitQuestion error: ", error);
-				});
-		} else {
-			e.preventDefault();
-			alert("Please fill all inputs!");
-		}
-	}
-
-	//function for adding a new term to the database, used to add newly created answers
-	createNewAnswer = (answer) => {
-			let header = {
-				headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-				};
-
-
-			if (answer.front.length !== 0 && answer.back.length !== 0)
-			{   
-				
-				const data = new FormData(); 
-
-				//required fields for adding a term
-				data.append('front', answer.front); 
-				data.append('back', answer.back); 
-				data.append('moduleID', this.props.curModule.moduleID); 
-				data.append('language', this.props.curModule.language); 
-
-				//map through all the tags and make a tag field object for them 
-				answer.tags.map((label) => {
-					return ( data.append('tag', label) )
-				})
-
-				axios.post(this.props.serviceIP + '/term', data, header)
-					.then(async res => {
-
-						let data = {
-							questionID: this.state.questionID,
-							termID: res.data.termID
-						}
-						
-						await axios.post(this.props.serviceIP + '/addAnswer', data, header)
-							.then(res => {
-								this.props.updateCurrentModule({module: this.props.curModule})
-							})
-							.catch(error => {
-								console.log("createNewAnswer /addAnswer error: ", error)
-						})
-
-					}) 
-					.catch(function (error) {
-						console.log("createNewAnswer /term error: ", error);
-					});
-			} else {
-				//e.preventDefault();
-				alert("Please fill all inputs!");
-			}
-		}
-
-	//function that loops through all of the answers and attaches them to the question, one by one
-	submitAnswers = () => {
-		for(let i = 0; i < this.state.answers.length; i++){
-			this.submitIndividualAnswer(this.state.answers[i]);
-		}
-
-		//this.props.updateCurrentModule();
-	}
-
-	//function that attaches an answer to a question
-	submitIndividualAnswer = (answer) => {
-		let header = {
-			headers: {'Authorization': 'Bearer ' + localStorage.getItem('jwt')}
-		}
-
-		let data = {
-			questionID: this.state.questionID,
-			termID: answer.id
-		}
-
-		axios.post(this.props.serviceIP + '/addAnswer', data, header)
 			.then(res => {
-
-				console.log("res.data in submitIndividualAnswer: ", res.data)
+				this.resetFields();
+				this.props.updateCurrentModule({ module: this.props.curModule });
 			})
 			.catch(error => {
-				console.log("error in submitIndividualAnswer: ", error)
+				console.log("submitQuestion error: ", error.response);
 			})
+
+		}
 	}
 
-
+	
 	//TODO: handleAddAnswer and createAnswer kinda do the same thing. Maybe they should be one thing?
 	//function that takes a string and adds the corresponding answer object to this.state.answers
 	handleAddAnswer = (event) => {

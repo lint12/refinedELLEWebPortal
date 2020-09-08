@@ -55,21 +55,32 @@ class AddExistingTerm extends React.Component {
 	    	console.log("submitting existing term, data: ", data);
 	    	
 	    	axios.post(this.props.serviceIP + '/attachterm', data, header)
-	    	.then(res => {
+	    	.then( res => {
+
 	    		console.log("res.data in submitExistingTerms: ", res.data)
+	    		
 	    		if(i === (this.state.addedTerms.length - 1)){
 	    			this.props.updateCurrentModule({module: this.props.curModule});
 	    		}
+	    		
 	    	})
 	    	.catch( error => {
 	    		console.log("submitExistingTerms error: ", error)
 	    	})
+	    	.then(() => {
+	    		this.resetFields();
+	    	})
+
+
 	    	
 	    }
+
+
 	    
   }
 
   resetFields = () => {
+
 	  this.setState({
 		front: "", 
 		back: "", 
@@ -81,7 +92,10 @@ class AddExistingTerm extends React.Component {
 
 		imgLabel: "Pick an image for the term", 
 		audioLabel: "Pick an audio for the term",
+		addedTerms: [],
 	  })
+
+	  this.props.updateCurrentModule({module: this.props.curModule});
   }
 
   //TODO: handleAddTag and createTag kinda do the same thing. Maybe they should be one thing?

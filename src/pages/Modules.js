@@ -85,7 +85,7 @@ export default class Modules extends Component {
     if (this.state.selectedClass.value === 0) {
       axios.get(this.props.serviceIP + '/modules', header)
         .then(res => {
-          
+          console.log("in updateModuleList, modules: ", res.data);
           let modules = res.data;
 
           if(modules.length === 0){
@@ -134,6 +134,7 @@ export default class Modules extends Component {
 
   //function for getting the elements in the current module
   updateCurrentModule = (event) => {
+    console.log("updateCurrentModule, event.module: ", event.module);
     var data = {
       moduleID: event.module.moduleID
     }
@@ -144,6 +145,8 @@ export default class Modules extends Component {
 
     axios.post(this.props.serviceIP + '/modulequestions', data, header)
       .then( res => {
+        console.log("updateCurrentModule res.data: ", res.data);
+
 
         let cards = res.data;
 
