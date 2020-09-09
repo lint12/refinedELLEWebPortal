@@ -350,17 +350,9 @@ export default class Modules extends Component {
 
   render() {
     let classOptions = []; 
-    let temp = [];
-    let classOptForAddModule = []; 
     classOptions.push({value: 0, label: "All"}); 
 
     this.state.classes.map((item) => {classOptions.push({value: item.groupID, label: item.groupName})}); 
-
-    temp = classOptions; 
-
-    temp.splice(0,1); 
-
-    classOptForAddModule = temp; 
 
     return (
     <Container>
@@ -425,7 +417,7 @@ export default class Modules extends Component {
           <AddModule  
             serviceIP={this.props.serviceIP} 
             updateModuleList={this.updateModuleList}
-            classOptions={classOptForAddModule}
+            classOptions={classOptions}
             currentClass={this.state.selectedClass}
           />
         </Collapse>

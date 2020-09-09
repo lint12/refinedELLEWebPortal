@@ -109,7 +109,9 @@ class AddModule extends React.Component {
   } 
 
   render () {
-    console.log("CLASS: ", this.props.currentClass);
+    let classOptions = []; 
+
+    classOptions = this.props.classOptions.filter((option) => option.value !== 0);
     return (
       <div>
         <Alert color="none" style={{color: '#004085', backgroundColor: 'aliceblue'}}>
@@ -147,7 +149,7 @@ class AddModule extends React.Component {
                 <Label for="classContext">Class:</Label>
                 <Select
                   name="class"
-                  options={this.props.classOptions}
+                  options={classOptions}
                   className="basic-single"
                   classNamePrefix="select"
                   isClearable={true}
