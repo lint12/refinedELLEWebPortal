@@ -188,16 +188,16 @@ class Question extends React.Component {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     };
 
-    //data.append('image', this.state.changedImage && this.state.selectedImgFile !== undefined ? this.state.selectedImgFile : null); 
-    //data.append('audio', this.state.changedAudio && this.state.selectedAudioFile !== undefined ? this.state.selectedAudioFile : null); 
-    // data.append('imageID', 3); //optional
-    // data.append('audioID', 3); //optional
+    data.append('image', this.state.changedImage && this.state.selectedImgFile !== undefined ? this.state.selectedImgFile : null); 
+    data.append('audio', this.state.changedAudio && this.state.selectedAudioFile !== undefined ? this.state.selectedAudioFile : null); 
 
     data.append('questionText', this.state.editedQuestionText); 
     data.append('questionID', this.props.question.questionID); //not editable
     data.append('new_answers', stringifyIDList); 
     data.append('arr_of_terms', stringyAnswerList); 
     data.append('type', "LONGFORM");
+
+    localStorage.getItem('per') === "st" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
     
     axios.post(this.props.serviceIP + '/modifyquestion', data, header)
       .then(res => {
@@ -227,7 +227,10 @@ class Question extends React.Component {
     this.toggleModal(); 
 
     let header = { 
-      data: { questionID: this.state.question.questionID },
+      data: { 
+        questionID: this.state.question.questionID,
+        groupID: localStorage.getItem('per') === "st" ? this.props.currentClass.value : null
+      },
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     };
 
@@ -237,7 +240,7 @@ class Question extends React.Component {
         this.props.updateCurrentModule({ module: this.props.curModule });  
       })
       .catch(error => {
-        console.log("deleteQuestion in Question.js error: ", error);
+        console.log("deleteQuestion in Question.js error: ", error.message);
       });
   }
 
@@ -285,8 +288,8 @@ class Question extends React.Component {
     let {selectedImgFile, selectedAudioFile, editedQuestionText} = this.state;
     let {question} = this.props;
     
-    let imgLink = "http://34.239.123.94/Images/" + selectedImgFile;
-    let audioLink = "http://34.239.123.94/Audios/" + selectedAudioFile;
+    let imgLink = "https://endlesslearner.com" + selectedImgFile;
+    let audioLink = "https://endlesslearner.com" + selectedAudioFile;
 
     //console.log("this.state.answers: ", this.state.answers, " ANS: ", this.props.question.answers, " IDS: ", this.state.ids, " Original Answers: ", this.state.originalAnswers); 
     if (this.state.editMode === false){
@@ -298,7 +301,7 @@ class Question extends React.Component {
             {/* favicon is just a placeholder for now more testing needs to be done after deployment */}
             <Button 
               style={{backgroundColor: 'white', width: '100%'}} 
-              href="http://localhost:3000/favicon.ico" 
+              href={imgLink} 
               download
               >
               <img 

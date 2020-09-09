@@ -84,6 +84,9 @@ class AddTerm extends React.Component {
 			data.append('moduleID', this.props.curModule.moduleID); 
 			data.append('language', this.props.curModule.language); 
 
+			if (localStorage.getItem('per') === "st") 
+				data.append('groupID', this.props.currentClass.value); 
+
 			//optional fields for adding a term
 			if (this.state.type.length !== 0)
 				data.append('type', this.state.type); 

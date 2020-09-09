@@ -56,7 +56,7 @@ export default class SuperAdminProfile extends Component {
             (e.target.value.length > 0 && this.state.confirmPassword.length === 0)) {
                 this.setState({
                     validConfirm: false, 
-                    invalidConfirm: false
+                    invalidConfirm: false   
                 })
             }
             else if (e.target.value.localeCompare(this.state.confirmPassword) === 0) {

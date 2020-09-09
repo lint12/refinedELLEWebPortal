@@ -44,12 +44,18 @@ class AddExistingTerm extends React.Component {
 
 		let header = {
 	      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
-	    }
+		}
+
+		let groupID = null; 
+		
+		if (localStorage.getItem('per') === "st")
+			groupID = this.props.currentClass.value; 
 
 	    for(let i = 0; i < this.state.addedTerms.length; i++){
 	    	let data = {
 	    		termID: this.state.addedTerms[i].id,
-	    		moduleID: this.props.curModule.moduleID
+				moduleID: this.props.curModule.moduleID,
+				groupID: groupID
 	    	}
 
 	    	console.log("submitting existing term, data: ", data);

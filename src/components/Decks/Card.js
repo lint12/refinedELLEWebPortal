@@ -123,9 +123,11 @@ class Card extends React.Component {
     data.append('back', this.state.editedBack); 
     data.append('language', this.props.card.language); //not editable 
 
+    localStorage.getItem('per') === "st" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
+
     //map through all the tags and make a tag field object for them 
     this.state.tags.map((label) => {
-      return ( data.append('tag', label) )
+      return ( data.append('tag', label) )   
     })
 
     data.append('type', this.state.editedType); //editable
@@ -158,7 +160,10 @@ class Card extends React.Component {
     this.toggleModal(); 
 
     let header = { 
-      data: { termID: this.state.card.termID },
+      data: { 
+        termID: this.state.card.termID, 
+        groupID: localStorage.getItem('per') === "st" ? this.props.currentClass.value : null
+      },
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     };
 
@@ -255,8 +260,8 @@ class Card extends React.Component {
 
   render() {
     let {editedFront, editedBack, editedType, editedGender, selectedImgFile, selectedAudioFile} = this.state;
-    let imgLink = "http://34.239.123.94/Images/" + selectedImgFile;
-    let audioLink = "http://34.239.123.94/Audios/" + selectedAudioFile;
+    let imgLink = "https://endlesslearner.com" + selectedImgFile;
+    let audioLink = "https://endlesslearner.com" + selectedAudioFile;
 
     if (this.state.editMode === false){
       return (
@@ -270,7 +275,7 @@ class Card extends React.Component {
             {/* favicon is just a placeholder for now more testing needs to be done after deployment */}
             <Button 
               style={{backgroundColor: 'white', width: '100%'}} 
-              href="http://localhost:3000/favicon.ico" 
+              href={imgLink}
               download
               >
               <img 

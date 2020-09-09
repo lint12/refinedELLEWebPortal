@@ -51,6 +51,7 @@ const CardList = (props) => {
                 <Card
                 key={card.termID}
                 card={card}
+                currentClass={props.currentClass}
                 permissionLevel={props.permissionLevel}
                 serviceIP={props.serviceIP}
                 curModule={props.curModule}
@@ -90,6 +91,7 @@ const CardList = (props) => {
                 <Phrase                   
                   key={card.termID}
                   card={card}
+                  currentClass={props.currentClass}
                   permissionLevel={props.permissionLevel}
                   serviceIP={props.serviceIP}
                   curModule={props.curModule}
@@ -124,6 +126,7 @@ const CardList = (props) => {
                 <Question
                   key={card.questionID}
                   question={card}
+                  currentClass={props.currentClass}
                   permissionLevel={props.permissionLevel}
                   serviceIP={props.serviceIP}
                   curModule={props.curModule}

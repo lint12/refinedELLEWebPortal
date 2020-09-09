@@ -50,12 +50,7 @@ export default class Login extends Component {
 
       this.setState({loginErr : false});
 
-      if (localStorage.getItem('per') === 'su') {
-        this.props.history.push('/superadminprofile');
-      }
-      else {
-        this.props.history.push('/profile');
-      }
+      this.props.history.push('/profile');
     }).catch(error => {
       if (error.response !== undefined) {
         console.log("login error", error.response.data); 

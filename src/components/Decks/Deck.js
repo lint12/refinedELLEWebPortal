@@ -269,6 +269,7 @@ class Deck extends React.Component {
               {/*Form for adding a new Term*/}
               <Collapse isOpen={this.state.openForm === 2}>     
                 <AddTerm
+                  currentClass={this.props.currentClass}
                   curModule={this.props.curModule} 
                   updateCurrentModule={this.props.updateCurrentModule}
                   serviceIP={this.props.serviceIP}
@@ -282,6 +283,7 @@ class Deck extends React.Component {
               {/*Form for adding an existing Term*/}
               <Collapse isOpen={this.state.openForm === 1}>     
                 <AddExistingTerm
+                  currentClass={this.props.currentClass}
                   curModule={this.props.curModule} 
                   updateCurrentModule={this.props.updateCurrentModule}
                   serviceIP={this.props.serviceIP}
@@ -296,6 +298,7 @@ class Deck extends React.Component {
             {/*Form for adding a new Phrase*/}
               <Collapse isOpen={this.state.openForm === 3}>
                 <AddPhrase
+                  currentClass={this.props.currentClass}
                   curModule={this.props.curModule} 
                   updateCurrentModule={this.props.updateCurrentModule}
                   serviceIP={this.props.serviceIP}
@@ -306,6 +309,7 @@ class Deck extends React.Component {
             {/*Form for adding a new Question*/}
               <Collapse isOpen={this.state.openForm === 4}>
                 <AddQuestion
+                  currentClass={this.props.currentClass}
                   curModule={this.props.curModule} 
                   updateCurrentModule={this.props.updateCurrentModule}
                   serviceIP={this.props.serviceIP}
@@ -335,6 +339,7 @@ class Deck extends React.Component {
                   <Collapse isOpen={this.state.collapseTab === index}>
                     <CardList 
                       type={0} 
+                      currentClass={this.props.currentClass}
                       permissionLevel={this.props.permissionLevel}
                       cards = {filteredTerms} 
                       serviceIP={this.props.serviceIP} 
@@ -358,6 +363,7 @@ class Deck extends React.Component {
                   <Collapse isOpen={this.state.collapseTab === index}>
                     <CardList 
                       type={1} 
+                      currentClass={this.props.currentClass}
                       permissionLevel={this.props.permissionLevel}
                       cards={filteredPhrases} 
                       serviceIP={this.props.serviceIP}
@@ -378,6 +384,7 @@ class Deck extends React.Component {
                   <Collapse isOpen={this.state.collapseTab === index}>
                     <CardList 
                         type={2} 
+                        currentClass={this.props.currentClass}
                         permissionLevel={this.props.permissionLevel}
                         cards={filteredQuestions} 
                         serviceIP={this.props.serviceIP}

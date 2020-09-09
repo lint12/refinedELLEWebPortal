@@ -106,8 +106,11 @@ export default class Signup extends React.Component {
     var data = {
       username: this.state.username,
       password: this.state.password,
-      password_confirm: this.state.confirmation 
+      password_confirm: this.state.confirmation,
+      groupCode: this.state.classCode
     }
+
+    console.log("REGISTER DATA: ", data); 
 
     axios.post(this.props.serviceIP + '/register', data)
     .then(res => {

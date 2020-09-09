@@ -58,6 +58,8 @@ class Phrase extends React.Component {
         data.append('language', this.props.card.language); //not editable 
         data.append('termID', this.props.card.termID); //not editable
 
+        localStorage.getItem('per') === "st" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
+
         axios.post(this.props.serviceIP + '/term', data, header)
         .then(res => {
           this.setState({
@@ -100,7 +102,10 @@ class Phrase extends React.Component {
         this.toggleModal(); 
 
         let header = { 
-          data: { termID: this.state.card.termID },
+          data: { 
+              termID: this.state.card.termID, 
+              groupID: localStorage.getItem('per') === "st" ? this.props.currentClass.value : null 
+          },
           headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
         };
     
@@ -152,8 +157,8 @@ class Phrase extends React.Component {
     render () {
         let {editedFront, editedBack, selectedImgFile, selectedAudioFile, id, editMode} = this.state;
 
-        let imgLink = "http://34.239.123.94/Images/" + selectedImgFile;
-        let audioLink = "http://34.239.123.94/Audios/" + selectedAudioFile;
+        let imgLink = "https://endlesslearner.com" + selectedImgFile;
+        let audioLink = "https://endlesslearner.com" + selectedAudioFile;
 
         return (
             <>
@@ -163,7 +168,7 @@ class Phrase extends React.Component {
                     <td>{editedBack}</td>
                     <td>
                         {/* favicon is just a placeholder for now more testing needs to be done after deployment */}
-                        <Button style={{backgroundColor: 'white', width: '100%'}} href="http://localhost:3000/favicon.ico" download>
+                        <Button style={{backgroundColor: 'white', width: '100%'}} href={imgLink} download>
                         <img src={require('../../Images/image.png')} alt="frame icon" style={{width: '25px', height: '25px'}}/>
                         </Button>
                     </td>

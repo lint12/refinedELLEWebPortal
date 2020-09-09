@@ -35,23 +35,23 @@ class AddModule extends React.Component {
   submitModule = (e) => {
     e.preventDefault();
     console.log("submit button has been pressed"); 
-    console.log(this.props.serviceIP); 
 
     if (localStorage.getItem('per') === 'su'){
       var data = {
         name: this.state.name,
         language: this.state.language.value,
-        groupID: 0,
         complexity: 2
-        }
+      }
     } else {
       var data = {
         name: this.state.name,
         language: this.state.language.value, 
         complexity: 2, 
-        groupID: this.state.class.value
-        }
+        groupID: this.props.currentClass.value === 0 ? this.state.class.value : this.props.currentClass.value
+      }
     }
+
+    console.log("ADD MODULE DATA: ", data); 
         
     let header = {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
@@ -109,6 +109,7 @@ class AddModule extends React.Component {
   } 
 
   render () {
+    console.log("CLASS: ", this.props.currentClass);
     return (
       <div>
         <Alert color="none" style={{color: '#004085', backgroundColor: 'aliceblue'}}>
@@ -139,22 +140,24 @@ class AddModule extends React.Component {
             </FormGroup>
           </Col>
           </Row>
-          <Row>
-          <Col>
-            <FormGroup>
-              <Label for="classContext">Class:</Label>
-              <Select
-                name="class"
-                options={this.props.classOptions}
-                className="basic-single"
-                classNamePrefix="select"
-                isClearable={true}
-                value={this.state.class}
-                onChange={this.updateClass}
-              />
-            </FormGroup>
-          </Col>
-          </Row>
+          {this.props.currentClass.value === 0 ? 
+            <Row>
+            <Col>
+              <FormGroup>
+                <Label for="classContext">Class:</Label>
+                <Select
+                  name="class"
+                  options={this.props.classOptions}
+                  className="basic-single"
+                  classNamePrefix="select"
+                  isClearable={true}
+                  value={this.state.class}
+                  onChange={this.updateClass}
+                />
+              </FormGroup>
+            </Col>
+            </Row>
+          : null}
           <Row>
           <Col>
             <Button style={{backgroundColor: '#004085'}} type="submit" block>

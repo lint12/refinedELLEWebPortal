@@ -30,12 +30,12 @@ export default class Template extends React.Component {
         <nav id="nav-menu-container">
           <ul className="nav-menu">
             <li><Link to='/downloads'>Downloads</Link></li>
+            <li><Link to='/profile'>Profile</Link></li>
+            <li><Link to='/modules'>Modules</Link></li>
+            <li><Link to='/sessions'>Sessions</Link></li>
             {localStorage.getItem('per') === "su" 
             ? 
               <>
-                <li><Link to='/superadminprofile'>Profile</Link></li>
-                <li><Link to='/modules'>Modules</Link></li>
-                <li><Link to='/sessions'>Sessions</Link></li>
                 <li><Link to='/userlist'>User List</Link></li>
                 <li><Link to='/stats'>Stats</Link></li>
               </>
@@ -43,18 +43,7 @@ export default class Template extends React.Component {
             {localStorage.getItem('per') === "pf" 
             ? 
               <>
-                <li><Link to='/profile'>Profile</Link></li>
-                <li><Link to='/modules'>Modules</Link></li>
-                <li><Link to='/sessions'>Sessions</Link></li>
                 <li><Link to='/classroster'>Class Roster</Link></li>
-              </>
-            : null}
-            {localStorage.getItem('per') === "st" 
-            ? 
-              <>
-                <li><Link to='/profile'>Profile</Link></li>
-                <li><Link to='/modules'>Modules</Link></li>
-                <li><Link to='/sessions'>Sessions</Link></li>
               </>
             : null}
             <li><Link to='/logout'>Sign Out</Link></li>

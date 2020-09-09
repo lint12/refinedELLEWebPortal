@@ -46,7 +46,6 @@ class App extends Component {
               <Route path="/profile" render={(props)=><Profile {...props} serviceIP={flaskIP}/>}/>
               <Route path="/sessions" render={(props)=><Sessions {...props} serviceIP={flaskIP}/>}/>
               <AuthAdmin>  
-                <Route path="/superadminprofile" render={(props)=><SuperAdminProfile {...props} serviceIP={flaskIP}/>}/>
                 <Route path="/userlist" render={(props)=><UserList {...props} serviceIP={flaskIP}/>}/>
                 <Route path="/stats" render={(props)=><Stats {...props} serviceIP={flaskIP}/>}/>
                 <Route path="/classroster" render={(props)=><ClassRoster {...props} serviceIP={flaskIP}/>}/>

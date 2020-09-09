@@ -178,6 +178,8 @@ export default class Modules extends Component {
       .then(res => {
         allAnswersInDB = res.data;
 
+        console.log("ALL ANS IN DB before filter: ", allAnswersInDB); 
+
         //gets rid of responses that have type "PH", for phrases
         allAnswersInDB = allAnswersInDB.filter((answer) => {
           if(answer.type !== 'PH'){
@@ -195,6 +197,8 @@ export default class Modules extends Component {
                   })
         });
 
+        console.log("ALL ANS IN DB: ", allAnswersInDB); 
+
         //---
         //removes duplicates
         let frontArray = [];
@@ -206,6 +210,8 @@ export default class Modules extends Component {
           }
         }
         //---
+
+        console.log("ALL ANS MINUS THE DUPES: ", allAnswersMinusDupes); 
 
         this.setState({
           allAnswers: allAnswersMinusDupes
@@ -225,10 +231,11 @@ export default class Modules extends Component {
       moduleID: event.module.moduleID,
       name: editedName, 
       language: event.module.language,
-      complexity: 2 //all modules will have complexity 2
+      complexity: 2, //all modules will have complexity 2
+      groupID: localStorage.getItem('per') === "st" ? this.state.selectedClass.value : null
     }
 
-
+    console.log("EDIT MODULE DATA: ", data); 
     let header = {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }
@@ -252,11 +259,14 @@ export default class Modules extends Component {
   deleteModule = (id) => {
     
     let header = { 
-      data: {moduleID: id }, 
+      data: {
+        moduleID: id,
+        groupID: localStorage.getItem('per') === "st" ? this.state.selectedClass.value : null
+      }, 
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }
 
-    
+    console.log("DELETE MODULE DATA: ", header.data); 
     axios.delete(this.props.serviceIP + '/module', header)
       .then( res => {
 
@@ -340,9 +350,17 @@ export default class Modules extends Component {
 
   render() {
     let classOptions = []; 
+    let temp = [];
+    let classOptForAddModule = []; 
     classOptions.push({value: 0, label: "All"}); 
 
     this.state.classes.map((item) => {classOptions.push({value: item.groupID, label: item.groupName})}); 
+
+    temp = classOptions; 
+
+    temp.splice(0,1); 
+
+    classOptForAddModule = temp; 
 
     return (
     <Container>
@@ -354,6 +372,8 @@ export default class Modules extends Component {
       <Col className="Left Column" xs="3">
         <h3 style={{margin: "5px 0 0 0"}}>Your ELLE Modules:</h3>
       </Col>
+
+      {this.state.currentPermissionLevel !== "su" ?
       <Col className="Right Column" style={{display: "flex", justifyContent: "flex-end"}}>
         {/*Class Context*/}
           <Label style={{margin: "5px 8px 0 0", fontSize: "large"}}>Class: </Label>
@@ -375,6 +395,8 @@ export default class Modules extends Component {
           />
           {this.state.classChanged ? this.updateModuleList() : null}
       </Col>
+      : null}
+
     </Row>
     <Row className="Seperated Col">
       <Col className="Left Column" xs="3">
@@ -403,7 +425,8 @@ export default class Modules extends Component {
           <AddModule  
             serviceIP={this.props.serviceIP} 
             updateModuleList={this.updateModuleList}
-            classOptions={classOptions}
+            classOptions={classOptForAddModule}
+            currentClass={this.state.selectedClass}
           />
         </Collapse>
 
@@ -439,6 +462,7 @@ export default class Modules extends Component {
               this.state.modules.length !== 0 ? 
               <Deck
                 permissionLevel={this.state.currentPermissionLevel}
+                currentClass={this.state.selectedClass}
                 moduleName={this.state.moduleName}
                 curModule={this.state.currentModule}
                 cards={this.state.cards}

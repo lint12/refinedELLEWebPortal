@@ -5,8 +5,8 @@ import { Button, Form, FormGroup, FormFeedback, Label, Input, InputGroupAddon, C
 import {Tabs, Tab} from 'react-bootstrap';
 import axios from 'axios';
 import Template from './Template';
-import { Pie, Bar, HorizontalBar } from 'react-chartjs-2';
-import AccessDenied from './AccessDenied'; 
+import { Pie, Bar, HorizontalBar } from 'react-chartjs-2'; 
+import SuperAdminProfile from './SuperAdminProfile';
 
 export default class Profile extends React.Component {
   constructor(props) {
@@ -15,8 +15,6 @@ export default class Profile extends React.Component {
     this.state = {
         userID: "",
         username: "",
-        permissionGroup: "Admin",
-        isPendingAdmin: "1",
         newPassword: "",
         confirmPassword: "",
         validConfirm: false,
@@ -72,10 +70,10 @@ export default class Profile extends React.Component {
             sessions: res.data
           })
  
-          this.findNeedImprovementModule(res.data); 
-          this.findModuleAvgScore(res.data);
-          this.findMostFrequentPlatform(res.data); 
-          this.findPlatformUtilization(res.data); 
+          // this.findNeedImprovementModule(res.data); 
+          // this.findModuleAvgScore(res.data);
+          // this.findMostFrequentPlatform(res.data); 
+          // this.findPlatformUtilization(res.data); 
 
         }).catch(function (error) {
           console.log(error);
@@ -527,11 +525,7 @@ export default class Profile extends React.Component {
   render() { 
     if (localStorage.getItem('per') === "su") {
       return (
-        <Container>
-          <Template/>
-          <br></br>
-          <AccessDenied message={"Information Not Valid"} />
-        </Container>
+        <SuperAdminProfile></SuperAdminProfile>
       )
     }
     return (
@@ -709,7 +703,8 @@ export default class Profile extends React.Component {
               <h1 style={{textDecoration: "underline", fontFamily: "auto"}}>
                 Welcome back {this.state.username}!
               </h1>
-              <Row>
+
+              {/* <Row>
                 <Col xs="8">
                 <Tabs defaultActiveKey={0} id="uncontrolled-tab-example" className="profileTabs"
                       onSelect={(k) => this.toggleChartAnimation(k)}>
@@ -772,12 +767,13 @@ export default class Profile extends React.Component {
                       <CardSubtitle style={{color: "lightblue"}}>Word of the day</CardSubtitle>
                     </CardBody>
                   </Card>
-                </Col>
+                </Col>  
               </Row>
+              */}
             </CardBody>
           </Card>
         </Col>
-      </Row>
+      </Row> 
 		<br/>
       </Container>
     );
