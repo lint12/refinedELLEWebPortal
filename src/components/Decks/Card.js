@@ -456,7 +456,7 @@ class Card extends React.Component {
           <ButtonGroup>
             <Button 
               style={{backgroundColor: 'lightcyan'}} 
-              onClick = {this.submitEdit}
+              onClick = {() => this.submitEdit()}
               > 
               <img 
                 src={require('../../Images/submit.png')} 
@@ -466,7 +466,7 @@ class Card extends React.Component {
             </Button>
             <Button 
               style={{backgroundColor: 'lightcyan'}} 
-              onClick = {this.handleCancelEdit}
+              onClick = {() => this.handleCancelEdit()}
               > 
               <img 
                 src={require('../../Images/cancel.png')} 
