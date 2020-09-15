@@ -40,6 +40,7 @@ export default class Modules extends Component {
       searchDeck: '', //what gets typed in the search bar that filters the module list
       collapseNewModule: false, //determines whether or not the new module form is open
       emptyCollection: false, //true when there are no modules, false otherwise
+      modificationWarning: false, 
       selectedClass: {value: 0, label: "All"},
       classChanged: false,
       classes: [], 
@@ -59,7 +60,7 @@ export default class Modules extends Component {
   //function for initializing module list on sidebar and setting current module to the first one
   initializeModulesPage = () => { 
 
-    this.updateModuleList();
+    this.updateModuleList("initialize", null);
     if(this.state.modules.length > 0){
       this.setState({ moduleName: this.state.modules[0].name,
                       currentModule: this.state.modules[0]
@@ -69,7 +70,7 @@ export default class Modules extends Component {
   }
 
   //function for updating the module list on the sidebar with what's in the database
-  updateModuleList = () => {
+  updateModuleList = (task, moduleID) => {
     let header = {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     };
@@ -97,7 +98,16 @@ export default class Modules extends Component {
                           classChanged: false
                         });
 
-          this.updateCurrentModule({ module: modules[0] }); 
+          if (task === "initialize" || task === "change") {
+            console.log("SHOWING FIRST MODULE");
+            this.updateCurrentModule({ module: modules[0] }); 
+          }
+          else if (task === "add") {
+            console.log("SHOWING ADDED MODULE");
+            let newModule = modules.find((module) => module.moduleID === moduleID);
+            this.updateCurrentModule({ module: newModule }); 
+          }
+          
         })
         .catch(function (error) {
           console.log("updateModuleList error: ", error.message);
@@ -123,8 +133,16 @@ export default class Modules extends Component {
                         classChanged: false 
                       });
 
+        if (task === "change") {
+          console.log("SHOWING FIRST MODULE");
+          this.updateCurrentModule({ module: modules[0] }); 
+        }
+        else if (task === "add") {
+          console.log("SHOWING ADDED MODULE");
+          let newModule = modules.find((module) => module.moduleID === moduleID);
+          this.updateCurrentModule({ module: newModule }); 
+        }
         
-        this.updateCurrentModule({ module: modules[0] }); 
       })
       .catch(function (error) {
         console.log("updateModuleList error: ", error.message);
@@ -224,7 +242,7 @@ export default class Modules extends Component {
   }
 
 
-  //funcion for editing the name of a module
+  //function for editing the name of a module
   editModule = (editedName, event) => {
 
     var data = {
@@ -243,10 +261,11 @@ export default class Modules extends Component {
     axios.put(this.props.serviceIP + '/module', data, header)
       .then( res => {
 
-        this.updateModuleList(); 
+        this.updateModuleList("edit", null); 
  
-        if (this.state.currentModule.name === event.module.name) {
-          this.setState({moduleName: editedName}); 
+        if (this.state.currentModule.moduleID === event.module.moduleID) {
+          console.log("MODULE NAME BEING UPDATED IS THE SAME ONE THAT IS BEING DISPLAYED")
+          this.setState({ currentModule: res.data }); 
         }
 
       })
@@ -270,7 +289,7 @@ export default class Modules extends Component {
     axios.delete(this.props.serviceIP + '/module', header)
       .then( res => {
 
-        this.updateModuleList(); 
+        this.updateModuleList("delete", null); 
 
         if (id === this.state.currentModule.moduleID)
           this.updateCurrentModule({module: this.state.modules[0]}); 
@@ -309,6 +328,16 @@ export default class Modules extends Component {
   //function that toggles whether or not the empty collection alert is shown
   toggleEmptyCollectionAlert() {
     this.setState({ emptyCollection: true });
+  }
+
+  toggleModificationWarning = (condition) => {
+    console.log("Toggling warning"); 
+    if (condition === "new") {
+      this.setState({ modificationWarning: true }); 
+    }
+    else {
+      this.setState({ modificationWarning: !this.state.modificationWarning }); 
+    }
   }
 
   getClasses = () => {
@@ -385,7 +414,7 @@ export default class Modules extends Component {
               input: provided => ({ ...provided, margin: "0 0 0 10px"})
             }}
           />
-          {this.state.classChanged ? this.updateModuleList() : null}
+          {this.state.classChanged ? this.updateModuleList("change", null) : null}
       </Col>
       : null}
 
@@ -419,6 +448,7 @@ export default class Modules extends Component {
             updateModuleList={this.updateModuleList}
             classOptions={classOptions}
             currentClass={this.state.selectedClass}
+            toggleModificationWarning={this.toggleModificationWarning}
           />
         </Collapse>
 
@@ -461,6 +491,8 @@ export default class Modules extends Component {
                 serviceIP={this.props.serviceIP}
                 updateCurrentModule={this.updateCurrentModule}
                 allAnswers={this.state.allAnswers}
+                modificationWarning={this.state.modificationWarning}
+                toggleModificationWarning={this.toggleModificationWarning}
                 />
               : 
               <Alert isOpen={this.state.emptyCollection}>
@@ -472,7 +504,6 @@ export default class Modules extends Component {
                 }
               </Alert>
             }
-
             <br/><br/>
             
           </Col>

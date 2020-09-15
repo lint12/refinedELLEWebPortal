@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Form, FormGroup, Label, Input, CustomInput, Row, Col, Alert} from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Row, Col, Alert} from 'reactstrap';
 import Select from 'react-select';
 import axios from 'axios';
 import languageCodes from '../../languageCodes3.json';
@@ -64,7 +64,9 @@ class AddModule extends React.Component {
         success: true
       }); 
       this.onShowStatus(); 
-      this.props.updateModuleList();
+      this.props.updateModuleList("add", res.data.moduleID);
+      this.props.toggleModificationWarning("new"); 
+
     }).catch(function (error) {
       console.log(error.message);
     });

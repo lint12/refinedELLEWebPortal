@@ -1,6 +1,6 @@
 import React, { useState } from 'react'; 
 import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Popover, PopoverHeader, PopoverBody, 
-  Form, FormGroup, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'; 
+  Form, FormGroup, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter, Alert } from 'reactstrap'; 
 
   const SplitDeckBtn = (props) => {
     const [dropdownOpen, setOpen] = useState(false);
@@ -63,7 +63,10 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Pop
         <Modal isOpen={modalOpen}> 
           <ModalHeader toggle={toggleModal}>Delete</ModalHeader>
           <ModalBody>
-            <p>Are you sure you want to delete the module: {props.curModule.name}?</p>
+            <Alert color="primary">
+              Deleting this module will remove it from all the users who are currently using this module as well.
+            </Alert>
+            <p style={{paddingLeft: "20px"}}>Are you sure you want to delete the module: {props.curModule.name}?</p>
           </ModalBody>
           <ModalFooter>
             <Button onClick={ () => {toggleModal()} }>Cancel</Button>

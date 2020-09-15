@@ -1,7 +1,7 @@
 import React from 'react'
 import { Container, Row, Col, Input, InputGroup, InputGroupAddon, InputGroupText, Button,
     ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
-    Collapse, Card, CardHeader } from 'reactstrap';
+    Collapse, Card, CardHeader, Alert } from 'reactstrap';
 
 import CardList from './CardList'
 import axios from 'axios';
@@ -217,7 +217,7 @@ class Deck extends React.Component {
             <InputGroup style={{borderRadius: '12px'}}>          
               <InputGroupAddon addonType="prepend">
                 <InputGroupText>
-                  {this.props.moduleName}
+                  {this.props.curModule.name}
                 </InputGroupText>
               </InputGroupAddon>
               
@@ -325,6 +325,12 @@ class Deck extends React.Component {
                   />
               </Collapse>
             </Col>
+          </Row>
+
+          <Row>
+            <Alert color="info" style={{marginLeft: "5px"}} isOpen={this.props.modificationWarning} toggle={this.props.toggleModificationWarning}>
+                Modifying anything in this module will affect all the users who are currently using this module as well. 
+            </Alert>
           </Row>
 
           {this.state.tabs.map((index,i) => { 

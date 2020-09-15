@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, ButtonGroup, Input, Modal, ModalHeader, ModalBody, ModalFooter, Tooltip } from 'reactstrap';
+import { Alert, Button, ButtonGroup, Input, Modal, ModalHeader, ModalBody, ModalFooter, Tooltip } from 'reactstrap';
 import '../../stylesheets/style.css';
 import axios from 'axios';
 
@@ -193,7 +193,10 @@ class Phrase extends React.Component {
                         <Modal isOpen={this.state.modal} toggle={this.toggleModal}> 
                         <ModalHeader toggle={this.toggleModal}>Delete</ModalHeader>
                         <ModalBody>
-                            <p>Are you sure you want to delete the phrase: {editedFront}?</p>
+                            <Alert color="primary">
+                                Deleting this phrase will remove it from all the users who are currently using this module as well.
+                            </Alert>
+                            <p style={{paddingLeft: "20px"}}>Are you sure you want to delete the phrase: {editedFront}?</p>
                         </ModalBody>
                         <ModalFooter>
                             <Button onClick={this.toggleModal}>Cancel</Button>

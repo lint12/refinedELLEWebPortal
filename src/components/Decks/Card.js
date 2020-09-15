@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import { Button, ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter, Collapse, Input, CustomInput, Tooltip } from 'reactstrap';
+import { Alert, Button, ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter, Collapse, Input, CustomInput, Tooltip } from 'reactstrap';
 import axios from 'axios';
 
 import TagList from './TagList';
@@ -327,7 +327,10 @@ class Card extends React.Component {
               <ModalHeader toggle={this.toggleModal}>Delete</ModalHeader>
               
               <ModalBody>
-                <p>Are you sure you want to delete the card: {editedFront}?</p>
+                <Alert color="primary">
+                  Deleting this term will remove it from all the users who are currently using this module as well.
+                </Alert>
+                <p style={{paddingLeft: "20px"}}>Are you sure you want to delete the term: {editedFront}?</p>
               </ModalBody>
 
               <ModalFooter>
