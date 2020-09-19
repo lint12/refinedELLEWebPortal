@@ -14,7 +14,7 @@ class User extends Component {
 			<tr>
 				<td>{this.state.user.userID}</td>
 				<td>{this.state.user.username}</td>
-				<td>{this.state.user.permissionGroup}</td>
+				<td>{this.props.type === "su" ? this.state.user.permissionGroup : this.state.user.accessLevel}</td>
 		    </tr>
 	    )
 	}

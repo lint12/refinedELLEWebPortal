@@ -877,7 +877,7 @@ Prevent double borders
 
 table.tableList {
   width: 100%;
-  text-align: left;
+  text-align: left;   
   border-collapse: collapse;
 }
 table.tableList td, table.tableList th {
@@ -927,9 +927,44 @@ table.userListTable td {
 table.userListTable tbody th {
   vertical-align: bottom;
   border-bottom: 2px solid #dee2e6;
+  border-top-style: hidden;
   border-right-style: hidden;
   padding: 2px 12px 2px 12px; 
-  background-color: lightsteelblue;
+}
+
+/*----------------------------------------*/
+
+/*--------------------------------------------------------------
+# Module Table
+--------------------------------------------------------------*/
+.moduleTable {
+  border-collapse: collapse;
+  border-style: hidden; /* hide standard table (collapsed) border */
+  box-shadow: 0 0 0 1px #666; /* this draws the table border  */ 
+  margin: 0px;
+  overflow-y: auto;
+}
+
+.moduleTable thead th {
+  background-color: #5faeb5;
+  color: white;
+  vertical-align: bottom;
+  border-style: hidden;
+  padding: 7px 12px 7px 12px;
+  position: sticky;
+  top: 0; 
+}
+
+.moduleTable tbody tr {
+  border-bottom: 2px solid #dee2e6;
+}
+
+.moduleTable tbody td {
+  vertical-align: bottom;
+  border-left-style: hidden;
+  border-right-style: hidden;
+  width: 50%;
+  padding: 5px 12px 5px 12px;
 }
 
 /*----------------------------------------*/

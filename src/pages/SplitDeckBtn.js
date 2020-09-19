@@ -5,11 +5,13 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Pop
   const SplitDeckBtn = (props) => {
     const [dropdownOpen, setOpen] = useState(false);
     const [popoverOpen, setPopoverOpen] = useState(false);
+    const [unlinkModalOpen, setUnlinkModalOpen] = useState(false); 
     const [modalOpen, setModalOpen] = useState(false); 
     const [editedModuleName, setName] = useState(props.curModule.name);
   
     const toggle = () => setOpen(!dropdownOpen);
     const togglePopover = () => setPopoverOpen(!popoverOpen);
+    const toggleUnlinkModal = () => setUnlinkModalOpen(!unlinkModalOpen);
     const toggleModal = () => setModalOpen(!modalOpen); 
     
     return (
@@ -53,12 +55,31 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Pop
               <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightcyan', color: 'black', outline: 'none'}}
                 onClick={ () => { togglePopover() }}>
                 <img src={require('../Images/tools.png')} alt="edit icon" style={{width: '18px', height: '18px'}}/> Edit</DropdownItem>
+              
+              <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightsalmon', color: 'black', outline: 'none'}}
+                onClick={ () => { toggleUnlinkModal() }}>
+                <img src={require('../Images/unlink.png')} alt="unlink icon" style={{width: '18px', height: '20px'}}/> Unlink</DropdownItem>
+
               <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightcoral', color: 'black', outline: 'none'}}
                 onClick={ () => { toggleModal() }}>
                 <img src={require('../Images/delete.png')} alt="trash can icon" style={{width: '18px', height: '20px'}}/> Delete</DropdownItem>
           </DropdownMenu>
           </>
         : null}
+
+        <Modal isOpen={unlinkModalOpen}> 
+          <ModalHeader toggle={toggleUnlinkModal}>Delete</ModalHeader>
+          <ModalBody>
+            <p style={{paddingLeft: "20px"}}>Are you sure you want to unlink the module: {props.curModule.name}?</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={ () => { toggleUnlinkModal() }}>Cancel</Button>
+            <Button color="danger" onClick={ () => {
+              //props.deleteModule(props.id) 
+              toggleUnlinkModal()
+              }}>Unlink</Button>
+          </ModalFooter>
+        </Modal>
 
         <Modal isOpen={modalOpen}> 
           <ModalHeader toggle={toggleModal}>Delete</ModalHeader>

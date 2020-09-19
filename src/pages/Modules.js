@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Collapse, Button, Card, Input, InputGroup,
-   InputGroupAddon, Container, Row, Col, Alert, Label } from 'reactstrap';
+import { Collapse, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Card, Input, InputGroup,
+   InputGroupAddon, Container, Row, Col, Alert, Label, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import axios from 'axios';
 import Select from 'react-select';
   
@@ -14,11 +14,12 @@ import '../lib/bootstrap/css/bootstrap.min.css';
 import '../lib/font-awesome/css/font-awesome.min.css';
 import '../lib/owlcarousel/assets/owl.carousel.min.css';
 import '../lib/ionicons/css/ionicons.min.css';
+import AddExistingModule from '../components/Decks/AddExistingModule';
 
 export default class Modules extends Component {
   constructor(props) {
     super(props);
-    this.toggleNewModule = this.toggleNewModule.bind(this);
+    this.toggleAddModuleButton = this.toggleAddModuleButton.bind(this);
     this.editModule = this.editModule.bind(this); 
     this.deleteModule = this.deleteModule.bind(this);
     this.updateModuleList = this.updateModuleList.bind(this);
@@ -27,7 +28,6 @@ export default class Modules extends Component {
 
 
     this.state = {
-      moduleName: "", //for changing moduleNAME after a module edit 
       modules: [], //list of all modules in the database
       dynamicModules: [], //list of modules filtered by search bar
 
@@ -38,7 +38,8 @@ export default class Modules extends Component {
       allAnswers: [], //list of terms an addQuestion form will use for autocomplete
  
       searchDeck: '', //what gets typed in the search bar that filters the module list
-      collapseNewModule: false, //determines whether or not the new module form is open
+      addModuleButtonOpen: false, //determines whether or not the add module dropdown button is open
+      openForm: 0, //determines which input form is open. Is 0 if no form is open
       emptyCollection: false, //true when there are no modules, false otherwise
       modificationWarning: false, 
       selectedClass: {value: 0, label: "All"},
@@ -62,9 +63,7 @@ export default class Modules extends Component {
 
     this.updateModuleList("initialize", null);
     if(this.state.modules.length > 0){
-      this.setState({ moduleName: this.state.modules[0].name,
-                      currentModule: this.state.modules[0]
-                    })
+      this.setState({ currentModule: this.state.modules[0] })
     }
 
   }
@@ -106,6 +105,7 @@ export default class Modules extends Component {
             console.log("SHOWING ADDED MODULE");
             let newModule = modules.find((module) => module.moduleID === moduleID);
             this.updateCurrentModule({ module: newModule }); 
+            this.toggleModificationWarning("new");
           }
           
         })
@@ -141,6 +141,7 @@ export default class Modules extends Component {
           console.log("SHOWING ADDED MODULE");
           let newModule = modules.find((module) => module.moduleID === moduleID);
           this.updateCurrentModule({ module: newModule }); 
+          this.toggleModificationWarning("new");
         }
         
       })
@@ -170,7 +171,6 @@ export default class Modules extends Component {
 
         this.setState({
           module: event.module,
-          moduleName: event.module.name, 
           cards: cards,
           currentModule: event.module
         });
@@ -296,7 +296,7 @@ export default class Modules extends Component {
 
       })
       .catch(function (error) {
-        console.log("deleteModule error: ", error);
+        console.log("deleteModule error: ", error.message);
       });
   }
 
@@ -321,8 +321,20 @@ export default class Modules extends Component {
   }
 
   //function that toggles whether or not the new module form is shown
-  toggleNewModule() {
-    this.setState({ collapseNewModule: !this.state.collapseNewModule });
+  toggleAddModuleButton() {
+    this.setState({ addModuleButtonOpen: !this.state.addModuleButtonOpen });
+  }
+
+  //function that determines which form is open
+  setOpenForm = (openedForm) => {
+    //if the form is open at the moment then close it by setting it back to form 0, which is the closed state
+    if(this.state.openForm === openedForm){
+      this.setState({ openForm: 0 })
+    }
+    else { //else set the state of the open form to the form # that you want to open
+      this.setState({ openForm: openedForm })
+    }
+
   }
 
   //function that toggles whether or not the empty collection alert is shown
@@ -383,11 +395,14 @@ export default class Modules extends Component {
 
     this.state.classes.map((item) => {classOptions.push({value: item.groupID, label: item.groupName})}); 
 
+    console.log("dynamic modules: ", this.state.dynamicModules);
+    console.log("modules: ", this.state.modules)
+
     return (
     <Container>
     <Template/>
 
-    <br/><br/>
+    <br/>
 
     <Row style={{marginBottom: "15px"}}>
       <Col className="Left Column" xs="3">
@@ -428,29 +443,47 @@ export default class Modules extends Component {
             placeholder="Search" 
             value={this.state.searchDeck} 
             onChange={this.updateSearchDeck.bind(this)}
-            />
+          />
           {this.state.currentPermissionLevel !== 'st' 
           ? 
             <InputGroupAddon addonType="append">
-              <Button style={{backgroundColor:'#3e6184'}} onClick={this.toggleNewModule}>
-                Add Module
-              </Button>
+              <ButtonDropdown isOpen={this.state.addModuleButtonOpen} toggle={this.toggleAddModuleButton}>
+                <DropdownToggle style={{backgroundColor:'#3e6184', borderTopLeftRadius: "0px", borderBottomLeftRadius: "0px"}} caret>
+                  Add Module
+                </DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem onClick={() => this.setOpenForm(1)}> Add Existing </DropdownItem>
+                  <DropdownItem onClick={() => this.setOpenForm(2)}> Add New </DropdownItem>
+                </DropdownMenu>
+              </ButtonDropdown>
             </InputGroupAddon>
           : null}
         </InputGroup>
 
         <br/>
 
-        {/*Form for adding a new module*/}
-        <Collapse isOpen={this.state.collapseNewModule}>
-          <AddModule  
-            serviceIP={this.props.serviceIP} 
-            updateModuleList={this.updateModuleList}
-            classOptions={classOptions}
-            currentClass={this.state.selectedClass}
-            toggleModificationWarning={this.toggleModificationWarning}
-          />
-        </Collapse>
+      {/*Form for adding an existing Module*/}
+      <Modal isOpen={this.state.openForm === 1} toggle={() => this.setOpenForm(1)}>
+          <ModalHeader toggle={() => this.setOpenForm(1)}>Existing Modules</ModalHeader>
+          <ModalBody style={{padding: "0 20px 30px 20px"}}>
+            <AddExistingModule 
+              serviceIP={this.props.serviceIP} 
+              updateModuleList={this.updateModuleList}
+              classOptions={classOptions}
+              currentClass={this.state.selectedClass}
+            />
+          </ModalBody>
+      </Modal>
+
+      {/*Form for adding a new Module*/}
+      <Collapse isOpen={this.state.openForm === 2}>    
+        <AddModule  
+          serviceIP={this.props.serviceIP} 
+          updateModuleList={this.updateModuleList}
+          classOptions={classOptions}
+          currentClass={this.state.selectedClass}
+        />  
+      </Collapse>
 
         <Row>
           <Col>
@@ -485,7 +518,6 @@ export default class Modules extends Component {
               <Deck
                 permissionLevel={this.state.currentPermissionLevel}
                 currentClass={this.state.selectedClass}
-                moduleName={this.state.moduleName}
                 curModule={this.state.currentModule}
                 cards={this.state.cards}
                 serviceIP={this.props.serviceIP}

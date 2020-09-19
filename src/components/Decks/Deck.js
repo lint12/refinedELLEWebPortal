@@ -126,16 +126,14 @@ class Deck extends React.Component {
 
   //function that determines which form is open
   setOpenForm = (openedForm) => {
+    //if the form is open at the moment then close it by setting it back to form 0, which is the closed state
     if(this.state.openForm === openedForm){
-      this.setState({
-        openForm: 0
-      })
-      return;
+      this.setState({ openForm: 0 })
+    }
+    else { //else set the state of the open form to the form # that you want to open
+      this.setState({ openForm: openedForm })
     }
 
-    this.setState({
-      openForm: openedForm
-    })
   }
 
 
@@ -146,8 +144,6 @@ class Deck extends React.Component {
         .filter(card => card.type.toLowerCase() === "match" && card.answers[0] !== undefined)
           .map((card, i) => {return card.answers[0]});
 
-
-      
       let phrases = this.props.cards
         .filter(card => card.type.toLowerCase() === "phrase")
           .map((card, i) => {return card.answers[0]}); 
@@ -155,7 +151,6 @@ class Deck extends React.Component {
       let questions = this.props.cards
         .filter(card => card.type.toLowerCase() === "longform")
           .map((card, i) => {return card}); 
-
 
       //Gets all answers not in this module
       let termIDArray = terms.map(term => term.termID);

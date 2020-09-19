@@ -64,9 +64,7 @@ class AddModule extends React.Component {
         success: true
       }); 
       this.onShowStatus(); 
-      this.props.updateModuleList("add", res.data.moduleID);
-      this.props.toggleModificationWarning("new"); 
-
+      this.props.updateModuleList("add", res.data.moduleID);  
     }).catch(function (error) {
       console.log(error.message);
     });

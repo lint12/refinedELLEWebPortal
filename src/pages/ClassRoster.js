@@ -8,8 +8,8 @@ import axios from 'axios';
 import '../stylesheets/style.css';
 
 import Template from './Template';
-import User from '../components/UserList/User';
 import AccessDenied from './AccessDenied'; 
+import Class from './../components/ClassRoster/Class'; 
 
 class ClassRoster extends Component {
 
@@ -114,20 +114,24 @@ class ClassRoster extends Component {
 
     console.log("CLASS OPTIONS: ", classOptions); 
 
+    let classColors = this.getColors();
+
     if (group === "ta") {
-      this.state.groups.map((group) => {classes.push(
+      this.state.groups.map((group, i) => {classes.push(
         {
           groupID: group.groupID,
           groupName: group.groupName, 
+          groupColor: classColors[i],
           group_users: group.group_users.filter((user) => {return user.accessLevel === 'ta'})
         }
       )});
     }
     else {
-      this.state.groups.map((group) => {classes.push(
+      this.state.groups.map((group, i) => {classes.push(
         {
           groupID: group.groupID,
           groupName: group.groupName, 
+          groupColor: classColors[i],
           group_users: group.group_users.filter((user) => {return user.accessLevel === 'st'})
         }
       )});
@@ -151,23 +155,20 @@ class ClassRoster extends Component {
 
     let filteredClass = classes.filter(
       (group) => { 
-        if (group) 
           return (group.groupName.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1);
-        else 
-          return null; 
       }
-    );
+    ); 
 
     return (
       <>
       <Row>
         <Col sm={searchLength}>
           <InputGroup style={{borderRadius: "8px"}}>
-            <InputGroupAddon addonType="prepend" style={{margin: "5px 10px 10px 10px"}}>
+            <InputGroupAddon addonType="prepend" style={{margin: "10px"}}>
               <img 
                 src={require('../Images/search.png')} 
                 alt="Icon made by Freepik from www.flaticon.com" 
-                style={{width: '25px', height: '25px'}}
+                style={{width: '20px', height: '20px'}}
               />
             </InputGroupAddon>
             <Input style={{border: "none"}}
@@ -181,51 +182,13 @@ class ClassRoster extends Component {
         {addButton}
       </Row>
       <br />
-      <Table hover className="userListTable">
-        <thead>
-          <tr>
-            <th style={{borderTopLeftRadius: "8px"}}>ID</th>
-            <th>Username</th>
-            <th style={{borderTopRightRadius: "8px"}}>Permission</th>
-          </tr>
-        </thead>  
         {filteredClass.map(
-          (group, i) => { return (
-            group.group_users.length !== 0 
-            ?
-              <tbody key={i}>
-                <tr>
-                  <th>
-                    {group.groupName}
-                  </th>
-                  <th></th>
-                  <th></th>
-                </tr>
-                {group.group_users.filter((user) => user.accessLevel === this.state.currentGroup).map((user) => {
-                  return (
-                    <User key={user.userID} user={user}/>
-                  )
-                })}
-              </tbody>
-            :
-                <tbody key={i}>
-                  <tr>
-                    <th>{group.groupName}</th>
-                    <th></th>
-                    <th></th>
-                  </tr>
-                  <tr>
-                    <td>
-                      You currently have no {this.state.currentGroup === "st" ? "students" : "TAs"}
-                    </td> 
-                    <td></td> 
-                    <td></td>
-                  </tr>
-                </tbody>
+          (group, i) => { 
+            return (
+                <Class key={i} group={group} currentGroup={this.state.currentGroup} groupColor={group.groupColor} />
             )
           }
         )}
-      </Table>
       <Modal isOpen={this.state.elevateModalOpen} toggle={() => this.toggleElevateModal()} backdrop={true}>
         <ModalHeader toggle={() => this.toggleElevateModal()}>Modify Permission</ModalHeader>
         <ModalBody>
@@ -257,6 +220,27 @@ class ClassRoster extends Component {
       </Modal>
       </>
     )
+  }
+
+  getColors = () => {
+    let possibleColors=['lightCoral', 'moccasin', 'tan', 'cornflowerblue', 'darkseagreen', 'lightblue',
+     'lightsalmon', 'lightpink', 'lightsalmon', 'lightskyblue', 'mediumpurple', 'mediumturquoise', 'orchid', 'palevioletred',
+     'rosybrown', 'steelblue']
+
+		let colorList = [];
+		let index = 0;
+
+		for(let i = 0; i < this.state.groups.length; i++){
+			colorList.push(possibleColors[index]);
+			
+			index++;
+			
+			if(index >= possibleColors.length){
+				index = 0;
+			}
+    }
+    
+    return colorList;
   }
 
   resetVal = (k) => {

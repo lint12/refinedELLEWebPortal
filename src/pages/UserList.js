@@ -130,11 +130,11 @@ class UserList extends Component {
       <Row>
         <Col sm={searchLength}>
           <InputGroup style={{borderRadius: "8px"}}>
-            <InputGroupAddon addonType="prepend" style={{margin: "5px 10px 10px 10px"}}>
+            <InputGroupAddon addonType="prepend" style={{margin: "10px"}}>
               <img 
                 src={require('../Images/search.png')} 
                 alt="Icon made by Freepik from www.flaticon.com" 
-                style={{width: '25px', height: '25px'}}
+                style={{width: '20px', height: '20px'}}
               />
             </InputGroupAddon>
             <Input style={{border: "none"}}
@@ -159,7 +159,7 @@ class UserList extends Component {
         <tbody>
           {filteredUsers.map((user) => {
             return (
-              <User key={user.userID} user={user}/>
+              <User key={user.userID} user={user} type="su" />
             )
           })}
         </tbody>
