@@ -177,7 +177,7 @@ render () {
 			
 			<br/>
 
-			<Alert style={{color: '#004085', backgroundColor: 'deepskyblue'}}>
+			<Alert style={{color: '#004085', backgroundColor: 'lightskyblue', border: "none"}}>
 			<Row>
 				<Col>
 					<FormGroup>			
@@ -332,10 +332,10 @@ render () {
 			</Row>
 			<Row>
 				<Col>
-					<Button style={{backgroundColor: '#004085'}} type="submit" block>
+					<Button style={{backgroundColor: 'rgb(0, 64, 133)', border: "none"}} type="submit" block>
 						Create
 					</Button>
-					<Button style={{backgroundColor: 'crimson'}} onClick={() => this.props.setOpenForm(0)} block>
+					<Button style={{backgroundColor: 'steelblue', border: "none"}} onClick={() => this.props.setOpenForm(0)} block>
 						Cancel
 					</Button>
 				</Col>

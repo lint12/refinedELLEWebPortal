@@ -16,9 +16,9 @@ class TagItem extends React.Component {
   //function that sets the style of the button, either removable or not
   setStyle = () => {
     if(this.state.removeMode === false){
-      return {margin: "3px", border: "2px solid black"}
+      return {margin: "3px", border: "1px solid black"}
     } else {
-      return {margin: "3px", border: "2px solid black", backgroundColor: "red"}
+      return {margin: "3px", border: "1px solid black", backgroundColor: "red"}
     }
   };
 

@@ -5,19 +5,9 @@ export default class Template extends React.Component {
   constructor(props) {
     super(props);
 
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-      isOpen: false
-    };
   }
 
-  toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-  }
-  render() {
-    console.log("USING TEMPLATE"); 
+  render() { 
     return (
       <header id="header">
       <div className="container">
@@ -33,19 +23,8 @@ export default class Template extends React.Component {
             <li><Link to='/profile'>Profile</Link></li>
             <li><Link to='/modules'>Modules</Link></li>
             <li><Link to='/sessions'>Sessions</Link></li>
-            {localStorage.getItem('per') === "su" 
-            ? 
-              <>
-                <li><Link to='/userlist'>User List</Link></li>
-                <li><Link to='/stats'>Stats</Link></li>
-              </>
-            : null}
-            {localStorage.getItem('per') === "pf" 
-            ? 
-              <>
-                <li><Link to='/classroster'>Class Roster</Link></li>
-              </>
-            : null}
+            {localStorage.getItem('per') === "su" ? <li><Link to='/userlist'>User List</Link></li> : null}
+            {localStorage.getItem('per') === "pf" ? <li><Link to='/classroster'>Class Roster</Link></li> : null}
             <li><Link to='/logout'>Sign Out</Link></li>
 						<li><a href="https://www.github.com/ItsNotRick/elle" className="github"><i className="fa fa-github fa-lg"></i></a></li>
           </ul>

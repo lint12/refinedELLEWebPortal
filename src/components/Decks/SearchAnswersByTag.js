@@ -215,10 +215,8 @@ render () {
 		
 		<Form onSubmit={e => this.submitSearchedAnswers(e)}>
 			<input type="hidden" value="prayer" />
-			
-			<br/>
 
-			<Alert style={{color: '#004085', backgroundColor: 'deepskyblue'}}>
+			<Alert style={{color: '#004085', backgroundColor: 'lightskyblue', border: "none", borderRadius: "0px"}}>
 						
 			<Row>
 				<Col>
@@ -253,7 +251,7 @@ render () {
 
 			<Row>
 				<Col>
-					<h6 style={{color:"black"}}>All Terms:</h6>
+					<h6 style={{color:"black", fontWeight: "300"}}>All Terms:</h6>
 					<Card color="info" style={{overflow:"scroll", height:"35vh", width:"100%"}}>
 						{dynamicTerms.filter(
 							(answer) => {
@@ -263,7 +261,7 @@ render () {
 							.map((answer) => { 
 								return (
 									<Button 
-										style={{backgroundColor:"dodgerBlue"}} 
+										style={{backgroundColor:"dodgerBlue", border: "none"}} 
 										key={answer.id}
 										onClick={ () =>
 											this.handleAddExistingTerm({front:answer.front, id:answer.id})
@@ -277,8 +275,8 @@ render () {
 					</Card>
 				</Col>
 				<Col>
-					<h6 style={{color:"black"}}>Added Terms:</h6>
-					<Alert style={{backgroundColor:"deepSkyBlue", overflow:"scroll", height:"35vh", width:"100%"}}>
+					<h6 style={{color:"black", fontWeight: "300"}}>Added Terms:</h6>
+					<Alert style={{backgroundColor:"deepSkyBlue", overflow:"scroll", height:"35vh", width:"100%", border: "none"}}>
 						
 							<AnswerButtonList
 								answers={this.state.addedTerms.map((answer) => { 
@@ -295,10 +293,10 @@ render () {
 
 			<Row>
 				<Col>
-					<Button style={{backgroundColor: '#004085'}} type="submit" block>
+					<Button style={{backgroundColor: '#004085', border: "none"}} type="submit" block>
 						Add
 					</Button>
-					<Button style={{backgroundColor: 'crimson'}} onClick={this.props.toggleSearchByTagForm} block>
+					<Button style={{backgroundColor: 'steelblue', border: "none"}} onClick={this.props.toggleSearchByTagForm} block>
 						Cancel
 					</Button>
 				</Col>

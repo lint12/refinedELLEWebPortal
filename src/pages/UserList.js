@@ -27,7 +27,7 @@ class UserList extends Component {
   }
 
   componentDidMount() {
-    this.getUser(); 
+    this.getUsers(); 
   }
 
   change(e) {
@@ -40,7 +40,7 @@ class UserList extends Component {
     this.setState({ search: e.target.value.substr(0,20) });
   }
 
-  getUser = () => {
+  getUsers = () => {
     axios.get(this.props.serviceIP + '/users', {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then(res => {
@@ -75,7 +75,7 @@ class UserList extends Component {
     .then(res => {
       console.log(res.data);
       this.toggleElevateModal(); 
-      this.getUser(); 
+      this.getUsers(); 
     }).catch(function (error) {
       console.log(error);
     });
@@ -153,13 +153,14 @@ class UserList extends Component {
           <tr>
             <th style={{borderTopLeftRadius: "8px"}}>ID</th>
             <th>Username</th>
-            <th style={{borderTopRightRadius: "8px"}}>Permission</th>
+            <th style={{borderTopRightRadius: group !== "pf" ? "8px" : "0px"}}>Permission</th>
+            {group === "pf" ? <th style={{borderTopRightRadius: "8px"}}></th> : null}
           </tr>
         </thead>
         <tbody>
           {filteredUsers.map((user) => {
             return (
-              <User key={user.userID} user={user} type="su" />
+              <User key={user.userID} user={user} type="su" group={group}/>
             )
           })}
         </tbody>

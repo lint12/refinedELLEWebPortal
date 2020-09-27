@@ -223,9 +223,7 @@ class ClassRoster extends Component {
   }
 
   getColors = () => {
-    let possibleColors=['lightCoral', 'moccasin', 'tan', 'cornflowerblue', 'darkseagreen', 'lightblue',
-     'lightsalmon', 'lightpink', 'lightsalmon', 'lightskyblue', 'mediumpurple', 'mediumturquoise', 'orchid', 'palevioletred',
-     'rosybrown', 'steelblue']
+    let possibleColors=['#a5d5f6', "cornflowerblue", '#57baca', '#48a5b7']
 
 		let colorList = [];
 		let index = 0;

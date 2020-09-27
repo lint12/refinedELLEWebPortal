@@ -340,7 +340,7 @@ class AddQuestion extends React.Component {
 				
 				<br/>
 
-				<Alert style={{color: '#004085', backgroundColor: 'indianred'}}>
+				<Alert style={{color: '#004085', backgroundColor: 'lightskyblue', border: "none"}}>
 				<Row>
 					<Col>
 						<FormGroup>			
@@ -464,10 +464,10 @@ class AddQuestion extends React.Component {
 				
 				<Row>
 					<Col>
-						<Button style={{backgroundColor: '#004085'}} type="submit" block>
+						<Button style={{backgroundColor: '#004085', border: "none"}} type="submit" block>
 							Create
 						</Button>
-						<Button style={{backgroundColor: 'crimson'}} onClick={() => this.props.setOpenForm(0)} block>
+						<Button style={{backgroundColor: 'steelblue', border: "none"}} onClick={() => this.props.setOpenForm(0)} block>
 							Cancel
 						</Button>
 					</Col>
@@ -501,11 +501,11 @@ class AddQuestion extends React.Component {
 
 			<Modal isOpen={this.state.searchingByTag}>
 
-				<ModalHeader>
+				<ModalHeader toggle={this.toggleSearchByTagForm}>
 					Search By Tag
 				</ModalHeader>
 
-				<ModalBody>   
+				<ModalBody style={{padding: "0px"}}>   
 					<SearchAnswersByTag
 						curModule={this.props.curModule} 
 						updateCurrentModule={this.props.updateCurrentModule}
@@ -516,8 +516,6 @@ class AddQuestion extends React.Component {
 						allAnswers={this.state.validAnswers}
 						handleAddAnswer={this.handleAddAnswer}
 						toggleSearchByTagForm={this.toggleSearchByTagForm}   
-						
-
 					>
 					</SearchAnswersByTag>
 				</ModalBody>

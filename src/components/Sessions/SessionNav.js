@@ -17,7 +17,7 @@ const SessionNav = (props) => {
               className='item'
               tag={RNavLink}
             >
-              {session.sessionDate} -- {session.responseScore}
+              {session.sessionDate} -- {session.playerScore}
             </NavLink>
         )})
       }

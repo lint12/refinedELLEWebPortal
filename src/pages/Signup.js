@@ -35,6 +35,21 @@ export default class Signup extends React.Component {
     })
   }
 
+  generateUsername = () => {
+    let header = {
+      headers: {'Authorization': 'Bearer ' + localStorage.getItem('jwt') } 
+    };
+
+    axios.get(this.props.serviceIP + '/generateusername', header)
+    .then(res => {
+      console.log(res.data.username);
+
+      this.setState({username: res.data.username});
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+
   validatePassword = (e) => {
     let id = e.target.name === "password" ? 0 : 1; 
 
@@ -150,13 +165,30 @@ export default class Signup extends React.Component {
           <Form onSubmit={e => this.submit(e)}>
             <FormGroup>
               <Label for="userName">Username:</Label>
-              <Input value={this.state.username}
-                onChange={e => this.change(e)}
-                id="username"
-                name="username"
-                placeholder="Username"
-                autoComplete="off"
-              />
+              <InputGroup>
+                <Input value={this.state.username}
+                  //onChange={e => this.change(e)}
+                  id="username"
+                  name="username"
+                  placeholder="Roll the dice for a random username"
+                  autoComplete="off"
+                  disabled="true"
+                />
+                <InputGroupAddon addonType="append">
+                  <Button 
+                    style={{backgroundColor: "white", border: "none"}}
+                    name="dice"
+                    onClick={() => this.generateUsername()}
+                  >
+                    <img 
+                      src={require('../Images/dice.png')} 
+                      alt="Icon made by Freepik from www.flaticon.com" 
+                      name="dice"
+                      style={{width: '24px', height: '24px'}}
+                    />
+                  </Button>
+                </InputGroupAddon>
+              </InputGroup>
             </FormGroup>
             <FormGroup>
             <Label for="password">Password:</Label>
@@ -177,12 +209,21 @@ export default class Signup extends React.Component {
                   name="hiddenPassword"
                   onClick={e => this.togglePWPrivacy(e)}
                 >
+                {this.state.hiddenPassword ?
+                  <img 
+                    src={require('../Images/show.png')} 
+                    alt="Icon made by Pixel perfect from www.flaticon.com" 
+                    name="hiddenPassword"
+                    style={{width: '24px', height: '24px'}}
+                  />
+                :
                   <img 
                     src={require('../Images/hide.png')} 
                     alt="Icon made by Pixel perfect from www.flaticon.com" 
                     name="hiddenPassword"
                     style={{width: '24px', height: '24px'}}
                   />
+                }
                 </Button>
               </InputGroupAddon>
             </InputGroup>
@@ -208,12 +249,21 @@ export default class Signup extends React.Component {
                     name="hiddenConfirm"
                     onClick={e => this.togglePWPrivacy(e)}
                   >
+                  {this.state.hiddenConfirm ? 
+                    <img 
+                      src={require('../Images/show.png')} 
+                      alt="Icon made by Kiranshastry from www.flaticon.com" 
+                      name="hiddenConfirm"
+                      style={{width: '24px', height: '24px'}}
+                    />
+                  :
                     <img 
                       src={require('../Images/hide.png')} 
                       alt="Icon made by Pixel perfect from www.flaticon.com" 
                       name="hiddenConfirm"
                       style={{width: '24px', height: '24px'}}
                     />
+                  }
                   </Button>
                 </InputGroupAddon>
                 <FormFeedback valid>

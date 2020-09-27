@@ -57,7 +57,6 @@ export default class Profile extends React.Component {
         this.setState({
           userID: res.data.id,
           username: res.data.username,
-          motivation: res.data.motivation, 
         });
         console.log("ID: ", res.data.id) //14,26,9,51,52,47 //51 needs fixing //need to fix issue that the bar charts wont start at zero
         await axios.get(this.props.serviceIP + '/searchsessions', {params: {userID: res.data.id},
@@ -525,7 +524,7 @@ export default class Profile extends React.Component {
   render() { 
     if (localStorage.getItem('per') === "su") {
       return (
-        <SuperAdminProfile></SuperAdminProfile>
+        <SuperAdminProfile username={this.state.username} />
       )
     }
     return (

@@ -494,10 +494,10 @@ class Question extends React.Component {
 
         <Modal isOpen={this.state.submittingAnswer}>
             
-            <ModalHeader>
+            <ModalHeader toggle={this.cancelCreateAnswer}>
               Add Answer: 
             </ModalHeader>   
-            <ModalBody>
+            <ModalBody style={{padding: "0px"}}>
               <AddAnswer
                 curModule={this.props.curModule} 
                 updateCurrentModule={this.props.updateCurrentModule}

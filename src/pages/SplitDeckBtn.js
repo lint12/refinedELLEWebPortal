@@ -7,27 +7,25 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Pop
     const [popoverOpen, setPopoverOpen] = useState(false);
     const [unlinkModalOpen, setUnlinkModalOpen] = useState(false); 
     const [modalOpen, setModalOpen] = useState(false); 
-    const [editedModuleName, setName] = useState(props.curModule.name);
+    const [editedModuleName, setName] = useState("");
   
     const toggle = () => setOpen(!dropdownOpen);
     const togglePopover = () => setPopoverOpen(!popoverOpen);
     const toggleUnlinkModal = () => setUnlinkModalOpen(!unlinkModalOpen);
     const toggleModal = () => setModalOpen(!modalOpen); 
-    
+
     return (
-      <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
+      <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}> 
         <Button 
           style={{display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", backgroundColor: "#5faeb5",
                   border: "none", borderRadius: '0px'}} 
-          id={"deckButton" + props.id}
+          id={"deckButton" + props.curModule.moduleID}
           type="button"
-          onClick={ () => {
-            console.log("SplitDeckBtn: ", props.curModule); 
-            props.updateCurrentModule({ module: props.curModule })
-        }}>
+          onClick={ () => { props.updateCurrentModule({ module: props.curModule }) }}
+        >
           {props.curModule.name}
         </Button>
-        <Popover trigger="legacy" placement="bottom" isOpen={popoverOpen} target={"deckButton" + props.id}>
+        <Popover trigger="legacy" placement="bottom" isOpen={popoverOpen} target={"deckButton" + props.curModule.moduleID}>
           <PopoverHeader>
             Edit Module 
             <Button close onClick={ () => { togglePopover() }}/>
@@ -36,7 +34,7 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Pop
             <Form>
               <FormGroup>
                 <Label for="moduleName">Name:</Label>
-                <Input type="text" name="mName" id="moduleName" autoComplete="off" 
+                <Input type="text" name="mName" id="moduleName" autoComplete="off" placeholder={props.curModule.name} 
                   value={editedModuleName} onChange={ e => setName(e.target.value) }/>
               </FormGroup>
               <Button onClick={ () => {
@@ -53,16 +51,19 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Pop
           <DropdownToggle caret color="info" style={{backgroundColor: '#5faeb5', border: 'none', borderRadius: '0px'}}/>
           <DropdownMenu style={{minWidth: '50px', padding: '0px', backgroundColor: 'gray'}}>
               <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightcyan', color: 'black', outline: 'none'}}
-                onClick={ () => { togglePopover() }}>
+                onClick={ () => { togglePopover() } }>
                 <img src={require('../Images/tools.png')} alt="edit icon" style={{width: '18px', height: '18px'}}/> Edit</DropdownItem>
               
-              <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightsalmon', color: 'black', outline: 'none'}}
-                onClick={ () => { toggleUnlinkModal() }}>
-                <img src={require('../Images/unlink.png')} alt="unlink icon" style={{width: '18px', height: '20px'}}/> Unlink</DropdownItem>
+              {props.curModule.owned === true || props.permissionLevel === "su" ? 
+                <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightcoral', color: 'black', outline: 'none'}}
+                  onClick={ () => { toggleModal() }}>
+                  <img src={require('../Images/delete.png')} alt="trash can icon" style={{width: '18px', height: '20px'}}/> Delete</DropdownItem>
+              :
+                <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightsalmon', color: 'black', outline: 'none'}}
+                  onClick={ () => { toggleUnlinkModal() }}>
+                  <img src={require('../Images/unlink.png')} alt="unlink icon" style={{width: '18px', height: '20px'}}/> Unlink</DropdownItem>
+              }
 
-              <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightcoral', color: 'black', outline: 'none'}}
-                onClick={ () => { toggleModal() }}>
-                <img src={require('../Images/delete.png')} alt="trash can icon" style={{width: '18px', height: '20px'}}/> Delete</DropdownItem>
           </DropdownMenu>
           </>
         : null}
@@ -75,9 +76,9 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Pop
           <ModalFooter>
             <Button onClick={ () => { toggleUnlinkModal() }}>Cancel</Button>
             <Button color="danger" onClick={ () => {
-              //props.deleteModule(props.id) 
+              props.unlinkModule(props.curModule.moduleID) 
               toggleUnlinkModal()
-              }}>Unlink</Button>
+            }}>Unlink</Button>
           </ModalFooter>
         </Modal>
 
@@ -92,9 +93,9 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Pop
           <ModalFooter>
             <Button onClick={ () => {toggleModal()} }>Cancel</Button>
             <Button color="danger" onClick={ () => {
-              props.deleteModule(props.id) 
+              props.deleteModule(props.curModule.moduleID) 
               toggleModal()
-              }}>Delete</Button>
+            }}>Delete</Button>
           </ModalFooter>
         </Modal>
       </ButtonDropdown>

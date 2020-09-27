@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
 import { Collapse, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Card, Input, InputGroup,
-   InputGroupAddon, Container, Row, Col, Alert, Label, Modal, ModalHeader, ModalBody } from 'reactstrap';
+   InputGroupAddon, Container, Row, Col, Alert, Label, Modal, ModalHeader, ModalBody, Button } from 'reactstrap';
 import axios from 'axios';
 import Select from 'react-select';
   
-import AddModule from '../components/Decks/AddModule';
-import Deck from '../components/Decks/Deck';
 import Template from './Template';
-import SplitDeckBtn from './SplitDeckBtn';
+import AddExistingModule from '../components/Decks/AddExistingModule';
+import AddModule from '../components/Decks/AddModule';
+import StudentView from '../components/ModuleList/StudentView';
+import AdminView from '../components/ModuleList/AdminView';
+import SuperAdminView from '../components/ModuleList/SuperAdminView';
+import Deck from '../components/Decks/Deck';
 
 import '../stylesheets/style.css';
 import '../lib/bootstrap/css/bootstrap.min.css';
 import '../lib/font-awesome/css/font-awesome.min.css';
 import '../lib/owlcarousel/assets/owl.carousel.min.css';
 import '../lib/ionicons/css/ionicons.min.css';
-import AddExistingModule from '../components/Decks/AddExistingModule';
 
 export default class Modules extends Component {
   constructor(props) {
@@ -25,7 +27,6 @@ export default class Modules extends Component {
     this.updateModuleList = this.updateModuleList.bind(this);
     this.updateCurrentModule = this.updateCurrentModule.bind(this);
     this.initializeModulesPage = this.initializeModulesPage.bind(this);
-
 
     this.state = {
       modules: [], //list of all modules in the database
@@ -50,105 +51,95 @@ export default class Modules extends Component {
     };
   }
 
-
   componentDidMount() {
       this.initializeModulesPage();
       this.getClasses();
       this.getPermissionLevels();
   }
 
-
   //function for initializing module list on sidebar and setting current module to the first one
   initializeModulesPage = () => { 
-
-    this.updateModuleList("initialize", null);
-    if(this.state.modules.length > 0){
-      this.setState({ currentModule: this.state.modules[0] })
-    }
-
+    this.updateModuleList("initialize", null); 
   }
 
   //function for updating the module list on the sidebar with what's in the database
   updateModuleList = (task, moduleID) => {
     let header = {
-      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+      params: {groupID: this.state.currentPermissionLevel === "ta" ? this.state.selectedClass.value : null} 
     };
 
-    //TODO: this shouldn't be possible, consider deleting
-    if (this.state.selectedClass === null) {
-      return; 
-    }
+    axios.get(this.props.serviceIP + '/retrieveusermodules', header)
+    .then(res => {
+      console.log("RETRIEVE USER MODULES RESPONSE: ", res.data); 
+      let allModules = res.data; 
 
-    //TODO: this would be neater if, when you make an API call to 
-    // /retrievegroupmodules, and the group value is 0, it returns all modules
-    // consider asking for a change
-    if (this.state.selectedClass.value === 0) {
-      axios.get(this.props.serviceIP + '/modules', header)
-        .then(res => {
-          console.log("in updateModuleList, modules: ", res.data);
-          let modules = res.data;
-
-          if(modules.length === 0){
-            this.toggleEmptyCollectionAlert();
-          }
-          
-          this.setState({ modules : modules,
-                          dynamicModules: modules,
-                          classChanged: false
-                        });
-
-          if (task === "initialize" || task === "change") {
-            console.log("SHOWING FIRST MODULE");
-            this.updateCurrentModule({ module: modules[0] }); 
-          }
-          else if (task === "add") {
-            console.log("SHOWING ADDED MODULE");
-            let newModule = modules.find((module) => module.moduleID === moduleID);
-            this.updateCurrentModule({ module: newModule }); 
-            this.toggleModificationWarning("new");
-          }
-          
-        })
-        .catch(function (error) {
-          console.log("updateModuleList error: ", error.message);
-        });
-    }
-    else {
-      let config = {
-        params: {groupID: this.state.selectedClass.value}, 
-        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+      if(allModules.length === 0) {
+        this.toggleEmptyCollectionAlert();
+        return; 
       }
 
-      axios.get(this.props.serviceIP + '/retrievegroupmodules', config)
-      .then(res => {
-        let modules = res.data;
+      if (this.state.selectedClass.value === 0) {
+        this.setState({
+          modules: allModules,
+          dynamicModules: allModules,
+          classChanged: false
+        })
 
-
-        if(modules.length === 0){
-          this.toggleEmptyCollectionAlert();
-        }
-        
-        this.setState({ modules : modules,
-                        dynamicModules: modules, 
-                        classChanged: false 
-                      });
-
-        if (task === "change") {
-          console.log("SHOWING FIRST MODULE");
-          this.updateCurrentModule({ module: modules[0] }); 
-        }
-        else if (task === "add") {
+        //when a new module is added you want to display that new module 
+        if (task === "add") {
           console.log("SHOWING ADDED MODULE");
-          let newModule = modules.find((module) => module.moduleID === moduleID);
+          let newModule = allModules.find((module) => module.moduleID === moduleID);
           this.updateCurrentModule({ module: newModule }); 
           this.toggleModificationWarning("new");
         }
-        
-      })
-      .catch(function (error) {
-        console.log("updateModuleList error: ", error.message);
-      });
-    }
+        else if (task === "unlink") {
+          if (moduleID === this.state.currentModule.moduleID)
+            this.updateCurrentModule({ module: allModules[0] }); 
+        }
+        //when the page is first initialized or when the class context has changed then display the first module in the list 
+        else if (task === "initialize" || task === "change") {
+          this.updateCurrentModule({ module: allModules[0] }); 
+        }
+      }
+      else {
+        let groupSpecificModules = allModules.filter((module) => module.groupID === this.state.selectedClass.value);
+
+        if(groupSpecificModules.length === 0) {
+          this.setState({ 
+            dynamicModules: [], 
+            classChanged: false 
+          });
+          this.toggleEmptyCollectionAlert();
+          return; 
+        }
+
+        this.setState({ 
+          modules: allModules,
+          dynamicModules: groupSpecificModules, 
+          classChanged: false 
+        });
+
+        //when a new module is added you want to display that new module 
+        if (task === "add") {
+          console.log("SHOWING ADDED MODULE");
+          let newModule = groupSpecificModules.find((module) => module.moduleID === moduleID);
+          this.updateCurrentModule({ module: newModule }); 
+          this.toggleModificationWarning("new");
+        }
+        else if (task === "unlink") {
+          if (moduleID === this.state.currentModule.moduleID)
+            this.updateCurrentModule({ module: groupSpecificModules[0] }); 
+        }
+        //when the page is first initialized or when the class context has changed then display the first module in the list 
+        else if (task === "change") {
+          this.updateCurrentModule({ module: groupSpecificModules[0] }); 
+        }
+      } 
+
+    }).catch(error => {
+      console.log("updateModuleList error: ", error); 
+    })      
   }
 
   //function for getting the elements in the current module
@@ -166,11 +157,9 @@ export default class Modules extends Component {
       .then( res => {
         console.log("updateCurrentModule res.data: ", res.data);
 
-
         let cards = res.data;
 
         this.setState({
-          module: event.module,
           cards: cards,
           currentModule: event.module
         });
@@ -300,6 +289,28 @@ export default class Modules extends Component {
       });
   }
 
+  //function to unlink a module from a group 
+  unlinkModule = (id) => {
+    var data = {
+      moduleID: id,
+      groupID: this.state.selectedClass.value
+    }
+
+    let header = {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+    }
+
+    axios.post(this.props.serviceIP + '/addmoduletogroup', data, header)
+    .then(res => {
+      console.log("unlink Module res.data: ", res.data);
+
+      this.updateModuleList("unlink", id); 
+
+    }).catch(function (error) {
+      console.log(error.message);
+    });
+  }
+
 
   //function for making the searchbar for the module list work
   updateSearchDeck(e) {
@@ -376,6 +387,13 @@ export default class Modules extends Component {
         currentPermissionLevel: value.value === 0 ? localStorage.getItem('per') : currentClass.accessLevel
       }); 
     }
+    else {
+      this.setState({
+        selectedClass: {value: 0, label: "All"},
+        classChanged: true,
+        currentPermissionLevel: localStorage.getItem('per')
+      })
+    }
   } 
 
   getPermissionLevels = () => {
@@ -395,15 +413,15 @@ export default class Modules extends Component {
 
     this.state.classes.map((item) => {classOptions.push({value: item.groupID, label: item.groupName})}); 
 
+    console.log("Current Permission Level: ", this.state.currentPermissionLevel);
     console.log("dynamic modules: ", this.state.dynamicModules);
-    console.log("modules: ", this.state.modules)
-
+    console.log("modules: ", this.state.modules);
+    
     return (
     <Container>
     <Template/>
 
     <br/>
-
     <Row style={{marginBottom: "15px"}}>
       <Col className="Left Column" xs="3">
         <h3 style={{margin: "5px 0 0 0"}}>Your ELLE Modules:</h3>
@@ -444,7 +462,13 @@ export default class Modules extends Component {
             value={this.state.searchDeck} 
             onChange={this.updateSearchDeck.bind(this)}
           />
-          {this.state.currentPermissionLevel !== 'st' 
+          {this.state.currentPermissionLevel === 'su'
+          ? 
+            <InputGroupAddon addonType="append">
+                <Button style={{backgroundColor:'#3e6184'}} onClick={() => this.setOpenForm(2)}> Add Module </Button>
+            </InputGroupAddon>
+          : null}
+          {this.state.currentPermissionLevel === 'pf' || this.state.currentPermissionLevel === 'ta'
           ? 
             <InputGroupAddon addonType="append">
               <ButtonDropdown isOpen={this.state.addModuleButtonOpen} toggle={this.toggleAddModuleButton}>
@@ -459,9 +483,7 @@ export default class Modules extends Component {
             </InputGroupAddon>
           : null}
         </InputGroup>
-
-        <br/>
-
+      <br />
       {/*Form for adding an existing Module*/}
       <Modal isOpen={this.state.openForm === 1} toggle={() => this.setOpenForm(1)}>
           <ModalHeader toggle={() => this.setOpenForm(1)}>Existing Modules</ModalHeader>
@@ -487,24 +509,32 @@ export default class Modules extends Component {
 
         <Row>
           <Col>
-            
-            {/*Module list on the left side of the page*/}
-            <Card color="info" style={{overflow:"scroll", height:"65vh"}}>
-              {
-                this.state.dynamicModules.map((deck, i)=> (
-                  <SplitDeckBtn 
-                    key={i}
-                    permissionLevel={this.state.currentPermissionLevel}
-                    id={deck.moduleID} 
-                    curModule={deck} 
-                    updateCurrentModule={this.updateCurrentModule}
-                    deleteModule={this.deleteModule}
-                    editModule={this.editModule}
-                  />
-                ))
-              }
-            </Card>
-
+          {this.state.currentPermissionLevel === "st" ?
+            <StudentView 
+              currentPermissionLevel={this.state.currentPermissionLevel}
+              modules={this.state.dynamicModules}
+              updateCurrentModule={this.updateCurrentModule}
+            /> 
+          : null }
+          {this.state.currentPermissionLevel === "pf" || this.state.currentPermissionLevel === "ta" ?
+            <AdminView 
+              currentPermissionLevel={this.state.currentPermissionLevel}
+              modules={this.state.dynamicModules}
+              updateCurrentModule={this.updateCurrentModule}
+              deleteModule={this.deleteModule}
+              editModule={this.editModule}
+              unlinkModule={this.unlinkModule}
+            /> 
+          : null }
+          {this.state.currentPermissionLevel === "su" ?
+            <SuperAdminView 
+              currentPermissionLevel={this.state.currentPermissionLevel}
+              modules={this.state.dynamicModules}
+              updateCurrentModule={this.updateCurrentModule}
+              deleteModule={this.deleteModule}
+              editModule={this.editModule}
+            /> 
+          : null }
           </Col>
         </Row>
       </Col>
@@ -514,7 +544,7 @@ export default class Modules extends Component {
 
             {/*Either the contents of current module, or alert saying there are no modules*/}
             {
-              this.state.modules.length !== 0 ? 
+              this.state.dynamicModules.length !== 0 ? 
               <Deck
                 permissionLevel={this.state.currentPermissionLevel}
                 currentClass={this.state.selectedClass}

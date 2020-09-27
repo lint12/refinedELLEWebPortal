@@ -108,10 +108,8 @@ class AddAnswer extends React.Component {
 			{this.state.id !== "" ? 
 			<Form onSubmit={e => this.submitTerm(e)}>
 				<input type="hidden" value="prayer" />
-				
-				<br/>
 
-				<Alert style={{color: '#004085', backgroundColor: 'deepskyblue'}}>
+				<Alert style={{color: '#004085', backgroundColor: 'lightskyblue', border: "none", borderRadius: "0px"}}>
 					<Row>
 						<Col>
 							<FormGroup>			
@@ -185,18 +183,14 @@ class AddAnswer extends React.Component {
 					<Row>
 						<Col>
 							<Button 
-								style={{backgroundColor: '#004085'}} 
+								style={{backgroundColor: '#004085', border: "none"}} 
 								type="submit" 
 								block
 								>
 								Create
 							</Button>
-						</Col>
-					</Row>
-					<Row>
-						<Col>
 							<Button 
-								style={{backgroundColor: 'grey'}} 
+								style={{backgroundColor: 'steelblue', border: "none"}} 
 								onClick={this.props.cancelCreateAnswer} 
 								block
 								>

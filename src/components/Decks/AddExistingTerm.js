@@ -260,7 +260,7 @@ render () {
 			
 			<br/>
 
-			<Alert style={{color: '#004085', backgroundColor: 'deepskyblue'}}>
+			<Alert style={{color: '#004085', backgroundColor: 'lightskyblue', border: "none"}}>
 			<Row>
 				<Col>
 					<FormGroup>			
@@ -317,7 +317,7 @@ render () {
 
 			<Row>
 				<Col>
-					<h5 style={{color:"black"}}>All Terms:</h5>
+					<h5 style={{color:"black", fontWeight: "300"}}>All Terms:</h5>
 					<Card color="info" style={{overflow:"scroll", height:"35vh", width:"100%"}}>
 						{dynamicTerms.filter(
 							(answer) => {
@@ -327,7 +327,7 @@ render () {
 							.map((answer) => { 
 								return (
 									<Button 
-										style={{backgroundColor:"dodgerBlue"}} 
+										style={{backgroundColor:"#2b7e8a", border: "none", borderRadius: "0px"}} 
 										key={answer.id}
 										onClick={ () =>
 											this.handleAddExistingTerm({front:answer.front, id:answer.id})
@@ -341,8 +341,8 @@ render () {
 					</Card>
 				</Col>
 				<Col>
-					<h5 style={{color:"black"}}>Added Terms:</h5>
-					<Alert style={{backgroundColor:"deepSkyBlue", overflow:"scroll", height:"35vh", width:"100%"}}>
+					<h5 style={{color:"black", fontWeight: "300"}}>Added Terms:</h5>
+					<Alert style={{backgroundColor:"#17A2B7", overflow:"scroll", height:"35vh", width:"100%", border: "none"}}>
 						
 							<AnswerButtonList
 								answers={this.state.addedTerms.map((answer) => { 
@@ -359,10 +359,10 @@ render () {
 
 			<Row>
 				<Col>
-					<Button style={{backgroundColor: '#004085'}} type="submit" block>
+					<Button style={{backgroundColor: 'rgb(0, 64, 133)', border: "none"}} type="submit" block>
 						Add
 					</Button>
-					<Button style={{backgroundColor: 'crimson'}} onClick={() => this.props.setOpenForm(0)} block>
+					<Button style={{backgroundColor: 'steelblue', border: "none"}} onClick={() => this.props.setOpenForm(0)} block>
 						Cancel
 					</Button>
 				</Col>

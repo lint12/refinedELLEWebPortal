@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Button } from 'reactstrap';
+import axios from 'axios';
 
 class ExistingModule extends Component {
 	constructor(props){
@@ -12,7 +13,24 @@ class ExistingModule extends Component {
     
     link = () => {
         console.log("selected class val: ", this.props.selectedClass)
-        this.setState({ linked: true })
+
+        var data = {
+            moduleID: this.props.module.moduleID,
+            groupID: this.props.selectedClass.value
+        }
+
+        let header = {
+            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+        }
+      
+        axios.post(this.props.serviceIP + '/addmoduletogroup', data, header)
+        .then(res => {
+            console.log("link Module res.data: ", res.data);
+            this.setState({ linked: true })
+            this.props.updateModuleList("add", this.props.module.moduleID);  
+        }).catch(function (error) {
+            console.log(error.message);
+        });
     }
 
 	render() {

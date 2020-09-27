@@ -262,6 +262,8 @@ class AddExistingModule extends React.Component {
                                 key={module.moduleID} 
                                 module={module} 
                                 selectedClass={this.props.currentClass.value === 0 ? this.state.class : this.props.currentClass}
+                                serviceIP={this.props.serviceIP}
+                                updateModuleList={this.props.updateModuleList}
                             />
                         )
                     })}

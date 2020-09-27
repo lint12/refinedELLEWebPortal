@@ -969,6 +969,58 @@ table.userListTable tbody th {
 
 /*----------------------------------------*/
 
+/*--------------------------------------------------------------
+# Professor Details Table
+--------------------------------------------------------------*/
+.professorDetailsTable {
+  border-style: hidden;
+}
+
+.professorDetailsTable thead th {
+  background-color: white;
+  border-right-style: hidden;
+  position: sticky;
+  top: 0; 
+}
+
+.professorDetailsTable tbody tr {
+  border-style: hidden;
+}
+
+.professorDetailsTable tbody td {
+  border-right-style: hidden;
+}
+
+/*----------------------------------------*/
+
+/*--------------------------------------------------------------
+# Sessions Table
+--------------------------------------------------------------*/
+.sessionsTable {
+  border-style: hidden;
+}
+
+.sessionsTable thead th {
+  background-color: white;
+  border-style: hidden;
+  color: dimgrey;
+  position: sticky;
+  top: 0; 
+  width: 5%;
+  font-size: 12px;
+}
+
+.sessionsTable tbody tr {
+  border-style: hidden;
+}
+
+.sessionsTable tbody td {
+  border-right-style: hidden;
+  width: 5%;
+}
+
+/*----------------------------------------*/
+
 .no-suggestions {
   color: #999;
   padding: 0.5rem;
@@ -1014,4 +1066,34 @@ table.userListTable tbody th {
   color: #fff;
   background-color: lightslategray;
   border-color: dimgray;
+}
+
+/*--------------------------------------------------------------
+# Module List Tabs
+--------------------------------------------------------------*/
+nav.nav.nav-tabs {
+  border-bottom-style: hidden
+}
+
+a#moduleList-tabs-tab-own, a#moduleList-tabs-tab-linked, a#moduleList-tabs-tab-database {
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem;
+  color: #495057;
+  height: 35px;
+  padding-bottom: 14px;
+  padding-top: 5px;
+}
+
+a.active#moduleList-tabs-tab-own, a.active#moduleList-tabs-tab-linked, a.active#moduleList-tabs-tab-database {
+  color: #495057;
+  border-color: #ced4da #ced4da #fff;
+  height: 35px;
+  padding-bottom: 14px;
+  padding-top: 5px;
+}
+
+/*----------------------------------------*/
+
+a.active#platformSessions-tab-mb, a.active#platformSessions-tab-pc, a.active#platformSessions-tab-vr {
+  background-color: #37f0f9;
 }

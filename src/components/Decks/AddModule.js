@@ -142,7 +142,7 @@ class AddModule extends React.Component {
             </FormGroup>
           </Col>
           </Row>
-          {this.props.currentClass.value === 0 ? 
+          {this.props.currentClass.value === 0 && localStorage.getItem('per') !== "su" ? 
             <Row>
             <Col>
               <FormGroup>
@@ -162,7 +162,7 @@ class AddModule extends React.Component {
           : null}
           <Row>
           <Col>
-            <Button style={{backgroundColor: '#004085'}} type="submit" block>
+            <Button style={{backgroundColor: '#004085', border: "none"}} type="submit" block>
               Create
             </Button>
           </Col>

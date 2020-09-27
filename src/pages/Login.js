@@ -48,6 +48,9 @@ export default class Login extends Component {
       localStorage.setItem('per', decoded.user_claims);
       console.log("PERMISSION in Login: ", localStorage.getItem('per'));
 
+      localStorage.setItem('id', decoded.identity);
+      console.log("USER ID in Login: ", localStorage.getItem('id'));
+
       this.setState({loginErr : false});
 
       this.props.history.push('/profile');

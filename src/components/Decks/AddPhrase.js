@@ -106,7 +106,7 @@ class AddPhrase extends React.Component {
             <div>
             <br></br>
             <Form onSubmit={e => this.submitPhrase(e)}>
-            <Alert color='none' style={{color: '#004085', backgroundColor: 'burlywood'}}>
+            <Alert color='none' style={{color: '#004085', backgroundColor: 'lightskyblue', border: "none"}}>
                 <Row>
                     <Col>
                         <FormGroup>
@@ -170,10 +170,10 @@ class AddPhrase extends React.Component {
                 </Row>
                 <Row>
                     <Col>
-                        <Button style={{backgroundColor: '#004085'}} type="submit" block>
+                        <Button style={{backgroundColor: '#004085', border: "none"}} type="submit" block>
                             Create
                         </Button>
-                        <Button style={{backgroundColor: 'crimson'}} onClick={() => this.props.setOpenForm(0)} block>
+                        <Button style={{backgroundColor: 'steelblue', border: "none"}} onClick={() => this.props.setOpenForm(0)} block>
                             Cancel
                         </Button>
                     </Col>

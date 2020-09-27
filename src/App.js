@@ -5,14 +5,12 @@ import Template from './pages/Template';
 import Downloads from './pages/Downloads';
 import Modules from './pages/Modules';
 import Profile from './pages/Profile';
-import SuperAdminProfile from './pages/SuperAdminProfile';
 import Sessions from './pages/Sessions';
 import Login from './pages/Login'
 import Logout from './pages/Logout'
 import Signup from './pages/Signup';
 import UserList from './pages/UserList';
 import ClassRoster from './pages/ClassRoster'; 
-import Stats from './pages/Stats';
 import AuthUser from './components/Auth/AuthUser';
 import AuthAdmin from './components/Auth/AuthAdmin';
 
@@ -47,7 +45,6 @@ class App extends Component {
               <Route path="/sessions" render={(props)=><Sessions {...props} serviceIP={flaskIP}/>}/>
               <AuthAdmin>  
                 <Route path="/userlist" render={(props)=><UserList {...props} serviceIP={flaskIP}/>}/>
-                <Route path="/stats" render={(props)=><Stats {...props} serviceIP={flaskIP}/>}/>
                 <Route path="/classroster" render={(props)=><ClassRoster {...props} serviceIP={flaskIP}/>}/>
               </AuthAdmin>
             </AuthUser>
