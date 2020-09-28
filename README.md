@@ -89,3 +89,6 @@ WILL THESE FUNCTIONS BE INEFFICIENT?
 - https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/
 #### Other
 - https://www.youtube.com/watch?v=M-X0Jw2e68A&t=553s
+#### React Redux 
+- Should we consider it? 
+- https://daveceddia.com/what-does-redux-do/
