@@ -83,6 +83,7 @@ export default class Modules extends Component {
         this.setState({
           modules: allModules,
           dynamicModules: allModules,
+          currentModule: allModules[0],
           classChanged: false
         })
 
@@ -108,6 +109,7 @@ export default class Modules extends Component {
         if(groupSpecificModules.length === 0) {
           this.setState({ 
             dynamicModules: [], 
+            currentModule: [],
             classChanged: false 
           });
           this.toggleEmptyCollectionAlert();
@@ -117,6 +119,7 @@ export default class Modules extends Component {
         this.setState({ 
           modules: allModules,
           dynamicModules: groupSpecificModules, 
+          currentModule: groupSpecificModules[0],
           classChanged: false 
         });
 
@@ -457,7 +460,14 @@ export default class Modules extends Component {
         
         {/*Search Bar for module list*/}
         <InputGroup style={{borderRadius: '12px'}}>
-          <Input 
+          <InputGroupAddon addonType="prepend" style={{margin: "10px"}}>
+            <img 
+              src={require('../Images/search.png')} 
+              alt="Icon made by Freepik from www.flaticon.com" 
+              style={{width: '15px', height: '15px'}}
+            />
+          </InputGroupAddon>
+          <Input style={{border: "none"}}
             placeholder="Search" 
             value={this.state.searchDeck} 
             onChange={this.updateSearchDeck.bind(this)}
@@ -544,7 +554,7 @@ export default class Modules extends Component {
 
             {/*Either the contents of current module, or alert saying there are no modules*/}
             {
-              this.state.dynamicModules.length !== 0 ? 
+              this.state.currentModule.length !== 0 ? 
               <Deck
                 permissionLevel={this.state.currentPermissionLevel}
                 currentClass={this.state.selectedClass}

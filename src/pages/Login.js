@@ -69,7 +69,7 @@ export default class Login extends Component {
 
   generateErrorMsg = () => {
     return (
-      <Card color="danger" style={{paddingLeft: "12px"}}>
+      <Card style={{border: "none", backgroundColor: "transparent"}}>
         {this.state.errorMsg}
       </Card>
     )

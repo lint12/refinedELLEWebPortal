@@ -16,7 +16,7 @@ import AuthAdmin from './components/Auth/AuthAdmin';
 
 
 let flaskIP = 'https://endlesslearner.com:5000';
-flaskIP = 'http://54.158.210.144:3000'; 
+flaskIP = 'http://54.158.210.144:3000/api'; 
 //flaskIP = 'http://45.55.61.182:5000/api';
 
 class App extends Component {
