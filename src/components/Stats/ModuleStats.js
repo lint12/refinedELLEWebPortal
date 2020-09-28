@@ -16,12 +16,12 @@ class ModuleStats extends Component {
         return (
             <>
                 <Col className="Module Left Columns" xs="8" style={{paddingLeft: "0px"}}>
-                    <div class="suCard">
+                    <div className="suCardGreen">
                         Module Performance
                     </div>
                 </Col>
                 <Col className="Module Right Columns" style={{paddingLeft: "0px"}}>
-                    <div class="suCard">
+                    <div className="suCardBlue">
                         Module Languages
                     </div>
                 </Col>

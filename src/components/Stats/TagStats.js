@@ -16,7 +16,7 @@ class TagStats extends Component {
         return (
             <>
                 <Col>
-                    <div class="suCard">Tags?</div>
+                    <div className="suCardBlue">Tags?</div>
                 </Col>  
             </>
         );

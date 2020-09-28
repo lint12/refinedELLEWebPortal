@@ -78,7 +78,7 @@ class PlatformStats extends Component {
             <>
                 <Col className="Platform Left Column" xs="4">
                     <Row>
-                        <div class="suCard">
+                        <div className="suCardGreen">
                             Average Platform Duration
                             <li>Mobile: </li>
                             <li>PC: </li>
@@ -87,7 +87,7 @@ class PlatformStats extends Component {
                     </Row>
                     <br />
                     <Row>
-                        <div class="suCard">
+                        <div className="suCardBlue">
                             Average Platform Frequency 
                             <li>Mobile: </li>
                             <li>PC: </li>
@@ -97,7 +97,7 @@ class PlatformStats extends Component {
                 </Col>
 
                 <Col className="Platform Right Column">
-                    <div class="suCard">
+                    <div className="suCardGreen">
                         Average Platform Performance
                         {this.renderPerformanceChart()}
                     </div>

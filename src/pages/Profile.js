@@ -524,7 +524,7 @@ export default class Profile extends React.Component {
   render() { 
     if (localStorage.getItem('per') === "su") {
       return (
-        <SuperAdminProfile username={this.state.username} />
+        <SuperAdminProfile serviceIP={this.props.serviceIP} username={this.state.username} />
       )
     }
     return (

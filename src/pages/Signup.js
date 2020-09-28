@@ -155,14 +155,14 @@ export default class Signup extends React.Component {
 
   render() {
     return (
-    <Container>
+    <div className="signup-bg">
       <MainTemplate/>
       
       <div>
-        <div className="main-login main-center">
-          <h4 style={{textAlign: 'center'}}>Start your ELLE experience today.</h4>
+        <div className="login-form">
+          <h4 style={{textAlign: 'center', color: "white"}}>Start your ELLE experience today.</h4>
           {this.state.registerErr ? this.generateErrorMsg() : null}
-          <Form onSubmit={e => this.submit(e)}>
+          <Form onSubmit={e => this.submit(e)} className="signup-form-details">
             <FormGroup>
               <Label for="userName">Username:</Label>
               <InputGroup>
@@ -245,7 +245,7 @@ export default class Signup extends React.Component {
                 />
                 <InputGroupAddon addonType="append">
                   <Button 
-                    style={{backgroundColor: "white", border: "none"}} 
+                    style={{backgroundColor: "white", border: "none", borderRadius: "0 5px 5px 0"}} 
                     name="hiddenConfirm"
                     onClick={e => this.togglePWPrivacy(e)}
                   >
@@ -298,11 +298,11 @@ export default class Signup extends React.Component {
           <br></br>
           <p>
             Already have an account? &nbsp;
-            <Link to ='/Login' style={{color: 'white', textDecoration: 'underline'}}>Log in.</Link>
+            <Link to ='/Login' style={{color: '#007bff', textDecoration: 'underline'}}>Log in.</Link>
           </p>
         </div>
       </div>
-    </Container>
+    </div>
     );
     }
   }

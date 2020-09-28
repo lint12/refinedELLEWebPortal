@@ -77,11 +77,11 @@ export default class Login extends Component {
 
   render() {
     return (
-    <Container>
+    <div className="login-bg">
       <MainTemplate/>
 
       <div className="row main" >
-        <div className="main-login main-center">
+        <div className="login-form">
           <h4 style={{textAlign: 'center'}}>Welcome back to ELLE.</h4>
           {this.state.loginErr ? this.generateErrorMsg() : null}
           <Form onSubmit={e => this.submit(e)}>
@@ -106,11 +106,11 @@ export default class Login extends Component {
           <br></br>
 					<p>
 						Don't have an account? &nbsp;
-						<Link to ='/register' style={{color: 'white', textDecoration: 'underline'}}>Create one.</Link>
+						<Link to ='/register' style={{color: '#007bff', textDecoration: 'underline'}}>Create one.</Link>
 					</p>
         </div>
       </div>
-    </Container>
+    </div>
     );
   }
 }

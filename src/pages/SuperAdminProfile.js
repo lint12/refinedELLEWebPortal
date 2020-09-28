@@ -123,14 +123,14 @@ export default class SuperAdminProfile extends Component {
                 <Template/>         
                     <div>
                         <br/> <br/> 
-                        <div class="suContainer">
+                        <div className="suContainer">
                             <Row>
                                 <Col className="Left Column" xs="3">
                                     <Row>
                                         <Col>
-                                            <div class="greetingsTag">
+                                            <div className="greetingsTag">
                                                     Welcome back {this.props.username}!
-                                                    <p class="setting" onClick={() => this.togglePwModal()}> settings </p>
+                                                    <p className="setting" onClick={() => this.togglePwModal()}> settings </p>
                                             </div>
                                         </Col>
                                     </Row>
