@@ -12,8 +12,8 @@ const PlatformSession = (props) => {
     }
 
     return (
-        <Card style={{border: "none", height: "56vh", overflow: "scroll"}}>
-            <Table hover className="sessionsTable">
+        <Card style={{border: "none", height: "50vh", overflow: "scroll"}}>
+            <Table hover className="minimalisticTable">
             <thead>
                 <tr>
                 <th>SessionID</th>

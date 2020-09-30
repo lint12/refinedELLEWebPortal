@@ -427,7 +427,7 @@ export default class Modules extends Component {
     <br/>
     <Row style={{marginBottom: "15px"}}>
       <Col className="Left Column" xs="3">
-        <h3 style={{margin: "5px 0 0 0"}}>Your ELLE Modules:</h3>
+        <h3 style={{margin: "5px 0 0 0", color: "#16a3b8"}}>Your ELLE Modules:</h3>
       </Col>
 
       {this.state.currentPermissionLevel !== "su" ?

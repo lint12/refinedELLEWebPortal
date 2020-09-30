@@ -996,27 +996,37 @@ table.userListTable tbody th {
 /*--------------------------------------------------------------
 # Sessions Table
 --------------------------------------------------------------*/
-.sessionsTable {
+.minimalisticTable {
   border-style: hidden;
 }
 
-.sessionsTable thead th {
+.minimalisticTable thead th {
   background-color: white;
-  border-style: hidden;
   color: dimgrey;
   position: sticky;
   top: 0; 
   width: 5%;
+  border-right-style: hidden;
   font-size: 12px;
 }
 
-.sessionsTable tbody tr {
+.minimalisticTable tbody tr {
   border-style: hidden;
 }
 
-.sessionsTable tbody td {
+.minimalisticTable tbody td {
   border-right-style: hidden;
   width: 5%;
+}
+
+.minimalisticTable input.form-control {
+  padding: 2px;
+  border: none;
+  font-size: 14px;
+}
+
+.minimalisticTable input.form-control:hover {
+  background-color: #ececec;
 }
 
 /*----------------------------------------*/

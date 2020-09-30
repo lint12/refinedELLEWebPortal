@@ -1,7 +1,9 @@
 import React from 'react'
 import { Container, Row, Col, Input, InputGroup, InputGroupAddon, InputGroupText, Button,
-    ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
+    ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Label,
     Collapse, Card, CardHeader, Alert } from 'reactstrap';
+
+import Badge from 'react-bootstrap/Badge'
 
 import CardList from './CardList'
 import axios from 'axios';
@@ -11,6 +13,7 @@ import AddExistingTerm from './AddExistingTerm';
 
 import AddQuestion from './AddQuestion';   
 import AddPhrase from './AddPhrase'; 
+import ImportTerms from './ImportTerms';
 
 
 class Deck extends React.Component {
@@ -107,7 +110,7 @@ class Deck extends React.Component {
 
     let header = {
       headers: {'Authorization': 'Bearer ' + localStorage.getItem('jwt')}
-      };
+    };
 
     axios.get(this.props.serviceIP + '/tags', header)
       .then(res => {
@@ -206,17 +209,23 @@ class Deck extends React.Component {
 
       return (
         <Container className='Deck'>
-          <Row className='Header' style={{marginBottom: '25px'}}>
+          <Row className='Header' style={{marginBottom: '15px'}}>
             
             {/*Search Bar for all cards in a deck, with the buttons for adding new items as appendages*/}
             <InputGroup style={{borderRadius: '12px'}}>          
               <InputGroupAddon addonType="prepend">
-                <InputGroupText>
+                <InputGroupText style={{border: "none"}}>
                   {this.props.curModule.name}
                 </InputGroupText>
               </InputGroupAddon>
-              
-              <Input 
+              <InputGroupAddon addonType="prepend" style={{margin: "10px"}}>
+                <img 
+                  src={require('../../Images/search.png')} 
+                  alt="Icon made by Freepik from www.flaticon.com" 
+                  style={{width: '15px', height: '15px'}}
+                />
+              </InputGroupAddon>
+              <Input style={{border: "none"}}
                 type="text" 
                 placeholder="Search" 
                 value={this.state.searchCard} 
@@ -320,6 +329,24 @@ class Deck extends React.Component {
                   />
               </Collapse>
             </Col>
+          </Row>
+
+          <Row style={{marginBottom: "8px"}}>
+            <Col>
+              <Badge pill variant="info">
+                Language: {this.props.curModule.language}
+              </Badge>
+            </Col>
+            {this.props.permissionLevel !== "st" ?
+              <Col style={{display: "flex", justifyContent: "flex-end"}}>
+                <ImportTerms 
+                  serviceIP={this.props.serviceIP} 
+                  module={this.props.curModule} 
+                  updateCurrentModule={this.props.updateCurrentModule}
+                  currentClass={this.props.currentClass}
+                />
+              </Col>
+            : null}
           </Row>
 
           <Row>
