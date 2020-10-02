@@ -160,7 +160,7 @@ class UserList extends Component {
         <tbody>
           {filteredUsers.map((user) => {
             return (
-              <User key={user.userID} user={user} type="su" group={group}/>
+              <User key={user.userID} user={user} type="su" group={group} serviceIP={this.props.serviceIP} getUsers={this.getUsers}/>
             )
           })}
         </tbody>

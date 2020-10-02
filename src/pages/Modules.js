@@ -83,7 +83,6 @@ export default class Modules extends Component {
         this.setState({
           modules: allModules,
           dynamicModules: allModules,
-          currentModule: allModules[0],
           classChanged: false
         })
 
@@ -119,7 +118,6 @@ export default class Modules extends Component {
         this.setState({ 
           modules: allModules,
           dynamicModules: groupSpecificModules, 
-          currentModule: groupSpecificModules[0],
           classChanged: false 
         });
 
@@ -414,11 +412,11 @@ export default class Modules extends Component {
     let classOptions = []; 
     classOptions.push({value: 0, label: "All"}); 
 
-    this.state.classes.map((item) => {classOptions.push({value: item.groupID, label: item.groupName})}); 
+    this.state.classes.map((item) => {classOptions.push({value: item.groupID, label: item.groupName})});
 
     console.log("Current Permission Level: ", this.state.currentPermissionLevel);
     console.log("dynamic modules: ", this.state.dynamicModules);
-    console.log("modules: ", this.state.modules);
+    console.log("ALL modules in DB: ", this.state.modules);
     
     return (
     <Container>

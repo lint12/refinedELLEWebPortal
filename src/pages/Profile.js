@@ -1,12 +1,13 @@
 import React from 'react';
 import { Button, Form, FormGroup, FormFeedback, Label, Input, InputGroupAddon, Container, Row, 
-  Col, Card, CardSubtitle, CardBody, Badge, Alert, Tooltip, Modal, ModalHeader, ModalBody, ModalFooter, 
+  Col, Card, CardBody, Badge, Tooltip, Modal, ModalHeader, ModalBody, ModalFooter, 
   ListGroup, ListGroupItem, InputGroup } from 'reactstrap';
 import {Tabs, Tab} from 'react-bootstrap';
 import axios from 'axios';
 import Template from './Template';
 import { Pie, Bar, HorizontalBar } from 'react-chartjs-2'; 
 import SuperAdminProfile from './SuperAdminProfile';
+import ClassDetails from '../components/Profile/ClassDetails'; 
 
 export default class Profile extends React.Component {
   constructor(props) {
@@ -25,6 +26,7 @@ export default class Profile extends React.Component {
         currentClassDetails: {},
         className: "", 
         classCode: "", 
+        editClass: false,
         sessions: [],
         bestModule: "", 
         moduleAverageScores: [],
@@ -401,37 +403,100 @@ export default class Profile extends React.Component {
     }
   }
 
-  revealClassDetails = (item) => {
-    console.log(item); 
+  revealClassDetails = () => {
     return (
       <Modal isOpen={this.state.classDetailModalOpen} toggle={this.toggleClassDetailModal}>
         <ModalHeader toggle={this.toggleClassDetailModal}>Class Details</ModalHeader>
         <ModalBody>
-          <Card>
-            <Row>
-              <Col style={{paddingLeft: "30px"}}>
-                <Label>Class Name: </Label>{' '}{item.groupName}
-              </Col>
-            </Row>
-            <Row>
-              <Col style={{paddingLeft: "30px"}}>
-              <Label>Class Code: </Label>{' '}{item.groupCode}
-              </Col>
-            </Row>
-          </Card>
+          <ClassDetails 
+            item={this.state.currentClassDetails} 
+            editClass={this.state.editClass} 
+            handleOnEditName={this.handleOnEditName}
+            generateNewCode={this.generateNewCode}
+          />  
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" >Edit</Button>{' '}
-          <Button color="secondary" >Delete</Button>
+          {this.state.editClass ? 
+          <Button color="primary" onClick={() => this.updateClassName()}>Save</Button>
+          : <Button color="primary" onClick={() => this.toggleEditClass()}>Edit</Button>}
+          {' '}
+          <Button color="secondary" onClick={() => this.deleteClass()}>Delete</Button>
         </ModalFooter>
       </Modal>
     )
   }
 
   toggleClassDetailModal = (item) => {
+    console.log("ITEM", item)
     this.setState({ 
       classDetailModalOpen: !this.state.classDetailModalOpen, 
       currentClassDetails: item
+    })
+  }
+
+  toggleEditClass = () => {
+    this.setState({ editClass: !this.state.editClass }); 
+  }
+
+  handleOnEditName = (e) => {
+    console.log("VALUE: ", e.target.value)
+    let temp = this.state.currentClassDetails;
+
+    let newClassDetails = {
+      accessLevel: temp.accessLevel,
+      groupCode: temp.groupCode,
+      groupID: temp.groupID,
+      groupName: e.target.value,
+      group_users: temp.group_users
+    }
+
+    this.setState({ currentClassDetails: newClassDetails }); 
+  }
+
+  updateClassName = () => {
+    this.toggleEditClass()
+
+    let header = {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+    }
+
+    let config = {
+      groupID: this.state.currentClassDetails.groupID,
+      groupName: this.state.currentClassDetails.groupName
+    }
+
+    axios.put(this.props.serviceIP + '/group', config, header)
+    .then(res => {
+      console.log("class name edit response: ", res.data);
+      this.getClasses(); 
+    }).catch(error => {
+      console.log("updateClassName error: ", error); 
+    })
+  }
+
+  generateNewCode = () => {
+    let header = {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+      params: {groupID: this.state.currentClassDetails.groupID}
+    }
+
+    axios.get(this.props.serviceIP + '/generategroupcode', header)
+    .then(res => {
+      console.log("NEW GROUP CODE: ", res.data);
+
+      let temp = this.state.currentClassDetails;
+
+      let newClassDetails = {
+        accessLevel: temp.accessLevel,
+        groupCode: res.data.groupCode,
+        groupID: temp.groupID,
+        groupName: temp.groupName,
+        group_users: temp.group_users
+      }
+
+      this.setState({ currentClassDetails: newClassDetails }); 
+    }).catch(error => {
+      console.log("ERROR in generating new group code: ", error);
     })
   }
 
@@ -475,6 +540,22 @@ export default class Profile extends React.Component {
       this.setState({ className: "" }); 
     }).catch(error => {
       console.log(error.response); 
+    })
+  }
+
+  deleteClass = () => {
+    let header = {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt')},
+      data: {groupID: this.state.currentClassDetails.groupID}
+    }
+
+    axios.delete(this.props.serviceIP + '/group', header)
+    .then(res => {
+      console.log("DELETE CLASS WAS SUCCESSFUL: ", res.data);
+      this.toggleClassDetailModal(); 
+      this.getClasses(); 
+    }).catch(error => {
+      console.log("delete class code error: ", error); 
     })
   }
 
@@ -656,7 +737,6 @@ export default class Profile extends React.Component {
                           style={{width: '24px', height: '24px'}}
                         />
                       </Button>
-                      {this.revealClassDetails(this.state.currentClassDetails)}
                     </>
                     : null}
                   </ListGroupItem>)
@@ -664,6 +744,9 @@ export default class Profile extends React.Component {
               }
             </ListGroup>
           </Card>
+
+          {this.state.classDetailModalOpen ? this.revealClassDetails(this.state.currentClassDetails) : null}
+
           {localStorage.getItem('per') === "st" 
           ?           
           <Form onSubmit={e => this.submitClassCode(e)}>

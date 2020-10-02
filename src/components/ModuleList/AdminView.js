@@ -6,8 +6,8 @@ import SplitDeckBtn from '../../pages/SplitDeckBtn';
 
 const AdminView = (props) => {
 
-    return (
-        <Tabs defaultActiveKey="own" id="moduleList-tabs">
+    return (   
+        <Tabs defaultActiveKey={"own"} id="moduleList-tabs">
             <Tab eventKey="own" title="Own">
                 <Card color="info" style={{overflow:"scroll", height:"60vh", borderTopLeftRadius: "0px"}}>
                     {props.modules.filter((module) => module.owned === true).map((deck, i)=> (

@@ -92,7 +92,7 @@ class Class extends Component {
             ?
             <>
                 <tr>
-                    <th>ID</th>
+                    <th>Student ID</th>
                     <th>Username</th>
                     <th>Permission</th>
                 </tr>
