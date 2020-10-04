@@ -16,6 +16,7 @@ export default class Sessions extends Component {
       platform: "",
       userID: "",
       moduleID: "",
+      date: "",
       sessions: [],
       LoggedAnswers: [],
       loading: false,
@@ -34,9 +35,18 @@ export default class Sessions extends Component {
     this.setState({ [e.target.name] : e.target.value });
   }
 
+  clearInputs = () => {
+    this.setState({
+      platform: "",
+      userID: "",
+      moduleID: "",
+      date: ""
+    })
+  }
+
   handleSearch = (e) => {
     this.setState({ 
-      loading: true,
+      loading: true
     });
 
     this.searchSession(); 
@@ -48,7 +58,8 @@ export default class Sessions extends Component {
       params: {
         moduleID: this.state.moduleID.length !== 0 ? parseInt(this.state.moduleID) : null, 
         userID: this.state.userID.length !== 0 ? parseInt(this.state.userID) : null, 
-        platform: this.state.platform.length !== 0 ? this.state.platform : null
+        platform: this.state.platform.length !== 0 ? this.state.platform : null,
+        sessionDate: this.state.date.length !== 0 ? this.state.date : null
       }  
     };
 
@@ -72,9 +83,8 @@ export default class Sessions extends Component {
   }
 
   render() {
-    console.log("options: ", this.state.platform)
-    console.log("user ID: ", this.state.userID)
-    console.log("module ID: ", this.state.moduleID)
+    console.log("PLATFORM: ", this.state.platform);
+    console.log("DATE: ", this.state.date);
     return (
       <Container>
       <Template/>
@@ -95,17 +105,17 @@ export default class Sessions extends Component {
               <Card style={{padding: "20px"}}>
                 <Form>
                   <FormGroup>
-                    <Label for="platform">Platform</Label>
+                    <Label for="platform">Platform <a style={{fontSize: "10px", color: "red"}}>*Only select to filter based on a platform</a></Label>
                     <div style={{display: "flex", justifyContent: "center"}}>
-                      <CustomInput type="radio" id="mb" name="platform" inline onChange={e => this.handleChange(e)}>
+                      <CustomInput type="radio" id="mb" name="platform" inline checked={this.state.platform === 'mb'} onChange={e => this.handleChange(e)}>
                         <img style={{width: "20px", height: "20px", marginRight: "5px"}} src={require('../Images/phoneGames.png')} alt="phone icon" />
                         Mobile
                       </CustomInput>
-                      <CustomInput type="radio" id="cp" name="platform" inline onChange={e => this.handleChange(e)}>
+                      <CustomInput type="radio" id="cp" name="platform" inline checked={this.state.platform === 'cp'} onChange={e => this.handleChange(e)}>
                         <img style={{width: "20px", height: "20px", marginRight: "5px"}} src={require('../Images/computerGames.png')} alt="computer icon" />
                         PC
                       </CustomInput>                    
-                      <CustomInput type="radio" id="vr" name="platform" inline onChange={e => this.handleChange(e)}>
+                      <CustomInput type="radio" id="vr" name="platform" inline checked={this.state.platform === 'vr'} onChange={e => this.handleChange(e)}>
                         <img style={{width: "20px", height: "20px", marginRight: "5px"}} src={require('../Images/vrGames.png')} alt="vr icon" />
                         VR
                       </CustomInput>
@@ -117,6 +127,8 @@ export default class Sessions extends Component {
                       <Input
                         type="text"
                         name="userID"
+                        placeholder="Enter a user ID to find a specific user's sessions"
+                        value={this.state.userID}
                         onChange={e => this.handleInput(e)}
                       />
                     </FormGroup>
@@ -126,6 +138,8 @@ export default class Sessions extends Component {
                     <Input
                       type="text"
                       name="moduleID"
+                      placeholder="Enter a module ID to find a specific module's sessions"
+                      value={this.state.moduleID}
                       onChange={e => this.handleInput(e)}
                     />
                   </FormGroup>
@@ -134,14 +148,32 @@ export default class Sessions extends Component {
                     <Input
                       type="date"
                       name="date"
+                      value={this.state.date}
+                      onChange={e => this.handleInput(e)}
                     />
                   </FormGroup>
-                  <Button block style={{backgroundColor: "#37f0f9", color: "black", border: "none", fontWeight: "500"}} 
-                    disabled={this.state.platform.length === 0 && this.state.userID.length === 0 && this.state.moduleID.length === 0 
-                      ? true : false}
-                    onClick={() => this.handleSearch()}>
-                    Search
-                  </Button>
+                  <Row>
+                    <Col>
+                      <Button block style={{backgroundColor: "#37f0f9", color: "black", border: "none", fontWeight: "500"}}
+                        disabled={
+                          this.state.platform.length === 0 && this.state.userID.length === 0 && 
+                          this.state.moduleID.length === 0 && this.state.date.length === 0 
+                          ? true : false }
+                        onClick={() => this.clearInputs()}>
+                        Clear
+                      </Button>
+                    </Col>
+                    <Col>
+                      <Button block style={{backgroundColor: "#37f0f9", color: "black", border: "none", fontWeight: "500"}} 
+                        disabled={
+                          this.state.platform.length === 0 && this.state.userID.length === 0 && 
+                          this.state.moduleID.length === 0 && this.state.date.length === 0 
+                          ? true : false }
+                        onClick={() => this.handleSearch()}>
+                        Search
+                      </Button>
+                    </Col>
+                  </Row>
                 </Form>
               </Card>
             </Col>

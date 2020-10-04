@@ -21,7 +21,14 @@ const Downloads = (props) => {
     }
     
     const downloadLoggedAnswers = () => {
+        axios.get(props.serviceIP + '/getloggedanswercsv', {
+            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+        }).then(res => {
+            console.log(res.data);
     
+        }).catch(function (error) {
+            console.log(error);
+        });
     }
 
     return (
@@ -42,7 +49,7 @@ const Downloads = (props) => {
 
             <Button 
                 id="downloadLoggedAnswers"
-                //href={props.serviceIP + "/getsessioncsv"}
+                href={props.serviceIP + "/getloggedanswercsv"}
                 download="logged_answers.csv"
                 style={{backgroundColor: "#37f0f9", color: "black", border: "none", marginRight: "15px", 
                     display: "grid", fontSize: "10px", fontWeight: "700", padding: "2px 2px 0 2px"}} 
