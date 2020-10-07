@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './pages/Home';
-import Template from './pages/Template';
 import Downloads from './pages/Downloads';
 import Modules from './pages/Modules';
 import Profile from './pages/Profile';
@@ -14,16 +13,13 @@ import ClassRoster from './pages/ClassRoster';
 import AuthUser from './components/Auth/AuthUser';
 import AuthAdmin from './components/Auth/AuthAdmin';
 
-
 let flaskIP = 'https://endlesslearner.com:5000';
 flaskIP = 'http://54.158.210.144:3000/api'; 
-//flaskIP = 'http://45.55.61.182:5000/api';
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      //LoggedIn: true,
       user: {}
     };
   }
@@ -36,22 +32,21 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
+      <Router>  
         <div>
           <Switch>
             <Route exact path="/home" component={Home} />
-            <Route path="/downloads" component={Downloads} />
+            <Route path="/downloads" render={(props)=><Downloads {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
             <Route path="/logout" render={(props)=><Logout {...props} serviceIP={flaskIP}/>}/>
             <Route path="/login" render={(props)=><Login {...props} serviceIP={flaskIP} updateUserInfo={this.updateUserInfo}/>}/>
             <Route path="/register" render={(props)=><Signup {...props} serviceIP={flaskIP}/>}/>
             <AuthUser>   
-              <Route exact path="/" component={Template} />
               <Route path="/profile" render={(props)=><Profile {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <Route path="/modules" render={(props)=><Modules {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
-              <Route path="/sessions" render={(props)=><Sessions {...props} serviceIP={flaskIP}/>}/>
+              <Route path="/sessions" render={(props)=><Sessions {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <AuthAdmin>  
-                <Route path="/userlist" render={(props)=><UserList {...props} serviceIP={flaskIP}/>}/>
-                <Route path="/classroster" render={(props)=><ClassRoster {...props} serviceIP={flaskIP}/>}/>
+                <Route path="/classroster" render={(props)=><ClassRoster {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
+                <Route path="/userlist" render={(props)=><UserList {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               </AuthAdmin>
             </AuthUser>
           </Switch>

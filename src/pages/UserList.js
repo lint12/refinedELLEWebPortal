@@ -15,6 +15,7 @@ class UserList extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      permission: this.props.user.permission,
       currentGroup: "su",
       selectedUser: '',
       users: [], 
@@ -27,7 +28,23 @@ class UserList extends Component {
   }
 
   componentDidMount() {
+    this.verifyPermission();
     this.getUsers(); 
+  }
+
+  verifyPermission = () => {
+    const jwt = localStorage.getItem('jwt');
+    if (!jwt) {
+      this.props.history.push('/home');
+    }
+    else {
+      var jwtDecode = require('jwt-decode');
+
+      var decoded = jwtDecode(jwt);
+      console.log("JWT DECODED: ", decoded);
+
+      this.setState({ permission: decoded.user_claims }); 
+    }
   }
 
   change(e) {
@@ -217,19 +234,9 @@ class UserList extends Component {
   }
 
   render() {
-    if (localStorage.getItem('per') === "pf" || localStorage.getItem('per') === "st") {
-      return (
-        <Container>
-          <Template/>
-          <br></br>
-          <AccessDenied message={"Access Denied :("} />
-        </Container>
-      )
-    }
-
     return (
       <Container className="user-list">
-        <Template/>
+        <Template permission={this.state.permission}/>
         <br></br><br></br>			
         <div>
         <h3>List of Users</h3>

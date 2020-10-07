@@ -31,7 +31,23 @@ export default class Profile extends React.Component {
   }
 
   componentDidMount() {
+    this.verifyPermission(); 
     this.getUserInfo(); 
+  }
+
+  verifyPermission = () => {
+    const jwt = localStorage.getItem('jwt');
+    if (!jwt) {
+      this.props.history.push('/home');
+    }
+    else {
+      var jwtDecode = require('jwt-decode');
+
+      var decoded = jwtDecode(jwt);
+      console.log("JWT DECODED: ", decoded);
+
+      this.setState({ permission: decoded.user_claims }); 
+    }
   }
 
   getUserInfo = () => {
@@ -43,7 +59,6 @@ export default class Profile extends React.Component {
         this.setState({
           userID: res.data.id,
           username: res.data.username,
-          permission: res.data.permissionGroup
         });
         console.log("ID: ", res.data.id) //14,26,9,51,52,47 //51 needs fixing //need to fix issue that the bar charts wont start at zero
         await axios.get(this.props.serviceIP + '/searchsessions', {params: {userID: res.data.id},
@@ -326,7 +341,7 @@ export default class Profile extends React.Component {
   render() { 
     return (
       <Container>
-      <Template/>
+      <Template permission={this.state.permission}/>
 		  <br></br>
         {this.state.permission === "su" ? 
         <SuperAdminView 

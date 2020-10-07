@@ -4,19 +4,19 @@ import { withRouter } from 'react-router-dom';
 class AuthUser extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      userID: undefined,
-      perm: undefined
-
-    };
-  }
+  }  
 
   componentDidMount() {
-    const jwt = localStorage.getItem('jwt');
+    const jwt = localStorage.getItem('jwt');  
 
     if(!jwt) {
       this.props.history.push('/home');
+    } 
+    else {
+      var jwtDecode = require('jwt-decode');
+
+      var decoded = jwtDecode(jwt);
+      console.log("Auth User JWT DECODED: ", decoded);
     }
   }
 

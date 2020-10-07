@@ -58,12 +58,18 @@ export default class Modules extends Component {
   }
 
   verifyPermission = () => {
-    var jwtDecode = require('jwt-decode');
+    const jwt = localStorage.getItem('jwt');
+    if (!jwt) {
+      this.props.history.push('/home');
+    }
+    else {
+      var jwtDecode = require('jwt-decode');
 
-    var decoded = jwtDecode(localStorage.getItem('jwt'));
-    console.log("JWT DECODED: ", decoded);
+      var decoded = jwtDecode(jwt);
+      console.log("JWT DECODED: ", decoded);
 
-    this.setState({ currentPermissionLevel: decoded.user_claims }); 
+      this.setState({ currentPermissionLevel: decoded.user_claims }); 
+    }
   }
 
   //function for updating the module list on the sidebar with what's in the database
@@ -421,7 +427,7 @@ export default class Modules extends Component {
     
     return (
     <Container>
-    <Template/>
+    <Template permission={this.state.currentPermissionLevel}/>
 
     <br/>
     <Row style={{marginBottom: "15px"}}>

@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import { Container, Table, Row, Col, Input, Button, Card,
+import React, { Component } from 'react';
+import { Container, Row, Col, Input, Button, Card,
   InputGroup, InputGroupAddon, Modal, ModalHeader, ModalBody, Alert } from 'reactstrap';
 import ListGroup from 'react-bootstrap/ListGroup'
 import Tab from 'react-bootstrap/Tab'
@@ -8,7 +8,6 @@ import axios from 'axios';
 import '../stylesheets/style.css';
 
 import Template from './Template';
-import AccessDenied from './AccessDenied'; 
 import Class from './../components/ClassRoster/Class'; 
 
 class ClassRoster extends Component {
@@ -16,6 +15,7 @@ class ClassRoster extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      permission: this.props.user.permission,
       students: [],
       tas: [],
       groups: [], 
@@ -28,7 +28,23 @@ class ClassRoster extends Component {
   }    
 
   componentDidMount() {
+    this.verifyPermission(); 
     this.getGroups(); 
+  }
+
+  verifyPermission = () => {
+    const jwt = localStorage.getItem('jwt');
+    if (!jwt) {
+      this.props.history.push('/home');
+    }
+    else {
+      var jwtDecode = require('jwt-decode');
+
+      var decoded = jwtDecode(jwt);
+      console.log("JWT DECODED: ", decoded);
+
+      this.setState({ permission: decoded.user_claims }); 
+    }
   }
 
   change(e) {
@@ -257,18 +273,9 @@ class ClassRoster extends Component {
   }
 
   render() {
-    if (localStorage.getItem('per') === "su" || localStorage.getItem('per') === "st") {
-      return (
-        <Container>
-          <Template/>
-          <br></br>
-          <AccessDenied message={localStorage.getItem('per') === "su" ? "Information Not Valid" : "Access Denied :("} />
-        </Container>
-      )
-    }
     return (
       <Container className="user-list">
-        <Template/>
+        <Template permission={this.state.permission}/>
         <br></br><br></br>			
         <div>
         <h3>Class Roster</h3>

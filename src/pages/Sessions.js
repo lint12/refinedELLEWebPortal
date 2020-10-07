@@ -13,6 +13,7 @@ export default class Sessions extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      permission: this.props.user.permission,
       platform: "",
       userID: "",
       moduleID: "",
@@ -25,6 +26,22 @@ export default class Sessions extends Component {
   }
 
   componentDidMount() {
+    this.verifyPermission();
+  }
+
+  verifyPermission = () => {
+    const jwt = localStorage.getItem('jwt');
+    if (!jwt) {
+      this.props.history.push('/home');
+    }
+    else {
+      var jwtDecode = require('jwt-decode');
+
+      var decoded = jwtDecode(jwt);
+      console.log("JWT DECODED: ", decoded);
+
+      this.setState({ permission: decoded.user_claims }); 
+    }
   }
 
   handleChange = (e) => {
@@ -87,7 +104,7 @@ export default class Sessions extends Component {
     console.log("DATE: ", this.state.date);
     return (
       <Container>
-      <Template/>
+      <Template permission={this.state.permission}/>
       <br /><br />
       <Row>
         <Col>

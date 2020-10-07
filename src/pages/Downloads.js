@@ -10,12 +10,38 @@ import '../lib/ionicons/css/ionicons.min.css';
 
 
 export default class Downloads extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			permission: this.props.user.permission
+		}
+	
+	}  
+
+	componentDidMount() {
+		this.verifyPermission(); 
+	}
+
+	verifyPermission = () => {
+		const jwt = localStorage.getItem('jwt');
+		if (!jwt) {
+		  this.props.history.push('/home');
+		}
+		else {
+		  var jwtDecode = require('jwt-decode');
+	
+		  var decoded = jwtDecode(jwt);
+		  console.log("JWT DECODED: ", decoded);
+	
+		  this.setState({ permission: decoded.user_claims }); 
+		}
+	}
 
 	render() {
-		console.log("Downloads page: ",localStorage.getItem('jwt'));
-	return (
+	return (  
 	<div>
-		{localStorage.getItem('jwt') === null ? <MainTemplate /> : <Template />}
+		{localStorage.getItem('jwt') === null ? <MainTemplate /> : <Template permission={this.state.permission}/>}
 		
 		<section id="intro">
 			<div className="intro-content">
