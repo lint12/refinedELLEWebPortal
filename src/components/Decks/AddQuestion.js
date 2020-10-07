@@ -82,7 +82,7 @@ class AddQuestion extends React.Component {
 			data.append('type', "LONGFORM"); 
 			data.append('moduleID', this.props.curModule.moduleID);
 
-			localStorage.getItem('per') === "st" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
+			this.props.permissionLevel === "ta" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
 
 			if (this.state.selectedImgFile !== null || this.state.selectedImgFile !== undefined)
 				data.append('image', this.state.selectedImgFile);

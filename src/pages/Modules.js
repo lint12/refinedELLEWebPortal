@@ -26,7 +26,6 @@ export default class Modules extends Component {
     this.deleteModule = this.deleteModule.bind(this);
     this.updateModuleList = this.updateModuleList.bind(this);
     this.updateCurrentModule = this.updateCurrentModule.bind(this);
-    this.initializeModulesPage = this.initializeModulesPage.bind(this);
 
     this.state = {
       modules: [], //list of all modules in the database
@@ -46,20 +45,25 @@ export default class Modules extends Component {
       selectedClass: {value: 0, label: "All"},
       classChanged: false,
       classes: [], 
-      permissionLevels: [], //TODO: consider renaming this to something more intuitive
-      currentPermissionLevel: localStorage.getItem('per')
+      groupPermissionLevels: [], 
+      currentPermissionLevel: this.props.user.permission
     };
   }
 
   componentDidMount() {
-      this.initializeModulesPage();
-      this.getClasses();
-      this.getPermissionLevels();
+    this.verifyPermission(); 
+    this.updateModuleList("initialize", null); 
+    this.getClasses();
+    this.getGroupPermissionLevels();
   }
 
-  //function for initializing module list on sidebar and setting current module to the first one
-  initializeModulesPage = () => { 
-    this.updateModuleList("initialize", null); 
+  verifyPermission = () => {
+    var jwtDecode = require('jwt-decode');
+
+    var decoded = jwtDecode(localStorage.getItem('jwt'));
+    console.log("JWT DECODED: ", decoded);
+
+    this.setState({ currentPermissionLevel: decoded.user_claims }); 
   }
 
   //function for updating the module list on the sidebar with what's in the database
@@ -240,7 +244,7 @@ export default class Modules extends Component {
       name: editedName, 
       language: event.module.language,
       complexity: 2, //all modules will have complexity 2
-      groupID: localStorage.getItem('per') === "st" ? this.state.selectedClass.value : null
+      groupID: this.state.currentPermissionLevel === "st" ? this.state.selectedClass.value : null
     }
 
     console.log("EDIT MODULE DATA: ", data); 
@@ -270,7 +274,7 @@ export default class Modules extends Component {
     let header = { 
       data: {
         moduleID: id,
-        groupID: localStorage.getItem('per') === "st" ? this.state.selectedClass.value : null
+        groupID: this.state.currentPermissionLevel === "st" ? this.state.selectedClass.value : null
       }, 
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }
@@ -380,29 +384,30 @@ export default class Modules extends Component {
 
   updateClassContext = (value) => {
     if (value !== null) {
-      let currentClass = this.state.permissionLevels.find((group) => group.groupID === value.value);
+      let currentClass = this.state.groupPermissionLevels.find((group) => group.groupID === value.value);
 
       this.setState({
         selectedClass: value, 
         classChanged: true,
-        currentPermissionLevel: value.value === 0 ? localStorage.getItem('per') : currentClass.accessLevel
       }); 
+
+      value.value === 0 ? this.verifyPermission() : this.setState({currentPermissionLevel: currentClass.accessLevel}); 
     }
     else {
       this.setState({
         selectedClass: {value: 0, label: "All"},
         classChanged: true,
-        currentPermissionLevel: localStorage.getItem('per')
       })
+      this.verifyPermission(); 
     }
   } 
 
-  getPermissionLevels = () => {
+  getGroupPermissionLevels = () => {
     axios.get(this.props.serviceIP + '/userlevels', {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then(res => {
       console.log("PERMISSION LEVELS: ", res.data); 
-      this.setState({ permissionLevels: res.data })
+      this.setState({ groupPermissionLevels: res.data })
     }).catch(error => {
       console.log("getPermissionLevels error: ", error); 
     })
@@ -413,10 +418,6 @@ export default class Modules extends Component {
     classOptions.push({value: 0, label: "All"}); 
 
     this.state.classes.map((item) => {classOptions.push({value: item.groupID, label: item.groupName})});
-
-    console.log("Current Permission Level: ", this.state.currentPermissionLevel);
-    console.log("dynamic modules: ", this.state.dynamicModules);
-    console.log("ALL modules in DB: ", this.state.modules);
     
     return (
     <Container>
@@ -509,6 +510,7 @@ export default class Modules extends Component {
       <Collapse isOpen={this.state.openForm === 2}>    
         <AddModule  
           serviceIP={this.props.serviceIP} 
+          permissionLevel={this.state.currentPermissionLevel}
           updateModuleList={this.updateModuleList}
           classOptions={classOptions}
           currentClass={this.state.selectedClass}
@@ -552,17 +554,17 @@ export default class Modules extends Component {
 
             {/*Either the contents of current module, or alert saying there are no modules*/}
             {
-              this.state.currentModule.length !== 0 ? 
-              <Deck
-                permissionLevel={this.state.currentPermissionLevel}
-                currentClass={this.state.selectedClass}
-                curModule={this.state.currentModule}
-                cards={this.state.cards}
-                serviceIP={this.props.serviceIP}
-                updateCurrentModule={this.updateCurrentModule}
-                allAnswers={this.state.allAnswers}
-                modificationWarning={this.state.modificationWarning}
-                toggleModificationWarning={this.toggleModificationWarning}
+              this.state.currentModule ? 
+                <Deck
+                  permissionLevel={this.state.currentPermissionLevel}
+                  currentClass={this.state.selectedClass}
+                  curModule={this.state.currentModule}
+                  cards={this.state.cards}
+                  serviceIP={this.props.serviceIP}
+                  updateCurrentModule={this.updateCurrentModule}
+                  allAnswers={this.state.allAnswers}
+                  modificationWarning={this.state.modificationWarning}
+                  toggleModificationWarning={this.toggleModificationWarning}
                 />
               : 
               <Alert isOpen={this.state.emptyCollection}>

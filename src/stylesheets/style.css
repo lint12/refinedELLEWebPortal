@@ -1107,3 +1107,16 @@ a.active#moduleList-tabs-tab-own, a.active#moduleList-tabs-tab-linked, a.active#
 a.active#platformSessions-tab-mb, a.active#platformSessions-tab-pc, a.active#platformSessions-tab-vr {
   background-color: #37f0f9;
 }
+
+/*--------------------------------------------------------------
+# New Password Form
+--------------------------------------------------------------*/
+input#newPassword, input#confirmPassword {
+  border: none;
+}
+
+.feedback.valid-feedback, .feedback.invalid-feedback{
+  padding-left: 12px;
+}
+
+/*----------------------------------------*/

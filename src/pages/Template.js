@@ -5,9 +5,19 @@ export default class Template extends React.Component {
   constructor(props) {
     super(props);
 
+  }  
+
+  verifyPermission = () => {
+    var jwtDecode = require('jwt-decode');
+
+    var decoded = jwtDecode(localStorage.getItem('jwt'));
+    console.log("JWT DECODED: ", decoded);
+
+    return decoded.user_claims; 
   }
 
   render() { 
+    let permission = this.verifyPermission(); 
     return (
       <header id="header">
       <div className="container">
@@ -23,8 +33,8 @@ export default class Template extends React.Component {
             <li><Link to='/profile'>Profile</Link></li>
             <li><Link to='/modules'>Modules</Link></li>
             <li><Link to='/sessions'>Sessions</Link></li>
-            {localStorage.getItem('per') === "su" ? <li><Link to='/userlist'>User List</Link></li> : null}
-            {localStorage.getItem('per') === "pf" ? <li><Link to='/classroster'>Class Roster</Link></li> : null}
+            {permission === "su" ? <li><Link to='/userlist'>User List</Link></li> : null}
+            {permission === "pf" ? <li><Link to='/classroster'>Class Roster</Link></li> : null}
             <li><Link to='/logout'>Sign Out</Link></li>
 						<li><a href="https://www.github.com/ItsNotRick/elle" className="github"><i className="fa fa-github fa-lg"></i></a></li>
           </ul>

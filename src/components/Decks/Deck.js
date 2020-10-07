@@ -277,6 +277,7 @@ class Deck extends React.Component {
                   curModule={this.props.curModule} 
                   updateCurrentModule={this.props.updateCurrentModule}
                   serviceIP={this.props.serviceIP}
+                  permissionLevel={this.props.permissionLevel}
                   deleteTag={this.deleteTag}
                   addTag={this.addTag}
                   allTags={this.state.allTags}
@@ -291,6 +292,7 @@ class Deck extends React.Component {
                   curModule={this.props.curModule} 
                   updateCurrentModule={this.props.updateCurrentModule}
                   serviceIP={this.props.serviceIP}
+                  permissionLevel={this.props.permissionLevel}
                   deleteTag={this.deleteTag}
                   addTag={this.addTag}
                   allTags={this.state.allTags}
@@ -306,6 +308,7 @@ class Deck extends React.Component {
                   curModule={this.props.curModule} 
                   updateCurrentModule={this.props.updateCurrentModule}
                   serviceIP={this.props.serviceIP}
+                  permissionLevel={this.props.permissionLevel}
                   setOpenForm={this.setOpenForm}
                 />
               </Collapse>
@@ -316,6 +319,7 @@ class Deck extends React.Component {
                   currentClass={this.props.currentClass}
                   curModule={this.props.curModule} 
                   updateCurrentModule={this.props.updateCurrentModule}
+                  permissionLevel={this.props.permissionLevel}
                   serviceIP={this.props.serviceIP}
                         
                   allAnswers={this.props.allAnswers}
@@ -341,6 +345,7 @@ class Deck extends React.Component {
               <Col style={{display: "flex", justifyContent: "flex-end"}}>
                 <ImportTerms 
                   serviceIP={this.props.serviceIP} 
+                  permissionLevel={this.props.permissionLevel}
                   module={this.props.curModule} 
                   updateCurrentModule={this.props.updateCurrentModule}
                   currentClass={this.props.currentClass}

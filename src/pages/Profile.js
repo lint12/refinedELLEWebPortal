@@ -1,32 +1,22 @@
 import React from 'react';
-import { Button, Form, FormGroup, FormFeedback, Label, Input, InputGroupAddon, Container, Row, 
-  Col, Card, CardBody, Badge, Tooltip, Modal, ModalHeader, ModalBody, ModalFooter, 
-  ListGroup, ListGroupItem, InputGroup } from 'reactstrap';
+import { Container } from 'reactstrap';
 import {Tabs, Tab} from 'react-bootstrap';
 import axios from 'axios';
 import Template from './Template';
 import { Pie, Bar, HorizontalBar } from 'react-chartjs-2'; 
-import SuperAdminProfile from './SuperAdminProfile';
-import ClassDetails from '../components/Profile/ClassDetails'; 
+import SuperAdminView from '../components/Profile/SuperAdminView';
+import AdminView from '../components/Profile/AdminView';
+import StudentView from '../components/Profile/StudentView';
 
 export default class Profile extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-        userID: "",
-        username: "",
-        newPassword: "",
-        confirmPassword: "",
-        validConfirm: false,
-        invalidConfirm: false, 
-        hiddenPassword: true,
-        hiddenConfirm: true, 
-        classes: [],
-        currentClassDetails: {},
-        className: "", 
-        classCode: "", 
-        editClass: false,
+        userID: this.props.user.userID,
+        username: this.props.user.username,
+        permission: this.props.user.permission,
+
         sessions: [],
         bestModule: "", 
         moduleAverageScores: [],
@@ -36,18 +26,13 @@ export default class Profile extends React.Component {
         platformUtilization: [],
         displayChart: 0, 
         emptySession: false,  
-        tooltipOpen: false,
-        pwModal: false, 
-        classDetailModalOpen: false
     };
 
     this.change = this.change.bind(this);
-    this.submitPassword= this.submitPassword.bind(this);
   }
 
   componentDidMount() {
     this.getUserInfo(); 
-    this.getClasses(); 
   }
 
   getUserInfo = () => {
@@ -59,6 +44,7 @@ export default class Profile extends React.Component {
         this.setState({
           userID: res.data.id,
           username: res.data.username,
+          permission: res.data.permissionGroup
         });
         console.log("ID: ", res.data.id) //14,26,9,51,52,47 //51 needs fixing //need to fix issue that the bar charts wont start at zero
         await axios.get(this.props.serviceIP + '/searchsessions', {params: {userID: res.data.id},
@@ -83,17 +69,6 @@ export default class Profile extends React.Component {
     }).catch(function (error) {
       console.log(error);
     });
-  }
-
-  getClasses = () => {
-    axios.get(this.props.serviceIP + '/searchusergroups', {
-      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-    }).then(res => {
-      console.log(res.data); 
-      this.setState({ classes: res.data })
-    }).catch(error => {
-      console.log(error.response); 
-    })
   }
 
   //this is for the word/term of the day 
@@ -349,444 +324,35 @@ export default class Profile extends React.Component {
     })
   }
 
-  toggleTooltipOpen = () => {
-    this.setState({ tooltipOpen: !this.state.tooltipOpen })
-  }
-  
-  validatePassword = (e) => {
-    let id = e.target.name === "newPassword" ? 0 : 1; 
-
-    this.setState({
-      [e.target.name]: e.target.value
-    })
-
-    if (id === 0) {
-      if ((e.target.value.length === 0 && this.state.confirmPassword.length === 0)|| 
-        (e.target.value.length > 0 && this.state.confirmPassword.length === 0)) {
-        this.setState({
-          validConfirm: false, 
-          invalidConfirm: false
-        })
-      }
-      else if (e.target.value.localeCompare(this.state.confirmPassword) === 0) {
-        this.setState({
-          validConfirm: true, 
-          invalidConfirm: false
-        })
-      }
-      else {
-        this.setState({
-          validConfirm: false, 
-          invalidConfirm: true
-        })
-      }
-    }
-    else {
-      if ((e.target.value.length === 0 && this.state.newPassword.length === 0)) {
-        this.setState({
-          validConfirm: false, 
-          invalidConfirm: false
-        })
-      }
-      else if (e.target.value.localeCompare(this.state.newPassword) === 0) {
-        this.setState({
-          validConfirm: true, 
-          invalidConfirm: false
-        })
-      }
-      else {
-        this.setState({
-          validConfirm: false, 
-          invalidConfirm: true
-        })
-      }
-    }
-  }
-
-  revealClassDetails = () => {
-    return (
-      <Modal isOpen={this.state.classDetailModalOpen} toggle={this.toggleClassDetailModal}>
-        <ModalHeader toggle={this.toggleClassDetailModal}>Class Details</ModalHeader>
-        <ModalBody>
-          <ClassDetails 
-            item={this.state.currentClassDetails} 
-            editClass={this.state.editClass} 
-            handleOnEditName={this.handleOnEditName}
-            generateNewCode={this.generateNewCode}
-          />  
-        </ModalBody>
-        <ModalFooter>
-          {this.state.editClass ? 
-          <Button color="primary" onClick={() => this.updateClassName()}>Save</Button>
-          : <Button color="primary" onClick={() => this.toggleEditClass()}>Edit</Button>}
-          {' '}
-          <Button color="secondary" onClick={() => this.deleteClass()}>Delete</Button>
-        </ModalFooter>
-      </Modal>
-    )
-  }
-
-  toggleClassDetailModal = (item) => {
-    console.log("ITEM", item)
-    this.setState({ 
-      classDetailModalOpen: !this.state.classDetailModalOpen, 
-      currentClassDetails: item
-    })
-  }
-
-  toggleEditClass = () => {
-    this.setState({ editClass: !this.state.editClass }); 
-  }
-
-  handleOnEditName = (e) => {
-    console.log("VALUE: ", e.target.value)
-    let temp = this.state.currentClassDetails;
-
-    let newClassDetails = {
-      accessLevel: temp.accessLevel,
-      groupCode: temp.groupCode,
-      groupID: temp.groupID,
-      groupName: e.target.value,
-      group_users: temp.group_users
-    }
-
-    this.setState({ currentClassDetails: newClassDetails }); 
-  }
-
-  updateClassName = () => {
-    this.toggleEditClass()
-
-    let header = {
-      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
-    }
-
-    let config = {
-      groupID: this.state.currentClassDetails.groupID,
-      groupName: this.state.currentClassDetails.groupName
-    }
-
-    axios.put(this.props.serviceIP + '/group', config, header)
-    .then(res => {
-      console.log("class name edit response: ", res.data);
-      this.getClasses(); 
-    }).catch(error => {
-      console.log("updateClassName error: ", error); 
-    })
-  }
-
-  generateNewCode = () => {
-    let header = {
-      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
-      params: {groupID: this.state.currentClassDetails.groupID}
-    }
-
-    axios.get(this.props.serviceIP + '/generategroupcode', header)
-    .then(res => {
-      console.log("NEW GROUP CODE: ", res.data);
-
-      let temp = this.state.currentClassDetails;
-
-      let newClassDetails = {
-        accessLevel: temp.accessLevel,
-        groupCode: res.data.groupCode,
-        groupID: temp.groupID,
-        groupName: temp.groupName,
-        group_users: temp.group_users
-      }
-
-      this.setState({ currentClassDetails: newClassDetails }); 
-    }).catch(error => {
-      console.log("ERROR in generating new group code: ", error);
-    })
-  }
-
-  submitClassCode = (e) => {
-    e.preventDefault(); 
-    console.log("CODE: ", this.state.classCode); 
-    var data = {
-      groupCode: this.state.classCode
-    }
-
-    var headers = {
-      'Authorization': 'Bearer ' + localStorage.getItem('jwt')
-    }
-
-    axios.post(this.props.serviceIP + '/groupregister', data, {headers:headers}
-    ).then(res => {
-      console.log(res.data); 
-      this.getClasses(); 
-      this.setState({ classCode: "" }); 
-    }).catch(error => {
-      console.log(error.response); 
-    })
-  }
-
-  createClass = (e) => {
-    e.preventDefault(); 
-    console.log("Class name: ", this.state.className);
-    var data = {
-      groupName: this.state.className
-    }
-
-    var headers = {
-      'Authorization': 'Bearer ' + localStorage.getItem('jwt')
-    }
-
-    axios.post(this.props.serviceIP + '/group', data, {headers:headers}
-    ).then(res => {
-      console.log(res.data); 
-      this.getClasses(); 
-
-      this.setState({ className: "" }); 
-    }).catch(error => {
-      console.log(error.response); 
-    })
-  }
-
-  deleteClass = () => {
-    let header = {
-      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt')},
-      data: {groupID: this.state.currentClassDetails.groupID}
-    }
-
-    axios.delete(this.props.serviceIP + '/group', header)
-    .then(res => {
-      console.log("DELETE CLASS WAS SUCCESSFUL: ", res.data);
-      this.toggleClassDetailModal(); 
-      this.getClasses(); 
-    }).catch(error => {
-      console.log("delete class code error: ", error); 
-    })
-  }
-
-  submitPassword = () => {
-      var data = {
-        userID: this.state.userID,
-        pw: this.state.newPassword,
-        confirm: this.state.confirmPassword
-      }
-      var headers = {
-        'Authorization': 'Bearer ' + localStorage.getItem('jwt')
-      }
-
-      axios.post(this.props.serviceIP + '/resetpassword', data, {headers:headers})
-      .then(res => {
-        console.log(res.data);
-        this.togglePwModal(); 
-      }).catch(function (error) {
-        console.log(error);
-      });
-  }
-
-  togglePwModal = () => {
-    this.setState({
-      pwModal: !this.state.pwModal, 
-      newPassword: "", 
-      confirmPassword: "", 
-      validConfirm: false, 
-      invalidConfirm: false, 
-    })
-  }
-
-  togglePWPrivacy = (e) => {
-    console.log(e.target)
-    if (e.target.name === "hiddenPassword") {
-      this.setState({
-        hiddenPassword: !this.state.hiddenPassword
-      })
-    }
-    else {
-      this.setState({
-        hiddenConfirm: !this.state.hiddenConfirm
-      })
-    }
-  }
-
   render() { 
-    if (localStorage.getItem('per') === "su") {
-      return (
-        <SuperAdminProfile serviceIP={this.props.serviceIP} username={this.state.username} />
-      )
-    }
     return (
       <Container>
       <Template/>
 		  <br></br>
-	  
-      <h3><Badge style={{backgroundColor: "cadetblue"}}>Your Profile</Badge></h3> 
-      <Row>
-        <Col xs="3">
-          <Card style={{backgroundColor: "lightblue", height: "65vh"}}>
-          <CardBody>
-          <h6>Username:</h6>
-          <Card>
+        {this.state.permission === "su" ? 
+        <SuperAdminView 
+          serviceIP={this.props.serviceIP} 
+          username={this.state.username}
+          permission={this.state.permission}
+        /> : null}
+        {this.state.permission === "pf" ? 
+        <AdminView 
+          serviceIP={this.props.serviceIP} 
+          username={this.state.username}
+          permission={this.state.permission}
+        /> : null}
+        {this.state.permission === "st" ? 
+        <StudentView 
+          serviceIP={this.props.serviceIP} 
+          username={this.state.username}
+          permission={this.state.permission}
+        /> : null}
+      <br/>
+      </Container>
+    );
+  }
+/*
               <Row>
-                <Col xs="9" style={{paddingLeft: "35px", paddingTop: "5px"}}>
-                  {this.state.username}
-                </Col>
-                <Col xs="3">
-                  <Button id="changePassword" style={{backgroundColor: "aliceblue", float: "right"}}
-                    onClick={() => this.togglePwModal()}> 
-                    <img src={require('../Images/password.png')} style={{width: "15px", height: "15px"}}/>
-                  </Button>
-                  <Tooltip placement="top" isOpen={this.state.tooltipOpen} target="changePassword" toggle={this.toggleTooltipOpen}>
-                    Click to Change Password
-                  </Tooltip>
-                  <Modal isOpen={this.state.pwModal} toggle={this.togglePwModal}>
-                    <ModalHeader toggle={this.togglePwModal}>Change Password</ModalHeader>
-                    <Card style={{borderRadius: "0px"}}>
-                      <CardBody>
-                      <Form>
-                        <FormGroup>
-                          <Label>New Password:</Label>
-                        <InputGroup>
-                          <Input 
-                            type={this.state.hiddenPassword ? 'password' : 'text'}
-                            name="newPassword"
-                            id="newPassword"
-                            placeholder="Enter your new password here."
-                            autoComplete="new-password"
-                            onChange={e => this.validatePassword(e)}
-                            value={this.state.newPassword}
-                          />
-                          <InputGroupAddon addonType="append">
-                            <Button 
-                              style={{backgroundColor: "white", border: "none"}} 
-                              name="hiddenPassword"
-                              onClick={e => this.togglePWPrivacy(e)}
-                            >
-                              <img 
-                                src={require('../Images/hide.png')} 
-                                alt="Icon made by Pixel perfect from www.flaticon.com" 
-                                name="hiddenPassword"
-                                style={{width: '24px', height: '24px'}}
-                              />
-                            </Button>
-                          </InputGroupAddon>
-                        </InputGroup>
-                        </FormGroup>
-                        <FormGroup>
-                          <Label>Confirm Password:</Label>
-                          <InputGroup>
-                            <Input 
-                              valid={this.state.validConfirm}
-                              invalid={this.state.invalidConfirm}
-                              type={this.state.hiddenConfirm ? 'password' : 'text'}
-                              name="confirmPassword"
-                              id="confirmPassword"
-                              placeholder="Confirm your new password here."
-                              autoComplete="off"
-                              onChange={e => this.validatePassword(e)}
-                              value={this.state.confirmPassword}
-                            />
-                            <InputGroupAddon addonType="append">
-                              <Button 
-                                style={{backgroundColor: "white", border: "none"}} 
-                                name="hiddenConfirm"
-                                onClick={e => this.togglePWPrivacy(e)}
-                              >
-                                <img 
-                                  src={require('../Images/hide.png')} 
-                                  alt="Icon made by Pixel perfect from www.flaticon.com" 
-                                  name="hiddenConfirm"
-                                  style={{width: '24px', height: '24px'}}
-                                />
-                              </Button>
-                            </InputGroupAddon>
-                            <FormFeedback valid>
-                              The passwords match!
-                            </FormFeedback>
-                            <FormFeedback invalid={this.state.invalidConfirm.toString()}>
-                              The passwords do not match, please try again.
-                            </FormFeedback>
-                        </InputGroup>
-                        </FormGroup>
-                      </Form>
-                      </CardBody>
-                    </Card>
-                    <ModalFooter>
-                      <Button disabled={this.state.validConfirm ? false : true} block onClick={() => this.submitPassword()}>
-                        Submit New Password
-                      </Button>
-                    </ModalFooter>
-                  </Modal>
-                </Col>
-              </Row>
-          </Card>
-          <br />
-          <h6>Classes:</h6>
-          <Card style={{overflow:"scroll", height: "20vh"}}>
-            <ListGroup flush>
-              {this.state.classes.length === 0 
-              ? <ListGroupItem> You currently are not part of any classes. </ListGroupItem>
-              : this.state.classes.map((item, i) => {
-                return(
-                  <ListGroupItem key={i}> 
-                    {item.groupName} 
-                    {localStorage.getItem('per') === "pf" 
-                    ? 
-                    <>
-                      <Button 
-                        style={{float: "right", backgroundColor: "white", border: "none", padding: "0"}}
-                        onClick={() => this.toggleClassDetailModal(item)}
-                      >
-                        <img 
-                          src={require('../Images/more.png')} 
-                          alt="Icon made by xnimrodx from www.flaticon.com" 
-                          name="more"
-                          style={{width: '24px', height: '24px'}}
-                        />
-                      </Button>
-                    </>
-                    : null}
-                  </ListGroupItem>)
-                })
-              }
-            </ListGroup>
-          </Card>
-
-          {this.state.classDetailModalOpen ? this.revealClassDetails(this.state.currentClassDetails) : null}
-
-          {localStorage.getItem('per') === "st" 
-          ?           
-          <Form onSubmit={e => this.submitClassCode(e)}>
-            <h3 style={{marginTop: "8px"}}>Join a New Class</h3>
-            <FormGroup>
-              <Label for="classCode">Enter your class code below.</Label>
-              <Input type="text"
-              name="classCode"
-              id="classCode"
-              onChange={e => this.change(e)}
-              value={this.state.classCode} />
-            </FormGroup>
-            <Button block type="submit">Submit Class Code</Button>
-          </Form>
-          : 
-          <Form onSubmit={e => this.createClass(e)}>
-            <h4 style={{marginTop: "8px"}}>Create a New Class</h4>
-            <FormGroup>
-              <Label for="className">Class Name: </Label>
-              <Input type="text"
-              name="className"
-              id="className"
-              onChange={e => this.change(e)}
-              value={this.state.className} />
-            </FormGroup>
-            <Button block type="submit">Create</Button>
-          </Form>
-          }
-          </CardBody>
-          </Card>
-        </Col>
-
-        <Col xs="9">
-          <Card style={{backgroundColor: "cadetblue", height: "65vh"}}>
-            <CardBody style={{color: "#04354b"}}>
-              <h1 style={{textDecoration: "underline", fontFamily: "auto"}}>
-                Welcome back {this.state.username}!
-              </h1>
-
-              {/* <Row>
                 <Col xs="8">
                 <Tabs defaultActiveKey={0} id="uncontrolled-tab-example" className="profileTabs"
                       onSelect={(k) => this.toggleChartAnimation(k)}>
@@ -851,13 +417,5 @@ export default class Profile extends React.Component {
                   </Card>
                 </Col>  
               </Row>
-              */}
-            </CardBody>
-          </Card>
-        </Col>
-      </Row> 
-		<br/>
-      </Container>
-    );
-  }
+*/
 }

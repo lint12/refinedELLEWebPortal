@@ -58,7 +58,7 @@ class Phrase extends React.Component {
         data.append('language', this.props.card.language); //not editable 
         data.append('termID', this.props.card.termID); //not editable
 
-        localStorage.getItem('per') === "st" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
+        this.props.permissionLevel === "ta" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
 
         axios.post(this.props.serviceIP + '/term', data, header)
         .then(res => {
@@ -104,7 +104,7 @@ class Phrase extends React.Component {
         let header = { 
           data: { 
               termID: this.state.card.termID, 
-              groupID: localStorage.getItem('per') === "st" ? this.props.currentClass.value : null 
+              groupID: this.props.permissionLevel === "ta" ? this.props.currentClass.value : null 
           },
           headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
         };

@@ -30,7 +30,7 @@ class AddPhrase extends React.Component {
 		if (this.state.phFront.length !== 0 && this.state.phBack.length !== 0)
 		{   
 			event.preventDefault();
-			const data = new FormData(); 
+			const data = new FormData();    
 			let header = {
 				headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
             };
@@ -43,7 +43,7 @@ class AddPhrase extends React.Component {
             //the type of a term must be PH in order to added as a phrase in the backend, so this will be hardcoded 
             data.append('type', "PH");  
 
-            localStorage.getItem('per') === "st" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
+            this.props.permissionLevel === "ta" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
             
             //optional fields for adding a phrase 
 			if (this.state.selectedImgFile !== null || this.state.selectedImgFile !== undefined)

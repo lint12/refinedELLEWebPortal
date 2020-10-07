@@ -23,9 +23,15 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      LoggedIn: true,
-      permission: 0,
+      //LoggedIn: true,
+      user: {}
     };
+  }
+
+  updateUserInfo = (user) => {
+    this.setState({
+      user: user
+    })
   }
 
   render() {
@@ -36,12 +42,12 @@ class App extends Component {
             <Route exact path="/home" component={Home} />
             <Route path="/downloads" component={Downloads} />
             <Route path="/logout" render={(props)=><Logout {...props} serviceIP={flaskIP}/>}/>
-            <Route path="/login" render={(props)=><Login {...props} serviceIP={flaskIP}/>}/>
+            <Route path="/login" render={(props)=><Login {...props} serviceIP={flaskIP} updateUserInfo={this.updateUserInfo}/>}/>
             <Route path="/register" render={(props)=><Signup {...props} serviceIP={flaskIP}/>}/>
             <AuthUser>   
               <Route exact path="/" component={Template} />
-              <Route path="/modules" render={(props)=><Modules {...props} serviceIP={flaskIP}/>}/>
-              <Route path="/profile" render={(props)=><Profile {...props} serviceIP={flaskIP}/>}/>
+              <Route path="/profile" render={(props)=><Profile {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
+              <Route path="/modules" render={(props)=><Modules {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <Route path="/sessions" render={(props)=><Sessions {...props} serviceIP={flaskIP}/>}/>
               <AuthAdmin>  
                 <Route path="/userlist" render={(props)=><UserList {...props} serviceIP={flaskIP}/>}/>

@@ -123,7 +123,7 @@ class Card extends React.Component {
     data.append('back', this.state.editedBack); 
     data.append('language', this.props.card.language); //not editable 
 
-    localStorage.getItem('per') === "st" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
+    this.props.permissionLevel === "ta" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
 
     //map through all the tags and make a tag field object for them 
     this.state.tags.map((label) => {
@@ -162,7 +162,7 @@ class Card extends React.Component {
     let header = { 
       data: { 
         termID: this.state.card.termID, 
-        groupID: localStorage.getItem('per') === "st" ? this.props.currentClass.value : null
+        groupID: this.props.permissionLevel === "ta" ? this.props.currentClass.value : null
       },
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     };

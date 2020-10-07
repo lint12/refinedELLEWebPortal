@@ -211,15 +211,15 @@ export default class Signup extends React.Component {
                 >
                 {this.state.hiddenPassword ?
                   <img 
-                    src={require('../Images/show.png')} 
+                    src={require('../Images/hide.png')} 
                     alt="Icon made by Pixel perfect from www.flaticon.com" 
                     name="hiddenPassword"
                     style={{width: '24px', height: '24px'}}
                   />
                 :
                   <img 
-                    src={require('../Images/hide.png')} 
-                    alt="Icon made by Pixel perfect from www.flaticon.com" 
+                    src={require('../Images/show.png')} 
+                    alt="Icon made by Kiranshastry from www.flaticon.com" 
                     name="hiddenPassword"
                     style={{width: '24px', height: '24px'}}
                   />
@@ -251,15 +251,15 @@ export default class Signup extends React.Component {
                   >
                   {this.state.hiddenConfirm ? 
                     <img 
-                      src={require('../Images/show.png')} 
-                      alt="Icon made by Kiranshastry from www.flaticon.com" 
+                      src={require('../Images/hide.png')} 
+                      alt="Icon made by Pixel perfect from www.flaticon.com" 
                       name="hiddenConfirm"
                       style={{width: '24px', height: '24px'}}
                     />
                   :
                     <img 
-                      src={require('../Images/hide.png')} 
-                      alt="Icon made by Pixel perfect from www.flaticon.com" 
+                      src={require('../Images/show.png')} 
+                      alt="Icon made by Kiranshastry from www.flaticon.com" 
                       name="hiddenConfirm"
                       style={{width: '24px', height: '24px'}}
                     />

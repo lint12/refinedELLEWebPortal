@@ -75,7 +75,7 @@ export default class ImportTerms extends Component {
       data.append('moduleID', this.props.module.moduleID)
 
       //TODO: need to append groupID if the user is a ta 
-      if (localStorage.getItem('per') === "st") {
+      if (this.props.permissionLevel === "ta") {
         data.append('groupID', this.props.currentClass.value);  
       }
 

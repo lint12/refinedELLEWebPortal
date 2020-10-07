@@ -5,7 +5,7 @@ import '../../stylesheets/loading.css';
 const Loading = (props) => {
 
     return (
-        <Card color="info" style={{height:"50vh"}}>
+        <Card color="info" style={{height:"56vh"}}>
         {
             <div className="loadingContainer">
                 <div className="loading">

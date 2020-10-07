@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, FormGroup, Input, Container, Label, Card } from 'reactstrap';
+import { Button, Form, FormGroup, Input, Label, Card } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import MainTemplate from '../pages/MainTemplate';
@@ -51,7 +51,14 @@ export default class Login extends Component {
       localStorage.setItem('id', decoded.identity);
       console.log("USER ID in Login: ", localStorage.getItem('id'));
 
+      let user = {
+        username: this.state.username, 
+        userID: decoded.identity,
+        permission: decoded.user_claims
+      }
+
       this.setState({loginErr : false});
+      this.props.updateUserInfo(user); 
 
       this.props.history.push('/profile');
     }).catch(error => {

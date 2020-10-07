@@ -48,7 +48,7 @@ class AddExistingTerm extends React.Component {
 
 		let groupID = null; 
 		
-		if (localStorage.getItem('per') === "st")
+		if (this.props.permissionLevel === "ta")
 			groupID = this.props.currentClass.value; 
 
 	    for(let i = 0; i < this.state.addedTerms.length; i++){

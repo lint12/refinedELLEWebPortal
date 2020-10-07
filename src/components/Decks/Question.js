@@ -197,7 +197,7 @@ class Question extends React.Component {
     data.append('arr_of_terms', stringyAnswerList); 
     data.append('type', "LONGFORM");
 
-    localStorage.getItem('per') === "st" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
+    this.props.permissionLevel === "ta" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
     
     axios.post(this.props.serviceIP + '/modifyquestion', data, header)
       .then(res => {
@@ -229,7 +229,7 @@ class Question extends React.Component {
     let header = { 
       data: { 
         questionID: this.state.question.questionID,
-        groupID: localStorage.getItem('per') === "st" ? this.props.currentClass.value : null
+        groupID: this.props.permissionLevel === "ta" ? this.props.currentClass.value : null
       },
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     };

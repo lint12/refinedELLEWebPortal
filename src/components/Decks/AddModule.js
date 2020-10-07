@@ -36,7 +36,7 @@ class AddModule extends React.Component {
     e.preventDefault();
     console.log("submit button has been pressed"); 
 
-    if (localStorage.getItem('per') === 'su'){
+    if (this.props.permissionLevel === 'su'){
       var data = {
         name: this.state.name,
         language: this.state.language.value,
@@ -145,7 +145,7 @@ class AddModule extends React.Component {
             </FormGroup>
           </Col>
           </Row>
-          {this.props.currentClass.value === 0 && localStorage.getItem('per') !== "su" ? 
+          {this.props.currentClass.value === 0 && this.props.permissionLevel !== "su" ? 
             <Row>
             <Col>
               <FormGroup>
