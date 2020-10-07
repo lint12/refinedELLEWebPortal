@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import MainTemplate from '../pages/MainTemplate';
+import Template from '../pages/Template'; 
 
 import '../stylesheets/style.css';
 import '../lib/bootstrap/css/bootstrap.min.css';
@@ -8,10 +9,39 @@ import '../lib/font-awesome/css/font-awesome.min.css';
 import '../lib/owlcarousel/assets/owl.carousel.min.css';
 import '../lib/ionicons/css/ionicons.min.css';
 
-const Home = (props) => {
-  return (
+export default class Home extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			permission: this.props.user.permission
+		}
+	
+	}  
+
+	componentDidMount() {
+		this.verifyPermission(); 
+	}
+
+	verifyPermission = () => {
+		const jwt = localStorage.getItem('jwt');
+		if (!jwt) {
+		  this.props.history.push(this.props.location.pathname);
+		}
+		else {
+		  var jwtDecode = require('jwt-decode');
+	
+		  var decoded = jwtDecode(jwt);
+		  console.log("JWT DECODED: ", decoded);
+	
+		  this.setState({ permission: decoded.user_claims }); 
+		}
+	}   
+
+	render() {
+	return (  
 	<div>
-		<MainTemplate/>
+		{localStorage.getItem('jwt') === null ? <MainTemplate /> : <Template permission={this.state.permission}/>}
 
 		<section id="intro">
 			<div className="intro-content">
@@ -239,6 +269,6 @@ const Home = (props) => {
 	
 	</div>
   );
+}
 };
 
-export default Home;

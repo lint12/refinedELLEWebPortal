@@ -26,7 +26,7 @@ export default class Downloads extends Component {
 	verifyPermission = () => {
 		const jwt = localStorage.getItem('jwt');
 		if (!jwt) {
-		  this.props.history.push('/home');
+		  this.props.history.push(this.props.location.pathname);
 		}
 		else {
 		  var jwtDecode = require('jwt-decode');
@@ -36,13 +36,13 @@ export default class Downloads extends Component {
 	
 		  this.setState({ permission: decoded.user_claims }); 
 		}
-	}
+	}   
 
 	render() {
 	return (  
 	<div>
 		{localStorage.getItem('jwt') === null ? <MainTemplate /> : <Template permission={this.state.permission}/>}
-		
+
 		<section id="intro">
 			<div className="intro-content">
 				<h2>Downloads</h2>

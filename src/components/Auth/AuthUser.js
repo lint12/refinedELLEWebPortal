@@ -12,12 +12,6 @@ class AuthUser extends Component {
     if(!jwt) {
       this.props.history.push('/home');
     } 
-    else {
-      var jwtDecode = require('jwt-decode');
-
-      var decoded = jwtDecode(jwt);
-      console.log("Auth User JWT DECODED: ", decoded);
-    }
   }
 
   render () {

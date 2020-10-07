@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, Table } from 'reactstrap';
 
-const PlatformSession = (props) => {
+const Session = (props) => {
     const { sessions } = props;
     
     const convertTimetoDecimal = (time) => {
@@ -53,4 +53,4 @@ const PlatformSession = (props) => {
     )
 }
 
-export default PlatformSession
+export default Session

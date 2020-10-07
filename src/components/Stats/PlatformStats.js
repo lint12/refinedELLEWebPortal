@@ -3,19 +3,18 @@ import React, { Component } from 'react'
 import { Row, Col } from 'reactstrap';
 import '../../stylesheets/superadmin.css'
 import axios from 'axios';
-import { Bar } from 'react-chartjs-2'; 
+import { Bar, Pie } from 'react-chartjs-2'; 
+import { trackPromise } from 'react-promise-tracker';
 
 class PlatformStats extends Component {
 	constructor(props){
 		super(props);
 
 		this.state = {
-            duration: {},
-            frequency: {},
-            performance: {}
+            cp: {},
+            mb: {}, 
+            vr: {}
         }
-
- 
     }
 
     componentDidMount() {
@@ -23,25 +22,31 @@ class PlatformStats extends Component {
             headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
         };
 
-        axios.get(this.props.serviceIP + '/getallsessions', header)
-        .then(res => {
-            console.log(res.data); 
+        trackPromise(
+            axios.get(this.props.serviceIP + '/platformstats', header)
+            .then(res => {
+                console.log(res.data); 
 
-        }).catch(error => {
-            console.log(error.response); 
-        })
+                this.setState({
+                    cp: res.data.cp,
+                    mb: res.data.mb,
+                    vr: res.data.vr
+                })
+
+            }).catch(error => {
+                console.log(error.response); 
+            })
+        );
     }
 
     renderPerformanceChart = () => {
-        let chartColors=['#abc9cd', '#658e93', '#7abe80']
-
         let performanceData = {
             labels: ["Mobile", "PC", "VR"],
             datasets: [
             {
                 label: 'Average Score (%)',
-                data: [20,55,60],
-                backgroundColor: chartColors
+                data: [this.state.mb.avg_score, this.state.cp.avg_score, this.state.vr.avg_score],
+                backgroundColor: ['#abc9cd', '#658e93', '#7abe80']
             }
             ]
         };
@@ -73,25 +78,83 @@ class PlatformStats extends Component {
         )
     }
 
+    renderFrequencyChart = () => {
+        let frequencyData = {
+                labels: ['Mobile', 'PC', 'VR'],
+                datasets: [
+                    {
+                        label: 'platforms',
+                        data: [this.state.mb.frequency * 100, this.state.cp.frequency * 100, this.state.vr.frequency * 100],
+                        backgroundColor: ['#96384e', '#eda48e', '#eed284']
+                    }
+                ]
+        };
+    
+        return (
+          <Pie
+            data={frequencyData}
+            options={{
+              legend: {
+                  position: 'right',
+                  labels: {
+                      fontColor: 'white'
+                  }
+              }
+            }
+          }
+          />
+        )
+    }
+
+    timeToString = (time) => {
+        let str = ""; 
+        let hoursMinutesSeconds = time.split(/[.:]/);
+        let hours = parseInt(hoursMinutesSeconds[0]) > 0 ? hoursMinutesSeconds[0] + "hrs " : ""; 
+        let minutes = parseInt(hoursMinutesSeconds[1]) > 0 ? hoursMinutesSeconds[1] + "min " : ""; 
+        let seconds = parseInt(hoursMinutesSeconds[2]) > 0 ? hoursMinutesSeconds[2] + "s" : "";      
+
+        str = hours + minutes + seconds; 
+        console.log("str", str); 
+        return str; 
+    }
+
+    formatTime = () => {
+        let durations = []; 
+        let mbAvgDuration = this.timeToString(this.state.mb.avg_time_spent);
+        let cpAvgDuration = this.timeToString(this.state.cp.avg_time_spent); 
+        let vrAvgDuration = this.timeToString(this.state.vr.avg_time_spent); 
+
+        durations.push(mbAvgDuration);
+        durations.push(cpAvgDuration);
+        durations.push(vrAvgDuration);
+
+        return durations; 
+    }
+
 	render() { 
+        let platformDuration = []; 
+
+        if (this.state.mb.avg_time_spent && this.state.cp.avg_time_spent && this.state.vr.avg_time_spent) {
+            platformDuration = this.formatTime(); 
+        }
+
         return (
             <>
                 <Col className="Platform Left Column" xs="4">
                     <Row>
                         <div className="suCardGreen">
                             Average Platform Duration
-                            <li>Mobile: </li>
-                            <li>PC: </li>
-                            <li>VR: </li>
+                            <li>Mobile: {platformDuration[0]}</li>
+                            <li>PC: {platformDuration[1]}</li>
+                            <li>VR: {platformDuration[2]}</li>
                         </div>
                     </Row>
                     <br />
                     <Row>
                         <div className="suCardBlue">
                             Average Platform Frequency 
-                            <li>Mobile: </li>
-                            <li>PC: </li>
-                            <li>VR: </li>
+                            {this.state.mb.frequency && this.state.cp.frequency && this.state.vr.frequency ?
+                            this.renderFrequencyChart() : null}
                         </div>
                     </Row>
                 </Col>
@@ -99,7 +162,8 @@ class PlatformStats extends Component {
                 <Col className="Platform Right Column">
                     <div className="suCardGreen">
                         Average Platform Performance
-                        {this.renderPerformanceChart()}
+                        {this.state.mb.avg_score && this.state.cp.avg_score && this.state.vr.avg_score ?
+                        this.renderPerformanceChart() : null}
                     </div>
                 </Col>
             </>

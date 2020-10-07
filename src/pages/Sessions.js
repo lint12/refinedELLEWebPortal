@@ -6,7 +6,7 @@ import '../lib/bootstrap/css/bootstrap.min.css';
 import '../lib/ionicons/css/ionicons.min.css';
 import Template from './Template';
 import Loading from '../components/Loading/Loading';
-import PlatformSession from '../components/Sessions/PlatformSession';
+import Session from '../components/Sessions/Session';
 import Downloads from '../components/Sessions/Downloads';
 
 export default class Sessions extends Component {
@@ -209,7 +209,7 @@ export default class Sessions extends Component {
                 : null} 
 
                 {this.state.searched && this.state.sessions.length !== 0 && this.state.loading === false ? 
-                  <PlatformSession sessions={this.state.sessions} /> 
+                  <Session sessions={this.state.sessions} /> 
                 : null}
 
                 {this.state.searched && this.state.sessions.length === 0 && this.state.loading === false ? 
