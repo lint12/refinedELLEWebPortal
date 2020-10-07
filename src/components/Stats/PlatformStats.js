@@ -5,6 +5,7 @@ import '../../stylesheets/superadmin.css'
 import axios from 'axios';
 import { Bar, Pie } from 'react-chartjs-2'; 
 import { trackPromise } from 'react-promise-tracker';
+import Spinner from '../Loading/Spinner'; 
 
 class PlatformStats extends Component {
 	constructor(props){
@@ -52,6 +53,7 @@ class PlatformStats extends Component {
         };
         
         return (
+            <>
             <Bar 
                 data={performanceData}
                 options={
@@ -75,6 +77,11 @@ class PlatformStats extends Component {
                     }     
                 }
             />
+                <p style={{margin: "0px", display: "flex", justifyContent: "flex-end", fontSize: "12px"}}>
+                    Total Records Available: Mobile({this.state.mb.total_records_avail}){' '}
+                    PC({this.state.cp.total_records_avail}) VR({this.state.vr.total_records_avail})
+                </p>
+            </>
         )
     }
 
@@ -106,6 +113,20 @@ class PlatformStats extends Component {
         )
     }
 
+    renderPlatformDurations = () => {
+        let platformDuration = []; 
+        platformDuration = this.formatTime(); 
+
+        return (
+            <>
+            <li>Mobile: {platformDuration[0]}</li>
+            <li>PC: {platformDuration[1]}</li>
+            <li>VR: {platformDuration[2]}</li>
+            </>
+        )
+
+    }
+
     timeToString = (time) => {
         let str = ""; 
         let hoursMinutesSeconds = time.split(/[.:]/);
@@ -132,21 +153,14 @@ class PlatformStats extends Component {
     }
 
 	render() { 
-        let platformDuration = []; 
-
-        if (this.state.mb.avg_time_spent && this.state.cp.avg_time_spent && this.state.vr.avg_time_spent) {
-            platformDuration = this.formatTime(); 
-        }
-
         return (
             <>
                 <Col className="Platform Left Column" xs="4">
                     <Row>
                         <div className="suCardGreen">
                             Average Platform Duration
-                            <li>Mobile: {platformDuration[0]}</li>
-                            <li>PC: {platformDuration[1]}</li>
-                            <li>VR: {platformDuration[2]}</li>
+                            {this.state.mb.avg_time_spent && this.state.cp.avg_time_spent && this.state.vr.avg_time_spent ?
+                            this.renderPlatformDurations() : <Spinner chart="duration" />}
                         </div>
                     </Row>
                     <br />
@@ -154,7 +168,7 @@ class PlatformStats extends Component {
                         <div className="suCardBlue">
                             Average Platform Frequency 
                             {this.state.mb.frequency && this.state.cp.frequency && this.state.vr.frequency ?
-                            this.renderFrequencyChart() : null}
+                            this.renderFrequencyChart() : <Spinner chart="frequency"/>}
                         </div>
                     </Row>
                 </Col>
@@ -163,7 +177,7 @@ class PlatformStats extends Component {
                     <div className="suCardGreen">
                         Average Platform Performance
                         {this.state.mb.avg_score && this.state.cp.avg_score && this.state.vr.avg_score ?
-                        this.renderPerformanceChart() : null}
+                        this.renderPerformanceChart() : <Spinner chart="performance"/>}
                     </div>
                 </Col>
             </>
