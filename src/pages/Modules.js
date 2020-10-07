@@ -554,7 +554,7 @@ export default class Modules extends Component {
 
             {/*Either the contents of current module, or alert saying there are no modules*/}
             {
-              this.state.currentModule ? 
+              this.state.currentModule.length !== 0 ? 
                 <Deck
                   permissionLevel={this.state.currentPermissionLevel}
                   currentClass={this.state.selectedClass}

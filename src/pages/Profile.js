@@ -1,6 +1,5 @@
 import React from 'react';
 import { Container } from 'reactstrap';
-import {Tabs, Tab} from 'react-bootstrap';
 import axios from 'axios';
 import Template from './Template';
 import { Pie, Bar, HorizontalBar } from 'react-chartjs-2'; 
