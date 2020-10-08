@@ -110,7 +110,7 @@ export default class Sessions extends Component {
         <Col>
           <h3>Your ELLE Sessions:</h3>
         </Col>
-        {localStorage.getItem('per') === "su" ? <Downloads serviceIP={this.props.serviceIP}/> : null}
+        {this.state.permission === "su" ? <Downloads serviceIP={this.props.serviceIP}/> : null}
       </Row>
 
       <br />
