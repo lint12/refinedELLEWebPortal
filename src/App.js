@@ -5,6 +5,7 @@ import Downloads from './pages/Downloads';
 import Modules from './pages/Modules';
 import Profile from './pages/Profile';
 import Sessions from './pages/Sessions';
+import GameCode from './pages/GameCode'; 
 import Login from './pages/Login'
 import Logout from './pages/Logout'
 import Signup from './pages/Signup';
@@ -44,6 +45,7 @@ class App extends Component {
               <Route path="/profile" render={(props)=><Profile {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <Route path="/modules" render={(props)=><Modules {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <Route path="/sessions" render={(props)=><Sessions {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
+              <Route path="/gamecode" render={(props)=><GameCode {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <AuthAdmin>  
                 <Route path="/classroster" render={(props)=><ClassRoster {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
                 <Route path="/userlist" render={(props)=><UserList {...props} serviceIP={flaskIP} user={this.state.user}/>}/>

@@ -7,8 +7,6 @@ import SplitDeckBtn from '../../pages/SplitDeckBtn';
 const SuperAdminView = (props) => {
 
     return (
-        console.log("SUPER ADMIN VIEW: ", localStorage.getItem('id')),
-        console.log("SUPER ADMIN VIEW: ", props.modules), 
         <Tabs defaultActiveKey="own" id="moduleList-tabs">
             <Tab eventKey="own" title="Own">
                 <Card color="info" style={{overflow:"scroll", height:"60vh", borderTopLeftRadius: "0px"}}>

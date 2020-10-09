@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container, Row, Col, Input, InputGroup, InputGroupAddon, InputGroupText, Button,
-    ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Label,
+    ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
     Collapse, Card, CardHeader, Alert } from 'reactstrap';
 
 import Badge from 'react-bootstrap/Badge'
@@ -337,6 +337,9 @@ class Deck extends React.Component {
 
           <Row style={{marginBottom: "8px"}}>
             <Col>
+              <Badge pill variant="info">
+                Module ID: {this.props.curModule.moduleID}
+              </Badge>{' '}
               <Badge pill variant="info">
                 Language: {this.props.curModule.language}
               </Badge>

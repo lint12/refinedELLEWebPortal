@@ -12,12 +12,6 @@ import AdminView from '../components/ModuleList/AdminView';
 import SuperAdminView from '../components/ModuleList/SuperAdminView';
 import Deck from '../components/Decks/Deck';
 
-import '../stylesheets/style.css';
-import '../lib/bootstrap/css/bootstrap.min.css';
-import '../lib/font-awesome/css/font-awesome.min.css';
-import '../lib/owlcarousel/assets/owl.carousel.min.css';
-import '../lib/ionicons/css/ionicons.min.css';
-
 export default class Modules extends Component {
   constructor(props) {
     super(props);
@@ -42,6 +36,7 @@ export default class Modules extends Component {
       openForm: 0, //determines which input form is open. Is 0 if no form is open
       emptyCollection: false, //true when there are no modules, false otherwise
       modificationWarning: false, 
+
       selectedClass: {value: 0, label: "All"},
       classChanged: false,
       classes: [], 
@@ -334,12 +329,12 @@ export default class Modules extends Component {
         } else{
           return false;
         }
-      }
-      );
+      });
 
-    this.setState({ searchDeck: e.target.value.substr(0,20),
-                    dynamicModules: newModuleList 
-                  });
+    this.setState({ 
+      searchDeck: e.target.value.substr(0,20),
+      dynamicModules: newModuleList 
+    });
   }
 
   //function that toggles whether or not the new module form is shown

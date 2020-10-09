@@ -25,6 +25,9 @@ class AuthAdmin extends Component {
       else if (decoded.user_claims !== "pf" && this.props.location.pathname === "/classroster") {
         this.props.history.push('profile'); 
       }
+      else if (this.props.location.pathname === "/") {
+        this.props.history.push('profile');
+      }
       else {
         this.props.history.push(this.props.location.pathname);
       }

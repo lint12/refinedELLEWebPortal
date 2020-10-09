@@ -885,6 +885,7 @@ table.tableList td, table.tableList th {
 }
 table.tableList thead {
   background: #5faeb5;
+  border-bottom-style: hidden;
 }
 table.tableList thead th {
   font-size: 17px;
@@ -892,6 +893,7 @@ table.tableList thead th {
   color: #FFFFFF;
   text-align: center;
 }
+
 table.tableList tfoot td {
   font-size: 14px;
 }
@@ -1117,6 +1119,18 @@ input#newPassword, input#confirmPassword {
 
 .feedback.valid-feedback, .feedback.invalid-feedback{
   padding-left: 12px;
+}
+
+/*----------------------------------------*/
+
+/*--------------------------------------------------------------
+# Game Code Page's Video Border
+--------------------------------------------------------------*/
+
+.videoBorder {
+  background-color: cadetblue;
+  display: list-item;
+  padding: 10px; 
 }
 
 /*----------------------------------------*/

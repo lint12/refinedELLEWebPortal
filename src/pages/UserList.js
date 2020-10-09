@@ -8,7 +8,6 @@ import '../stylesheets/style.css';
 
 import User from '../components/UserList/User';
 import Template from './Template';
-import AccessDenied from './AccessDenied'; 
 
 class UserList extends Component {
 

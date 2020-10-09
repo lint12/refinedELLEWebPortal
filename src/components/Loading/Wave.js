@@ -5,9 +5,9 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 const Wave = (props) => {
 
   return (
-        <div style={{padding: "0", margin: "0"}}>
-          <SkeletonTheme color="transparent" highlightColor="#8691fa">
-            <Skeleton/>
+        <div>
+          <SkeletonTheme color="transparent" highlightColor="#3af0f9">
+            <Skeleton width={1000} height={1000}/>
           </SkeletonTheme>
         </div>
   );
