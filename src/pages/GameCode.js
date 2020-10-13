@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Button } from 'reactstrap';
+import { Container, Row, Col, Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
+import sample from '../Images/ELLE_blocks.mp4';
 import axios from 'axios';
 
 import '../lib/bootstrap/css/bootstrap.min.css';
@@ -10,7 +11,9 @@ export default class GameCode extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      permission: this.props.user.permission
+      permission: this.props.user.permission,
+      modalOpen: false,
+      OTC: ""
     }
   }
 
@@ -33,21 +36,52 @@ export default class GameCode extends Component {
     }
   }
 
+  toggleModal = () => {
+    this.setState({ modalOpen: !this.state.modalOpen })
+
+    if (!this.state.modalOpen === true) {
+      this.generateOTC(); 
+    }
+  }
+
+  generateOTC = () => {
+    let header = {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+    }
+
+    axios.get(this.props.serviceIP + '/generateotc', header)
+    .then(res => {
+      console.log("OTC: ", res.data);
+      this.setState({ OTC: res.data.otc }); 
+    }).catch(error => {
+      console.log("OTC error: ", error); 
+    })
+  }
+
   render() {
     return (
         <div>
             <Template permission={this.state.permission}/>
-            <div className="videoBorder" />
 
             <Row>
-                <Col style={{display: "flex", justifyContent: "center"}}>
-                    <Button className="gameCodeBtn">
-                        Generate Code 
-                    </Button>
-                </Col>
+              <Col style={{display: "flex", justifyContent: "center", zIndex: "1", position: "relative", top: "300px"}}>
+                  <Button className="gameCodeBtn" id="gameCodeBtn" onClick={() => this.toggleModal()}>
+                      Generate Code 
+                  </Button>
+              </Col>
+              <video width="100%" height="100%" style={{marginTop: "-40px"}} autoPlay loop muted>
+                <source src={sample} type="video/mp4" />
+              </video>
             </Row>
 
-            <div className="videoBorder" />
+            <Modal isOpen={this.state.modalOpen} toggle={() => this.toggleModal()}>
+              <ModalHeader toggle={() => this.toggleModal()}>Your OTC</ModalHeader>
+              <ModalBody>
+                <p style={{display: "flex", justifyContent: "center", fontSize: "xx-large", fontWeight: "600"}}>
+                  {this.state.OTC}
+                </p>
+              </ModalBody>
+            </Modal>
         </div>
     );
   }

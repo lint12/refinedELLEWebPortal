@@ -39,7 +39,7 @@ class PlatformStats extends Component {
             })
         );
     }
-
+//NEED TO FIX BUG HERE, when one of the values is zero it doesn't display the chart 
     renderPerformanceChart = () => {
         let performanceData = {
             labels: ["Mobile", "PC", "VR"],

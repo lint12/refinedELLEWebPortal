@@ -1123,14 +1123,10 @@ input#newPassword, input#confirmPassword {
 
 /*----------------------------------------*/
 
-/*--------------------------------------------------------------
-# Game Code Page's Video Border
---------------------------------------------------------------*/
-
-.videoBorder {
-  background-color: cadetblue;
-  display: list-item;
-  padding: 10px; 
+button#gameCodeBtn {
+  width: 20%;
+  font-size: larger;
+  font-weight: bold;
+  background-color: #5faeb4;
+  border: none;
 }
-
-/*----------------------------------------*/
