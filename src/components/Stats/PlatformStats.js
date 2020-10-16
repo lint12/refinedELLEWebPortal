@@ -46,7 +46,11 @@ class PlatformStats extends Component {
             datasets: [
             {
                 label: 'Average Score (%)',
-                data: [this.state.mb.avg_score, this.state.cp.avg_score, this.state.vr.avg_score],
+                data: [
+                    (this.state.mb.avg_score).toFixed(2), 
+                    (this.state.cp.avg_score).toFixed(2), 
+                    (this.state.vr.avg_score).toFixed(2)
+                ],
                 backgroundColor: ['#abc9cd', '#658e93', '#7abe80']
             }
             ]
@@ -91,7 +95,11 @@ class PlatformStats extends Component {
                 datasets: [
                     {
                         label: 'platforms',
-                        data: [this.state.mb.frequency * 100, this.state.cp.frequency * 100, this.state.vr.frequency * 100],
+                        data: [
+                            (this.state.mb.frequency * 100).toFixed(2), 
+                            (this.state.cp.frequency * 100).toFixed(2), 
+                            (this.state.vr.frequency * 100).toFixed(2)
+                        ],
                         backgroundColor: ['#96384e', '#eda48e', '#eed284']
                     }
                 ]
@@ -159,7 +167,8 @@ class PlatformStats extends Component {
                     <Row>
                         <div className="suCardGreen">
                             Average Platform Duration
-                            {this.state.mb.avg_time_spent && this.state.cp.avg_time_spent && this.state.vr.avg_time_spent ?
+                            {this.state.mb.avg_time_spent !== undefined && this.state.cp.avg_time_spent !== undefined 
+                            && this.state.vr.avg_time_spent !== undefined ?
                             this.renderPlatformDurations() : <Spinner chart="duration" />}
                         </div>
                     </Row>
@@ -167,7 +176,8 @@ class PlatformStats extends Component {
                     <Row>
                         <div className="suCardBlue">
                             Average Platform Frequency 
-                            {this.state.mb.frequency && this.state.cp.frequency && this.state.vr.frequency ?
+                            {this.state.mb.frequency !== undefined && this.state.cp.frequency !== undefined 
+                            && this.state.vr.frequency !== undefined ?
                             this.renderFrequencyChart() : <Spinner chart="frequency"/>}
                         </div>
                     </Row>
@@ -176,7 +186,8 @@ class PlatformStats extends Component {
                 <Col className="Platform Right Column">
                     <div className="suCardGreen">
                         Average Platform Performance
-                        {this.state.mb.avg_score && this.state.cp.avg_score && this.state.vr.avg_score ?
+                        {this.state.mb.avg_score !== undefined && this.state.cp.avg_score !== undefined 
+                        && this.state.vr.avg_score !== undefined ?
                         this.renderPerformanceChart() : <Spinner chart="performance"/>}
                     </div>
                 </Col>

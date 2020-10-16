@@ -1130,3 +1130,15 @@ button#gameCodeBtn {
   background-color: #5faeb4;
   border: none;
 }
+
+
+table.statsTable.table {
+  border-style: hidden;
+  margin: 0px;
+  color: white;
+}
+
+table.statsTable.table tbody td {
+  border-right-style: hidden;
+  border-bottom: 1px solid white ;
+}
