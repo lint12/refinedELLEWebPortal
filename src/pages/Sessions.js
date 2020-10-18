@@ -209,7 +209,7 @@ export default class Sessions extends Component {
                 : null} 
 
                 {this.state.searched && this.state.sessions.length !== 0 && this.state.loading === false ? 
-                  <Session sessions={this.state.sessions} /> 
+                  <Session sessions={this.state.sessions} serviceIP={this.props.serviceIP}/> 
                 : null}
 
                 {this.state.searched && this.state.sessions.length === 0 && this.state.loading === false ? 

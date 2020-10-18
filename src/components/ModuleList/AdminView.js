@@ -28,6 +28,7 @@ const AdminView = (props) => {
                         <SplitDeckBtn 
                             key={i}
                             permissionLevel={props.currentPermissionLevel}
+                            currentClassView={props.currentClassView}
                             curModule={deck} 
                             updateCurrentModule={props.updateCurrentModule}
                             deleteModule={props.deleteModule}

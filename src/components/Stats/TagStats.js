@@ -43,10 +43,10 @@ class TagStats extends Component {
                         {Object.keys(this.state.tags).map((item, i) => {
                             return (
                                 <tr key={i}>
-                                    <td>
+                                    <td style={{fontSize: "14px"}}>
                                         {item}
                                     </td>
-                                    <td style={{textAlign: "end"}}>
+                                    <td style={{textAlign: "end", fontSize: "14px"}}>
                                         {this.state.tags[item]}
                                     </td>
                                 </tr>

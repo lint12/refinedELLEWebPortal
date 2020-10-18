@@ -127,9 +127,9 @@ class PlatformStats extends Component {
 
         return (
             <>
-            <li>Mobile: {platformDuration[0]}</li>
-            <li>PC: {platformDuration[1]}</li>
-            <li>VR: {platformDuration[2]}</li>
+            <li style={{fontSize: "14px"}}>Mobile: {platformDuration[0]}</li>
+            <li style={{fontSize: "14px"}}>PC: {platformDuration[1]}</li>
+            <li style={{fontSize: "14px"}}>VR: {platformDuration[2]}</li>
             </>
         )
 

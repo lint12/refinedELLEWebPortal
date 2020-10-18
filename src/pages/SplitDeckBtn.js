@@ -58,14 +58,16 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Pop
                 <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightcoral', color: 'black', outline: 'none'}}
                   onClick={ () => { toggleModal() }}>
                   <img src={require('../Images/delete.png')} alt="trash can icon" style={{width: '18px', height: '20px'}}/> Delete</DropdownItem>
-              :
+              : null}
+
+              {(props.permissionLevel === "pf" || props.permissionLevel === "ta") && props.currentClassView !== 0 && props.curModule.owned === false ?
                 <DropdownItem style={{padding: '4px 24px 4px 10px', backgroundColor: 'lightsalmon', color: 'black', outline: 'none'}}
-                  onClick={ () => { toggleUnlinkModal() }}>
-                  <img src={require('../Images/unlink.png')} alt="unlink icon" style={{width: '18px', height: '20px'}}/> Unlink</DropdownItem>
-              }
+                onClick={ () => { toggleUnlinkModal() }}>
+                <img src={require('../Images/unlink.png')} alt="unlink icon" style={{width: '18px', height: '20px'}}/> Unlink</DropdownItem>
+              : null}
 
           </DropdownMenu>
-          </>
+          </>   
         : null}
 
         <Modal isOpen={unlinkModalOpen}> 

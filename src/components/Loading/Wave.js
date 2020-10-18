@@ -6,7 +6,7 @@ const Wave = (props) => {
   const { promiseInProgress } = usePromiseTracker();
   let height; 
   let width;
-  if (props.chart === "language") {
+  if (props.chart === "language" || props.chart === "modules") {
     height = 180; 
     width = 50;
   }

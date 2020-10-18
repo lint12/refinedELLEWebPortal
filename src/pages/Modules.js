@@ -305,7 +305,7 @@ export default class Modules extends Component {
     let header = {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }
-
+  
     axios.post(this.props.serviceIP + '/addmoduletogroup', data, header)
     .then(res => {
       console.log("unlink Module res.data: ", res.data);
@@ -530,6 +530,7 @@ export default class Modules extends Component {
           {this.state.currentPermissionLevel === "pf" || this.state.currentPermissionLevel === "ta" ?
             <AdminView 
               currentPermissionLevel={this.state.currentPermissionLevel}
+              currentClassView={this.state.selectedClass.value}
               modules={this.state.dynamicModules}
               updateCurrentModule={this.updateCurrentModule}
               deleteModule={this.deleteModule}
