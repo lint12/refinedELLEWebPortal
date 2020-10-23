@@ -17,7 +17,6 @@ export default class Template extends React.Component {
     });
   }
   render() {
-	  console.log("MAIN TEMPLATE IS RENDERED");
     return (
       <header id="header">
 			<div className="container">

@@ -98,6 +98,11 @@ export default class Login extends Component {
                 onChange={e => this.change(e)}
                 value={this.state.username}
                 id="username" placeholder="Username" />
+                <Link 
+                  to ='/forgotusername' 
+                  style={{color: '#007bff', textDecoration: 'underline', fontSize: "small", float: "right"}}>
+                  Forgot your username? 
+                </Link>
             </FormGroup>
             {' '}
             <FormGroup>
@@ -106,8 +111,13 @@ export default class Login extends Component {
                 onChange={e => this.change(e)}
                 value={this.state.password}
                 id="password" placeholder="Password" />
+              <Link 
+                to ='/forgotpassword' 
+                style={{color: '#007bff', textDecoration: 'underline', fontSize: "small", float: "right"}}>
+                Forgot your password? 
+              </Link>
             </FormGroup>
-            {' '}
+            <br />
             <Button color="primary" type="submit" className="btn-block">Submit</Button>
           </Form>
           <br></br>

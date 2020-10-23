@@ -13,6 +13,9 @@ import UserList from './pages/UserList';
 import ClassRoster from './pages/ClassRoster'; 
 import AuthUser from './components/Auth/AuthUser';
 import AuthAdmin from './components/Auth/AuthAdmin';
+import ForgotUsername from './pages/ForgotUsername';
+import ForgotPassword from './pages/ForgotPassword'; 
+import ResetPassword from './pages/ResetPassword'; 
 
 let flaskIP = 'https://endlesslearner.com:5000';
 flaskIP = 'http://54.158.210.144:3000/api'; 
@@ -41,6 +44,9 @@ class App extends Component {
             <Route path="/logout" render={(props)=><Logout {...props} serviceIP={flaskIP}/>}/>
             <Route path="/login" render={(props)=><Login {...props} serviceIP={flaskIP} updateUserInfo={this.updateUserInfo}/>}/>
             <Route path="/register" render={(props)=><Signup {...props} serviceIP={flaskIP}/>}/>
+            <Route path="/forgotusername" render={(props)=><ForgotUsername {...props} serviceIP={flaskIP}/>}/>
+            <Route path="/forgotpassword" render={(props)=><ForgotPassword {...props} serviceIP={flaskIP}/>}/>
+            <Route path="/resetpassword" render={(props)=><ResetPassword {...props} serviceIP={flaskIP}/>}/>
             <AuthUser>   
               <Route path="/profile" render={(props)=><Profile {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <Route path="/modules" render={(props)=><Modules {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
