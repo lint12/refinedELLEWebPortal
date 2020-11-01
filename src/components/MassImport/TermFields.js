@@ -37,28 +37,28 @@ class TermFields extends Component {
                     <Input 
                         name="front"
                         onChange={(e) => this.handleOnChange(e)}
-                        value={this.state.front}
+                        value={this.props.term.front}
                     />
                 </td>
                 <td>
                     <Input 
                         name="back"
                         onChange={(e) => this.handleOnChange(e)}
-                        value={this.state.back}
+                        value={this.props.term.back}
                     />
                 </td>
                 <td>
                     <Input 
                         name="type"
                         onChange={(e) => this.handleOnChange(e)}
-                        value={this.state.type}
+                        value={this.props.term.type}
                     />
                 </td>
                 <td>
                     <Input 
                         name="gender"
                         onChange={(e) => this.handleOnChange(e)}
-                        value={this.state.gender}
+                        value={this.props.term.gender}
                     />
                 </td>
             </>

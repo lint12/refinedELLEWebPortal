@@ -22,8 +22,8 @@ class Class extends Component {
     
     onExpand = () => {
         this.setState({ 
-            width: this.state.width === "0px" ? "160px" : "0px",
             marginLeft: this.state.marginLeft === "160px" ? "0px" : "160px",
+            width: this.state.width === "0px" ? "160px" : "0px",
             close: !this.state.close //this will take in affect after onExpand() has completed 
         });
 
@@ -46,81 +46,68 @@ class Class extends Component {
         filteredStudent.filter((student) => student.accessLevel === this.props.currentGroup);
 
 	    return (
-        <Table hover className="userListTable">
-          <thead>
-            <tr>
-                <th colSpan="2" style={{borderTopLeftRadius: "8px", backgroundColor: this.props.groupColor}}>{this.props.group.groupName}</th>
-                <th style={{borderTopRightRadius: "8px", backgroundColor: this.props.groupColor}}>
-                    {this.props.group.group_users.length !== 0
-                    ?
-                    <>
-                    <button
-                        size="sm"
-                        style={{...styles, marginLeft: this.state.marginLeft, backgroundColor: "transparent", borderStyle: "hidden", outline: "none"}}
-                        onClick={() => this.onExpand()}
-                    >
-                        <img 
-                            src={require('../../Images/search.png')} 
-                            alt="Icon made by Freepik from www.flaticon.com" 
-                            style={{width: '15px', height: '15px'}}
-                        />
-                    </button>
-
-                    <input 
-                        placeholder="Search for a student"
-                        style={{
-                            ...styles, 
-                            width: this.state.width, 
-                            borderStyle: "hidden hidden solid",
-                            padding: "0px",
-                            background: "transparent",
-                            outline: "none"
-                        }}
-                        value={this.state.search} 
-                        onChange={this.updateSearch.bind(this)}
-                        ref={this.inputRef}
-                        onBlur={() => this.onExpand()}
-                    />
-                    </>
-                    : null}
-                </th>
-            </tr>
-          </thead>
-
-          <tbody> 
+        <Table hover className="classTable">
+            <thead>
             {this.props.group.group_users.length !== 0 
             ?
-            <>
                 <tr>
                     <th>Student ID</th>
                     <th>Username</th>
-                    <th>Permission</th>
+                    <th> 
+                        <button
+                            size="sm"
+                            style={{...styles, marginLeft: this.state.marginLeft, backgroundColor: "transparent", borderStyle: "hidden", outline: "none"}}
+                            onClick={() => this.onExpand()}
+                        >
+                            <img 
+                                src={require('../../Images/search.png')} 
+                                alt="Icon made by Freepik from www.flaticon.com" 
+                                style={{width: '15px', height: '15px'}}
+                            />
+                        </button>
+
+                        <input 
+                            placeholder="Search for a student"
+                            style={{
+                                ...styles, 
+                                width: this.state.width, 
+                                borderStyle: "hidden hidden solid",
+                                padding: "0px",
+                                background: "transparent",
+                                outline: "none"
+                            }}
+                            value={this.state.search} 
+                            onChange={this.updateSearch.bind(this)}
+                            ref={this.inputRef}
+                            onBlur={() => this.onExpand()}
+                        />
+                    </th>
                 </tr>
-                {filteredStudent.length !== 0 
-                ? 
-                filteredStudent.map((user) => {
-                    return (
-                        <User key={user.userID} user={user} type="pf" />
-                    )
-                })
+            : null}
+            </thead>
+
+            <tbody> 
+                {this.props.group.group_users.length !== 0 ?
+                    filteredStudent.length !== 0 
+                    ? 
+                    filteredStudent.map((user) => {
+                        return (
+                            <User key={user.userID} serviceIP={this.props.serviceIP} user={user} type="pf" />
+                        )
+                    })
+                    :
+                    <tr>
+                        <td colSpan="3">
+                            {this.state.search} cannot be found in this class.
+                        </td> 
+                    </tr>
                 :
                 <tr>
-                    <td>
-                        {this.state.search} cannot be found in this class.
+                    <td colSpan="3">
+                        You currently have no {this.props.currentGroup === "st" ? "students" : "TAs"}
                     </td> 
-                    <td></td>
-                    <td></td>
                 </tr>}
-            </>
-            :
-            <tr>
-                <td>
-                    You currently have no {this.props.currentGroup === "st" ? "students" : "TAs"}
-                </td> 
-                <td colSpan="2"></td>
-            </tr>
-            }
-          </tbody>
+            </tbody>
         </Table>
 	    )
 	}

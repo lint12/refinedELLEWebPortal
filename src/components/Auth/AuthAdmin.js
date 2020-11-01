@@ -19,10 +19,10 @@ class AuthAdmin extends Component {
       var decoded = jwtDecode(jwt);
       console.log("Auth Super Admin JWT DECODED: ", decoded);
 
-      if (decoded.user_claims !== "su" && this.props.location.pathname === "/userlist") {
+      if (decoded.user_claims.permission !== "su" && this.props.location.pathname === "/userlist") {
         this.props.history.push('profile'); 
       }
-      else if (decoded.user_claims !== "pf" && this.props.location.pathname === "/classroster") {
+      else if (decoded.user_claims.permission !== "pf" && this.props.location.pathname === "/classroster") {
         this.props.history.push('profile'); 
       }
       else if (this.props.location.pathname === "/") {

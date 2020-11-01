@@ -91,6 +91,26 @@ export default class ResetPassword extends Component {
     }
   }
 
+  resetPassword = () => {
+    let header = {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+    }
+
+    let data = {
+      email: this.state.email,
+      resetToken: this.state.token,
+      password: this.state.password, 
+      confirmPassword: this.state.confirm
+    }
+
+    axios.post(this.props.serviceIP + '/resetpassword', data, header)
+    .then(res => {
+      console.log("reset pw msg: ", res.data); 
+    }).catch(error => {
+      console.log("reset pw error: ", error.response); 
+    })
+  }
+
   render() {
     return (
         <div className="reset-bg">
@@ -200,7 +220,13 @@ export default class ResetPassword extends Component {
                   </FormFeedback>
                 </InputGroup>
               </FormGroup>
-              <Button block disabled={this.state.validConfirm ? false : true}>Reset</Button>
+              <Button 
+                block 
+                disabled={this.state.validConfirm ? false : true}
+                onClick={() => this.resetPassword()}
+              >
+                Reset
+              </Button>
             </Form>
           </div>
         </div>

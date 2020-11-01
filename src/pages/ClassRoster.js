@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Input, Button, Card,
-  InputGroup, InputGroupAddon, Modal, ModalHeader, ModalBody, Alert } from 'reactstrap';
+  InputGroup, InputGroupAddon, Modal, ModalHeader, ModalBody, Alert, CardHeader, Collapse } from 'reactstrap';
 import ListGroup from 'react-bootstrap/ListGroup'
 import Tab from 'react-bootstrap/Tab'
 import Select from 'react-select';
@@ -24,6 +24,8 @@ class ClassRoster extends Component {
       elevateModalOpen: false,
       selectedClass: '',
       selectedUser: '', 
+
+      collapseTab: -1
     }
   }    
 
@@ -43,7 +45,7 @@ class ClassRoster extends Component {
       var decoded = jwtDecode(jwt);
       console.log("JWT DECODED: ", decoded);
 
-      this.setState({ permission: decoded.user_claims }); 
+      this.setState({ permission: decoded.user_claims.permission }); 
     }
   }
 
@@ -114,7 +116,6 @@ class ClassRoster extends Component {
     let classes = []; 
     let students = []; 
     let classOptions = this.state.groups.map((group) => { return ({value: group.groupID, label: group.groupName}) });
-    let nonTAList = []; 
     let searchLength = 11; 
     let addButton = (     
       <Col sm={1} style={{paddingLeft: "5px"}}>
@@ -201,9 +202,17 @@ class ClassRoster extends Component {
         {filteredClass.map(
           (group, i) => { 
             return (
-                <Class key={i} group={group} currentGroup={this.state.currentGroup} groupColor={group.groupColor} />
+              <Card key={i} style={{ marginBottom: '1rem' }}>
+                <CardHeader onClick={e => this.toggleTab(e)} data-event={i} style={{backgroundColor: group.groupColor}}>
+                  {group.groupName}
+                </CardHeader>
+                
+                <Collapse isOpen={this.state.collapseTab === i} style={{border: "none"}}>
+                  <Class group={group} currentGroup={this.state.currentGroup} groupColor={group.groupColor} serviceIP={this.props.serviceIP}/>
+                </Collapse>
+              </Card>
             )
-          }
+          }  
         )}
       <Modal isOpen={this.state.elevateModalOpen} toggle={() => this.toggleElevateModal()} backdrop={true}>
         <ModalHeader toggle={() => this.toggleElevateModal()}>Modify Permission</ModalHeader>
@@ -236,6 +245,14 @@ class ClassRoster extends Component {
       </Modal>
       </>
     )
+  }
+
+  toggleTab(e) {
+    let event = e.target.dataset.event; 
+
+    //if the accordion clicked on is equal to the current accordion that's open then close the current accordion,
+    //else open the accordion you just clicked on 
+    this.setState({ collapseTab: this.state.collapseTab === Number(event) ? -1 : Number(event) }) 
   }
 
   getColors = () => {

@@ -32,7 +32,7 @@ export default class GameCode extends Component {
       var decoded = jwtDecode(jwt);
       console.log("JWT DECODED: ", decoded);
 
-      this.setState({ permission: decoded.user_claims }); 
+      this.setState({ permission: decoded.user_claims.permission }); 
     }
   }
 

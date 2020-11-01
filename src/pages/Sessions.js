@@ -16,6 +16,7 @@ export default class Sessions extends Component {
       permission: this.props.user.permission,
       platform: "",
       userID: "",
+      username: "",
       moduleID: "",
       date: "",
       sessions: [],
@@ -40,7 +41,7 @@ export default class Sessions extends Component {
       var decoded = jwtDecode(jwt);
       console.log("JWT DECODED: ", decoded);
 
-      this.setState({ permission: decoded.user_claims }); 
+      this.setState({ permission: decoded.user_claims.permission }); 
     }
   }
 
@@ -56,6 +57,7 @@ export default class Sessions extends Component {
     this.setState({
       platform: "",
       userID: "",
+      username: "",
       moduleID: "",
       date: ""
     })
@@ -75,6 +77,7 @@ export default class Sessions extends Component {
       params: {
         moduleID: this.state.moduleID.length !== 0 ? parseInt(this.state.moduleID) : null, 
         userID: this.state.userID.length !== 0 ? parseInt(this.state.userID) : null, 
+        userName: this.state.username.length !== 0 ? this.state.username : null,
         platform: this.state.platform.length !== 0 ? this.state.platform : null,
         sessionDate: this.state.date.length !== 0 ? this.state.date : null
       }  
@@ -140,14 +143,28 @@ export default class Sessions extends Component {
                   </FormGroup>
                   {localStorage.getItem("per") !== "st" ?
                     <FormGroup>
-                      <Label for="userID">User ID</Label>
-                      <Input
-                        type="text"
-                        name="userID"
-                        placeholder="Enter a user ID to find a specific user's sessions"
-                        value={this.state.userID}
-                        onChange={e => this.handleInput(e)}
-                      />
+                      <Row>
+                        <Col xs="5">
+                          <Label for="userID">User ID</Label>
+                          <Input
+                            type="text"
+                            name="userID"
+                            placeholder="Filter by user ID"
+                            value={this.state.userID}
+                            onChange={e => this.handleInput(e)}
+                          />
+                        </Col>
+                        <Col xs="7">
+                          <Label for="userName">User Name</Label>
+                          <Input
+                            type="text"
+                            name="username"
+                            placeholder="Filter by username"
+                            value={this.state.username}
+                            onChange={e => this.handleInput(e)}
+                          />
+                        </Col>
+                      </Row>
                     </FormGroup>
                   : null}
                   <FormGroup>
@@ -173,7 +190,7 @@ export default class Sessions extends Component {
                     <Col>
                       <Button block style={{backgroundColor: "#37f0f9", color: "black", border: "none", fontWeight: "500"}}
                         disabled={
-                          this.state.platform.length === 0 && this.state.userID.length === 0 && 
+                          this.state.platform.length === 0 && this.state.userID.length === 0 && this.state.username.length === 0 &&
                           this.state.moduleID.length === 0 && this.state.date.length === 0 
                           ? true : false }
                         onClick={() => this.clearInputs()}>
@@ -183,7 +200,7 @@ export default class Sessions extends Component {
                     <Col>
                       <Button block style={{backgroundColor: "#37f0f9", color: "black", border: "none", fontWeight: "500"}} 
                         disabled={
-                          this.state.platform.length === 0 && this.state.userID.length === 0 && 
+                          this.state.platform.length === 0 && this.state.userID.length === 0 && this.state.username.length === 0 &&
                           this.state.moduleID.length === 0 && this.state.date.length === 0 
                           ? true : false }
                         onClick={() => this.handleSearch()}>

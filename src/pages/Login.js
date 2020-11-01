@@ -45,7 +45,7 @@ export default class Login extends Component {
       var decoded = jwtDecode(res.data.access_token);
       console.log("JWT DECODED: ", decoded);
   
-      localStorage.setItem('per', decoded.user_claims);
+      localStorage.setItem('per', decoded.user_claims.permission);
       console.log("PERMISSION in Login: ", localStorage.getItem('per'));
 
       localStorage.setItem('id', decoded.identity);
@@ -54,7 +54,7 @@ export default class Login extends Component {
       let user = {
         username: this.state.username, 
         userID: decoded.identity,
-        permission: decoded.user_claims
+        permission: decoded.user_claims.permission
       }
 
       this.setState({loginErr : false});

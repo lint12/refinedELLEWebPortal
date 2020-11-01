@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Tooltip, Modal, ModalHeader, ModalBody, ModalFooter, 
+import { Button, Tooltip, Modal, ModalHeader, ModalBody, Row, Col, Card,
     Form, FormGroup, Label, InputGroup, Input, InputGroupAddon, FormFeedback } from 'reactstrap';
 import axios from 'axios';
 
@@ -16,7 +16,8 @@ export default class Password extends Component {
             hiddenConfirm: true, 
 
             tooltipOpen: false,
-            pwModal: false, 
+            modalOpen: false, 
+            editEmail: false,
         }
     }
 
@@ -72,20 +73,18 @@ export default class Password extends Component {
 
     submitPassword = () => {
         var data = {
-          userID: this.state.userID,
-          pw: this.state.newPassword,
-          confirm: this.state.confirmPassword
+          password: this.state.newPassword
         }
         var headers = {
           'Authorization': 'Bearer ' + localStorage.getItem('jwt')
         }
   
-        axios.post(this.props.serviceIP + '/resetpassword', data, {headers:headers})
+        axios.post(this.props.serviceIP + '/changepassword', data, {headers:headers})
         .then(res => {
           console.log(res.data);
-          this.togglePwModal(); 
+          this.toggleModal(); 
         }).catch(function (error) {
-          console.log(error);
+          console.log(error.response);
         });
     }
 
@@ -103,14 +102,41 @@ export default class Password extends Component {
         }
     }
 
-    togglePwModal = () => {
+    toggleModal = () => {
         this.setState({
-          pwModal: !this.state.pwModal, 
+          modalOpen: !this.state.modalOpen, 
           newPassword: "", 
           confirmPassword: "", 
           validConfirm: false, 
           invalidConfirm: false, 
+          editEmail: false
         })
+    }
+
+    onChangeEmail = (e) => {
+      this.props.editEmail(e); 
+    }
+
+    toggleEditBtn = () => {
+      this.setState({ editEmail : !this.state.editEmail }); 
+    }
+
+    saveEmail = () => {
+      var data = {
+        newEmail: this.props.email
+      }
+
+      let header = {
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+      }
+
+      axios.put(this.props.serviceIP + '/user', data, header)
+      .then(res => {
+        console.log(res.data);
+        this.toggleEditBtn();
+      }).catch(error => {
+        console.log(error); 
+      })
     }
   
 
@@ -119,25 +145,48 @@ export default class Password extends Component {
             <>
                 {this.props.userType === "su" 
                 ?
-                    <p className="setting" onClick={() => this.togglePwModal()}> settings </p> 
+                    <p className="setting" onClick={() => this.toggleModal()}> settings </p> 
                 :
                     <>
-                        <Button id="changePassword" style={{backgroundColor: "aliceblue", float: "right", border: "none", borderRadius: "0 3px 3px 0"}}
-                            onClick={() => this.togglePwModal()}> 
+                        <Button id="changeSettings" style={{backgroundColor: "aliceblue", float: "right", border: "none", borderRadius: "0 3px 3px 0"}}
+                            onClick={() => this.toggleModal()}> 
                             <img src={require('../../Images/password.png')} style={{width: "15px", height: "15px"}}/>
                         </Button>
-                        <Tooltip placement="top" isOpen={this.state.tooltipOpen} target="changePassword" toggle={this.toggleTooltipOpen}>
-                            Click to Change Password
+                        <Tooltip placement="top" isOpen={this.state.tooltipOpen} target="changeSettings" toggle={this.toggleTooltipOpen}>
+                            Click to Configure Settings 
                         </Tooltip>
                     </>
                 }
 
-                <Modal isOpen={this.state.pwModal} toggle={this.togglePwModal}>
-                    <ModalHeader toggle={this.togglePwModal}>Change Password</ModalHeader>
+                <Modal isOpen={this.state.modalOpen} toggle={this.toggleModal}>
+                    <ModalHeader toggle={this.toggleModal}>Profile Settings</ModalHeader>
                         <ModalBody>
+                          <Label>Edit Email</Label>
+                          <Card style={{padding: "10px"}}>
+                            <Label style={{fontSize: "12px"}}>Email:</Label>
+                            <Row>
+                              <Col xs="10" style={{paddingRight: "0px"}}>
+                                <Input 
+                                  disabled={this.state.editEmail ? false : true}
+                                  placeholder="No email is associated with this account"
+                                  name="email"
+                                  value={this.props.email}
+                                  onChange={e => this.onChangeEmail(e)}
+                                />
+                              </Col>
+                              <Col xs="2" style={{paddingLeft: "10px"}}>
+                                {this.state.editEmail ? 
+                                <Button onClick={() => this.saveEmail()}>Save</Button> : 
+                                <Button onClick={() => this.toggleEditBtn()}>Edit</Button>}
+                              </Col>
+                            </Row>
+                          </Card>
+                          <br />
+                          <Label>Change Password</Label>
+                          <Card style={{padding: "10px"}}>
                             <Form>
                                 <FormGroup>
-                                <Label>New Password:</Label>
+                                <Label style={{fontSize: "12px"}}>New Password:</Label>
                                 <InputGroup>
                                 <Input 
                                     type={this.state.hiddenPassword ? 'password' : 'text'}
@@ -174,7 +223,7 @@ export default class Password extends Component {
                                 </InputGroup>
                                 </FormGroup>
                                 <FormGroup>
-                                    <Label>Confirm Password:</Label>
+                                    <Label style={{fontSize: "12px"}}>Confirm Password:</Label>
                                     <InputGroup>
                                         <Input 
                                             valid={this.state.validConfirm}
@@ -219,12 +268,11 @@ export default class Password extends Component {
                                     </InputGroup>
                                 </FormGroup>
                             </Form>
+                            <Button disabled={this.state.validConfirm ? false : true} block onClick={() => this.submitPassword()}>
+                              Submit New Password
+                            </Button>
+                          </Card>
                     </ModalBody>
-                    <ModalFooter>
-                    <Button disabled={this.state.validConfirm ? false : true} block onClick={() => this.submitPassword()}>
-                        Submit New Password
-                    </Button>
-                    </ModalFooter>
                 </Modal>
             </>
         );

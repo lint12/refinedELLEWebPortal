@@ -63,7 +63,7 @@ export default class Modules extends Component {
       var decoded = jwtDecode(jwt);
       console.log("JWT DECODED: ", decoded);
 
-      this.setState({ currentPermissionLevel: decoded.user_claims }); 
+      this.setState({ currentPermissionLevel: decoded.user_claims.permission }); 
     }
   }
 

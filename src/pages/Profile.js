@@ -14,6 +14,7 @@ export default class Profile extends React.Component {
     this.state = {
         userID: this.props.user.userID,
         username: this.props.user.username,
+        email: "",
         permission: this.props.user.permission,
 
         sessions: [],
@@ -46,7 +47,7 @@ export default class Profile extends React.Component {
       var decoded = jwtDecode(jwt);
       console.log("JWT DECODED: ", decoded);
 
-      this.setState({ permission: decoded.user_claims }); 
+      this.setState({ permission: decoded.user_claims.permission }); 
     }
   }
 
@@ -59,6 +60,7 @@ export default class Profile extends React.Component {
         this.setState({
           userID: res.data.id,
           username: res.data.username,
+          email: res.data.email === null ? "" : res.data.email
         });
         console.log("ID: ", res.data.id) //14,26,9,51,52,47 //51 needs fixing //need to fix issue that the bar charts wont start at zero
         await axios.get(this.props.serviceIP + '/searchsessions', {params: {userID: res.data.id},
@@ -83,6 +85,10 @@ export default class Profile extends React.Component {
     }).catch(function (error) {
       console.log(error);
     });
+  }
+
+  editEmail = (e) => {
+    this.setState({ email: e.target.value }); 
   }
 
   //this is for the word/term of the day 
@@ -347,19 +353,25 @@ export default class Profile extends React.Component {
         <SuperAdminView 
           serviceIP={this.props.serviceIP} 
           username={this.state.username}
+          email={this.state.email}
           permission={this.state.permission}
+          editEmail={this.editEmail}
         /> : null}
         {this.state.permission === "pf" ? 
         <AdminView 
           serviceIP={this.props.serviceIP} 
           username={this.state.username}
+          email={this.state.email}
           permission={this.state.permission}
+          editEmail={this.editEmail}
         /> : null}
         {this.state.permission === "st" ? 
         <StudentView 
           serviceIP={this.props.serviceIP} 
           username={this.state.username}
+          email={this.state.email}
           permission={this.state.permission}
+          editEmail={this.editEmail}
         /> : null}
       <br/>
       </Container>

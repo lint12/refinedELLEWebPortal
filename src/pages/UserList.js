@@ -42,7 +42,7 @@ class UserList extends Component {
       var decoded = jwtDecode(jwt);
       console.log("JWT DECODED: ", decoded);
 
-      this.setState({ permission: decoded.user_claims }); 
+      this.setState({ permission: decoded.user_claims.permission }); 
     }
   }
 
@@ -169,8 +169,7 @@ class UserList extends Component {
           <tr>
             <th style={{borderTopLeftRadius: "8px"}}>ID</th>
             <th>Username</th>
-            <th style={{borderTopRightRadius: group !== "pf" ? "8px" : "0px"}}>Permission</th>
-            {group === "pf" ? <th style={{borderTopRightRadius: "8px"}}></th> : null}
+            <th style={{borderTopRightRadius: "8px"}}></th>
           </tr>
         </thead>
         <tbody>

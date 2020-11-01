@@ -72,7 +72,8 @@ export default class AdminView extends Component {
         console.log("ITEM", item)
         this.setState({ 
           classDetailModalOpen: !this.state.classDetailModalOpen, 
-          currentClassDetails: item
+          currentClassDetails: item,
+          editClass: false 
         })
     }
     
@@ -195,7 +196,7 @@ export default class AdminView extends Component {
                                 {this.props.username}
                             </Col>
                             <Col xs="3">
-                              <Password userType="pf"/>
+                              <Password serviceIP={this.props.serviceIP} userType="pf" email={this.props.email} editEmail={this.props.editEmail}/>
                             </Col>
                         </Row>
                     </Card>

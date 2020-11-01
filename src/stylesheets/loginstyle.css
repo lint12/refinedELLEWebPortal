@@ -129,7 +129,7 @@ input, input::-webkit-input-placeholder {
 }
 
 .login-form, .reset-box {
-    margin: 30px auto;
+    margin: 20px auto;
     max-width: 400px;
     padding: 10px 40px;
     box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);   
@@ -154,7 +154,7 @@ input, input::-webkit-input-placeholder {
     backdrop-filter: blur(30px);
 }
 
-.reset-box .invalid-feedback {
+.reset-box .invalid-feedback, .reset-box .valid-feedback  {
     padding-left: 10px;
 }
 

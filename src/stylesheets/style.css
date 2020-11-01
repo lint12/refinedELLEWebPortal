@@ -908,6 +908,20 @@ table.userListTable {
   box-shadow: 0 0 0 1px #666; /* this draws the table border  */ 
 }
 
+table.classTable {
+  border-collapse: collapse;
+  border-radius: 8px;
+  border-style: hidden; /* hide standard table (collapsed) border */
+  margin: 0px;
+}
+
+table.classTable thead th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #dee2e6;
+  border-right-style: hidden;
+  padding: 10px 12px 2px 12px; 
+}
+
 table.userListTable thead th {
   vertical-align: bottom;
   border-bottom: 2px solid #dee2e6;
@@ -918,7 +932,7 @@ table.userListTable thead tr {
   background-color: lightskyblue;
 }
 
-table.userListTable td {
+table.userListTable td, table.classTable td {
   vertical-align: bottom;
   border-bottom: 2px solid #dee2e6;
   border-right-style: hidden;
@@ -931,6 +945,12 @@ table.userListTable tbody th {
   border-bottom: 2px solid #dee2e6;
   border-top-style: hidden;
   border-right-style: hidden;
+  padding: 2px 12px 2px 12px; 
+}
+
+table.classTable tbody th {
+  vertical-align: bottom;
+  border: hidden;
   padding: 2px 12px 2px 12px; 
 }
 

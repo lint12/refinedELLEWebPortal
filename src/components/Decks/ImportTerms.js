@@ -13,8 +13,7 @@ export default class ImportTerms extends Component {
   constructor() {
     super()
     this.state={
-      success: false,
-      messageOpen: false,
+      error: false, 
       modalOpen: false,
       tooltipOpen: false,
       terms: []
@@ -64,6 +63,7 @@ export default class ImportTerms extends Component {
 
   uploadTerms = () => {
     let listTerms = this.state.terms.filter((term) => term.selected === true); 
+    let failure = false; 
 
     for(var item in listTerms) {
       var data = new FormData();
@@ -92,19 +92,25 @@ export default class ImportTerms extends Component {
       .then(res => {
         console.log(res.data);
         this.props.updateCurrentModule({ module: this.props.module });
-        this.setState({ 
-          success: true,
-          messageOpen: true
-        });
       })
       .catch(error => {
         console.log(error);
+        if (error.response) {
+          this.setState({
+            error: true 
+          })
+          failure = true; 
+        }
       });
+    }
+
+    if (!failure) {
+      this.toggleModal(); 
     }
   }
  
   handleOnError = (err, file, inputElem, reason) => {
-    console.log(err)
+    console.log(err, file, inputElem, reason); 
   }
 
   toggleModal = () => {
@@ -163,10 +169,6 @@ export default class ImportTerms extends Component {
     this.setState({ terms: tempList });
   }
 
-  toggleMessage = () => {
-    this.setState({ messageOpen: !this.state.messageOpen });
-  }
-
   toggleTooltip = () => {
     this.setState({ tooltipOpen: !this.state.tooltipOpen });
   }
@@ -211,9 +213,9 @@ export default class ImportTerms extends Component {
             )}
           </CSVReader>
 
-          {this.state.success ? 
-            <Alert color="success" isOpen={this.state.messageOpen} toggle={() => this.toggleMessage()}>
-              The list of terms have been successfully added. 
+          {this.state.error ? 
+            <Alert color="danger">
+              Failure to add terms.  
             </Alert>
           : null}
 

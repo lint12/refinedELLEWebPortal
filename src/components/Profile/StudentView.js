@@ -73,7 +73,7 @@ export default class StudentView extends Component {
                                 {this.props.username}
                             </Col>
                             <Col xs="3">
-                            <Password userType="st"/>
+                                <Password serviceIP={this.props.serviceIP} userType="st" email={this.props.email} editEmail={this.props.editEmail}/>
                             </Col>
                         </Row>
                     </Card>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, Table, Card, CardBody } from 'reactstrap'
+import { Button, Modal, ModalHeader, ModalBody, Table, Card, CardBody, Row, Col, Input, Alert } from 'reactstrap'
 import axios from 'axios';
 
 class User extends Component {
@@ -7,12 +7,60 @@ class User extends Component {
 		super(props);
 
 		this.state = {
-			detailModalOpen: false 
+			pfDetailModalOpen: false,
+			detailModalOpen: false,
+			tempPW: "",
+			alertOpen: false,
+			alertMsg: ""
 		}
 	}
 
+	change(e) {
+		this.setState({
+		  [e.target.name]: e.target.value
+		})
+	}
+
 	toggleDetailModal = () => {
-		this.setState({ detailModalOpen: !this.state.detailModalOpen })
+		this.setState({ 
+			detailModalOpen: !this.state.detailModalOpen,
+			alertOpen: false,
+			alertMsg: ""
+		})
+	}
+
+	toggleProfessorDetailModal = () => {
+		this.setState({ pfDetailModalOpen: !this.state.pfDetailModalOpen })
+	}
+
+	renderUserInfo = () => {
+		return (
+			<Card style={{margin: "0 20px 0 20px", border: "none"}}>
+				<Row>
+					ID: {this.props.user.userID}
+				</Row>
+				<Row>
+					Name: {this.props.user.username}
+				</Row>
+				<Row>
+					Permission Level: {this.props.type === "pf" ? this.props.user.accessLevel : this.props.user.permissionGroup}
+				</Row>
+				<Row style={{paddingTop: "10px"}}>
+					Reset Password:
+					<Col xs="7" style={{paddingRight: "0px"}}>
+						<Input
+							placeholder="Create a temporary password"
+							name="tempPW"
+							value={this.state.tempPW}
+							onChange={e => this.change(e)}
+						/>
+					</Col>
+					<Col xs="1" style={{padding: "0 0 0 10px"}}>
+						<Button onClick={() => this.resetPassword()}>Reset</Button>
+					</Col>
+				</Row>
+			</Card>
+		)
 	}
 
 	generateNewCode = (id) => {
@@ -30,15 +78,37 @@ class User extends Component {
 		})
 	}
 
+	resetPassword = () => {
+		let header = {
+			headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
+		}
+
+		let data = {
+			userID: this.props.user.userID,
+			password: this.state.tempPW
+		}
+	
+		axios.post(this.props.serviceIP + '/changepassword', data, header)
+		.then(res => {
+			console.log("change pw msg: ", res.data);
+			this.setState({ 
+				tempPW: "",
+				alertOpen: true,
+				alertMsg: "Successful Reset"
+		 	}); 
+		}).catch(error => {
+			console.log("ERROR in changing password: ", error.response);
+		})
+	}
+
 	render() {
 	    return (
 			<>
 			<tr>
 				<td>{this.props.user.userID}</td>
 				<td>{this.props.user.username}</td>
-				<td>{this.props.type === "su" ? this.props.user.permissionGroup : this.props.user.accessLevel}</td>
-				{this.props.group === "pf" 
-				? <td>
+				{this.props.type === "pf" || this.props.group === "st" || this.props.group === "su" ? 
+				<td style={{paddingLeft: "24%"}}>
 					<Button 
 						style={{backgroundColor: "transparent", border: "none", padding: "0px"}}
 						onClick={() => this.toggleDetailModal()}
@@ -48,24 +118,51 @@ class User extends Component {
 							alt="Icon made by xnimrodx from www.flaticon.com" 
 							name="more"
 							style={{width: '20px', height: '20px'}}
+						/>
+					</Button>
+			  	</td> 
+				: null}
+
+				{this.props.group === "pf" ?
+				<td style={{paddingLeft: "24%"}}>
+					<Button 
+						style={{backgroundColor: "transparent", border: "none", padding: "0px"}}
+						onClick={() => this.toggleProfessorDetailModal()}
+					>
+						<img 
+							src={require('../../Images/more.png')}
+							alt="Icon made by xnimrodx from www.flaticon.com" 
+							name="more"
+							style={{width: '20px', height: '20px'}}
                         />
 					</Button>
-				  </td> 
+				</td> 
 				: null}
 		    </tr>
 
-			<Modal isOpen={this.state.detailModalOpen}> 
+			<Modal isOpen={this.state.detailModalOpen}>
 				<ModalHeader toggle={() => this.toggleDetailModal()}>Details</ModalHeader>
+				<ModalBody>
+					{this.state.alertOpen ? <Alert>{this.state.alertMsg}</Alert> : null}
+					{this.renderUserInfo()}
+				</ModalBody>
+			</Modal>
+
+			<Modal isOpen={this.state.pfDetailModalOpen}> 
+				<ModalHeader toggle={() => this.toggleProfessorDetailModal()}>Professor Details</ModalHeader>
 				<ModalBody style={{paddingBottom: "10px"}}>
+					{this.renderUserInfo()}
+					<br />
 					{this.props.group === 'pf' 
 					? this.props.user.groups.length !== 0 ?
 					<>
-					<Card style={{height: "40vh", overflow: "scroll", borderStyle: "none"}}>
+					<Row><Col style={{paddingLeft: "20px"}}>Class Info: </Col></Row>
+					<Card style={{height: "40vh", overflow: "scroll"}}>
 						<Table className="professorDetailsTable">
 							<thead>
 								<tr>
 									<th>ID</th>
-									<th>Name</th>
+									<th>Class</th>
 									<th>Code</th>
 									<th></th>
 								</tr>
@@ -105,7 +202,7 @@ class User extends Component {
 						</p>
 					  </>
 					: 
-					  <Card style={{alignItems: "center", borderStyle: "none"}}>
+					  <Card style={{alignItems: "center"}}>
 					  	{this.props.user.username} currently does not have any classes.
 					  </Card>
 					: null }

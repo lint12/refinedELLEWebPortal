@@ -13,6 +13,7 @@ export default class Signup extends React.Component {
   constructor() {
     super();
     this.state = {
+      email: "", 
       username: "",
       password: "",
       confirmation: "",
@@ -115,11 +116,12 @@ export default class Signup extends React.Component {
   }
 
   submit(e) {
-    console.log(this.state.username + " " + this.state.password + " " + this.state.confirmation + " " + this.state.classCode);
+    console.log(this.state.username + " " + this.state.email + " " + this.state.password + " " + this.state.confirmation + " " + this.state.classCode);
     e.preventDefault();
 
     var data = {
       username: this.state.username,
+      email: this.state.email,
       password: this.state.password,
       password_confirm: this.state.confirmation,
       groupCode: this.state.classCode
@@ -167,12 +169,11 @@ export default class Signup extends React.Component {
               <Label for="userName">Username:</Label>
               <InputGroup>
                 <Input value={this.state.username}
-                  //onChange={e => this.change(e)}
                   id="username"
                   name="username"
                   placeholder="Roll the dice for a random username"
                   autoComplete="off"
-                  disabled="true"
+                  disabled={true}
                 />
                 <InputGroupAddon addonType="append">
                   <Button 
@@ -189,6 +190,18 @@ export default class Signup extends React.Component {
                   </Button>
                 </InputGroupAddon>
               </InputGroup>
+            </FormGroup>
+            <FormGroup>
+              <Label for="classCode">Email:</Label>
+              <Input 
+                value={this.state.email}
+                onChange={e => this.change(e)}
+                type="text"
+                id="email"
+                name="email"
+                placeholder="Optional"
+                autoComplete="off"
+              />
             </FormGroup>
             <FormGroup>
             <Label for="password">Password:</Label>

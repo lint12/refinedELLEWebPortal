@@ -20,8 +20,8 @@ export default class SuperAdminView extends Component {
                         <Row>
                             <Col>
                                 <div className="greetingsTag">
-                                        Welcome back {this.props.username}!
-                                        <Password userType="su"/>
+                                    Welcome back {this.props.username}!
+                                    <Password serviceIP={this.props.serviceIP} userType="su" email={this.props.email} editEmail={this.props.editEmail}/>
                                 </div>
                             </Col>
                         </Row>
