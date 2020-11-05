@@ -66,42 +66,44 @@ export default class ImportTerms extends Component {
     let failure = false; 
 
     for(var item in listTerms) {
-      var data = new FormData();
-      data.append('front', listTerms[item]['front'])
-      data.append('back', listTerms[item]['back'])
-      data.append('language', this.props.module.language)
-      data.append('type', listTerms[item]['type'])
-      data.append('gender', listTerms[item]['gender'])
-      data.append('moduleID', this.props.module.moduleID)
+      if (listTerms[item]['front'].length !== 0 && listTerms[item]['back'].length !== 0) {
+        var data = new FormData();
+        data.append('front', listTerms[item]['front'])
+        data.append('back', listTerms[item]['back'])
+        data.append('language', this.props.module.language)
+        data.append('type', listTerms[item]['type'])
+        data.append('gender', listTerms[item]['gender'])
+        data.append('moduleID', this.props.module.moduleID)
 
-      //TODO: need to append groupID if the user is a ta 
-      if (this.props.permissionLevel === "ta") {
-        data.append('groupID', this.props.currentClass.value);  
-      }
-
-      var config = {
-        method: 'post',
-        url: this.props.serviceIP + '/term',
-        headers: {
-          'Authorization': 'Bearer ' + localStorage.getItem('jwt')
-        },
-        data : data
-      };
-
-      axios(config)
-      .then(res => {
-        console.log(res.data);
-        this.props.updateCurrentModule({ module: this.props.module });
-      })
-      .catch(error => {
-        console.log(error);
-        if (error.response) {
-          this.setState({
-            error: true 
-          })
-          failure = true; 
+        //TODO: need to append groupID if the user is a ta 
+        if (this.props.permissionLevel === "ta") {
+          data.append('groupID', this.props.currentClass.value);  
         }
-      });
+
+        var config = {
+          method: 'post',
+          url: this.props.serviceIP + '/term',
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('jwt')
+          },
+          data : data
+        };
+
+        axios(config)
+        .then(res => {
+          console.log(res.data);
+          this.props.updateCurrentModule({ module: this.props.module });
+        })
+        .catch(error => {
+          console.log(error);
+          if (error.response) {
+            this.setState({
+              error: true 
+            })
+            failure = true; 
+          }
+        });
+      }
     }
 
     if (!failure) {

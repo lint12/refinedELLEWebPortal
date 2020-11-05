@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Button, Card, Form, FormGroup, Label, Input, CustomInput } from 'reactstrap';
+import { Container, Row, Col, Button, Card, Form, FormGroup, Label, Input, CustomInput, Alert } from 'reactstrap';
 import axios from 'axios';
 
 import '../lib/bootstrap/css/bootstrap.min.css';
@@ -110,10 +110,17 @@ export default class Sessions extends Component {
       <Template permission={this.state.permission}/>
       <br /><br />
       <Row>
-        <Col>
+        <Col xs="4">
           <h3>Your ELLE Sessions:</h3>
         </Col>
-        {this.state.permission === "su" ? <Downloads serviceIP={this.props.serviceIP}/> : null}
+        <Col xs="6" style={{padding: "0 0 0 30px"}}>
+          {this.state.searched && this.state.sessions.length !== 0 && this.state.loading === false ? 
+            <Alert color="info" style={{margin: "0px", textAlign: "center"}}>Click on a row to reveal logged answers.</Alert>
+          : null}
+        </Col>
+        <Col xs="2" style={{padding: "0px"}}>
+          {this.state.permission === "su" ? <Downloads serviceIP={this.props.serviceIP}/> : null}
+        </Col>
       </Row>
 
       <br />

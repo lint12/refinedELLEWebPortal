@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, FormGroup, Input, Label, InputGroup, InputGroupAddon, FormFeedback } from 'reactstrap';
+import { Button, Form, FormGroup, Input, Label, InputGroup, InputGroupAddon, FormFeedback, Alert } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import MainTemplate from '../pages/MainTemplate';
@@ -17,6 +17,9 @@ export default class ResetPassword extends Component {
       invalidConfirm: false,
       hiddenPassword: true,
       hiddenConfirm: true, 
+      success: false,
+      error: false,
+      msg: ""
     };
 
   }
@@ -103,11 +106,25 @@ export default class ResetPassword extends Component {
       confirmPassword: this.state.confirm
     }
 
+    console.log("data: ", data); 
+
     axios.post(this.props.serviceIP + '/resetpassword', data, header)
     .then(res => {
       console.log("reset pw msg: ", res.data); 
+      this.setState({
+        success: true,
+        error: false, 
+        msg: res.data
+      })
     }).catch(error => {
       console.log("reset pw error: ", error.response); 
+      if (error.response) {
+        this.setState({
+          success: false,
+          error: true,
+          msg: error.response.data.Message
+        })
+      }
     })
   }
 
@@ -119,6 +136,8 @@ export default class ResetPassword extends Component {
         <div>
           <div className="reset-box">
             <h4 style={{display: "flex", justifyContent: "center"}}>Reset Your Password</h4>
+            {this.state.success ? <Alert color="success">{this.state.msg}</Alert> : null}
+            {this.state.error ? <Alert color="danger">{this.state.msg}</Alert> : null}
             <Form style={{marginBottom: "10px"}}>
               <FormGroup>
                 <Label>Email:</Label>
@@ -126,6 +145,8 @@ export default class ResetPassword extends Component {
                 <Input 
                   placeholder="user@email.com"
                   name="email"
+                  value={this.state.email}
+                  onChange={e => this.change(e)}
                 />
                 </InputGroup>
               </FormGroup>
@@ -135,6 +156,8 @@ export default class ResetPassword extends Component {
                 <Input 
                   placeholder="token"
                   name="token"
+                  value={this.state.token}
+                  onChange={e => this.change(e)}
                 />
                 </InputGroup>
               </FormGroup>

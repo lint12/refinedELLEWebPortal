@@ -117,7 +117,7 @@ export default class StudentView extends Component {
                     <Col xs="9">
                     <Card style={{backgroundColor: "cadetblue", height: "65vh"}}>
                         <CardBody style={{color: "#04354b"}}>
-                            <h1 style={{textDecoration: "underline", fontFamily: "auto"}}>
+                            <h1>
                                 Welcome back {this.props.username}!
                             </h1>
                         </CardBody>

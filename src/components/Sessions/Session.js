@@ -71,12 +71,12 @@ export default class Session extends Component {
                     <Table hover className="minimalisticTable">
                         <thead>
                             <tr>
-                            <th>SessionID</th>
+                            <th>Session ID</th>
                             <th>Date</th>
-                            <th>UserID</th>
+                            <th>User ID</th>
                             <th>Score</th>
                             <th>Duration</th>
-                            <th>ModuleID</th>
+                            <th>Module ID</th>
                             <th>Module Name</th>
                             <th>Platform</th>
                             </tr>

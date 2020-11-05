@@ -1030,6 +1030,8 @@ table.classTable tbody th {
   width: 5%;
   border-right-style: hidden;
   font-size: 10px;
+  padding: 12px 2px;
+  text-align: center;
 }
 
 .minimalisticTable tbody tr {
@@ -1039,6 +1041,9 @@ table.classTable tbody th {
 .minimalisticTable tbody td {
   border-right-style: hidden;
   width: 5%;
+  padding: 12px 2px;
+  font-size: 14px;
+  text-align: center;
 }
 
 .minimalisticTable input.form-control {
