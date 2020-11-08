@@ -14,7 +14,7 @@ const Spinner = (props) => {
         </div>
         :
         <div className="spinner">
-            <Loader type="ThreeDots" color="#3af0f9" height="62" width="62"/>
+            <Loader type="ThreeDots" color="#3af0f9" height="55" width="62"/>
         </div>
     )
   );

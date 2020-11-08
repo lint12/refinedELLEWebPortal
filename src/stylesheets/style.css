@@ -1018,7 +1018,7 @@ table.classTable tbody th {
 /*--------------------------------------------------------------
 # Sessions Table
 --------------------------------------------------------------*/
-.minimalisticTable {
+.minimalisticTable, .termStatsTable {
   border-style: hidden;
 }
 
@@ -1034,11 +1034,23 @@ table.classTable tbody th {
   text-align: center;
 }
 
-.minimalisticTable tbody tr {
+.termStatsTable thead th {
+  background-color: rgb(4, 53, 75);
+  color: white;
+  position: sticky;
+  top: 0; 
+  width: 5%;
+  border-right-style: hidden;
+  font-size: 10px;
+  padding: 5px 2px;
+  text-align: center;
+}
+
+.minimalisticTable tbody tr, .termStatsTable tbody tr {
   border-style: hidden;
 }
 
-.minimalisticTable tbody td {
+.minimalisticTable tbody td, .termStatsTable tbody td {
   border-right-style: hidden;
   width: 5%;
   padding: 12px 2px;

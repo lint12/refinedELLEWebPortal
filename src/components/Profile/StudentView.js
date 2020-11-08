@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { Row, Col, Badge, Button, Card, CardBody, ListGroup, ListGroupItem,
-    Form, FormGroup, Label, Input } from 'reactstrap';
+    Form, FormGroup, Label, Input, Alert } from 'reactstrap';
 import {Tabs, Tab} from 'react-bootstrap';
 import axios from 'axios';
 import Password from './Password';
+import ModulePerformance from '../Stats/ModulePerformance';
+import TermPerformance from '../Stats/TermPerformance';
 
 export default class StudentView extends Component {
 	constructor(props){
@@ -69,10 +71,10 @@ export default class StudentView extends Component {
                     <h6>Username:</h6>
                     <Card>
                         <Row>
-                            <Col xs="9" style={{paddingLeft: "35px", paddingTop: "5px"}}>
+                            <Col xs="8" style={{marginLeft: "15px", paddingLeft: "15px", paddingTop: "5px", display: "flex", overflowX: "scroll"}}>
                                 {this.props.username}
                             </Col>
-                            <Col xs="3">
+                            <Col xs="3" style={{paddingRight: "9px"}}>
                                 <Password serviceIP={this.props.serviceIP} userType="st" email={this.props.email} editEmail={this.props.editEmail}/>
                             </Col>
                         </Row>
@@ -120,6 +122,18 @@ export default class StudentView extends Component {
                             <h1>
                                 Welcome back {this.props.username}!
                             </h1>
+                            <Row>
+                                <Col>
+                                    <Tabs defaultActiveKey={0} id="uncontrolled-tab-example" className="profileTabs">
+                                        <Tab eventKey={0} title="Modules Performance">
+                                            <ModulePerformance serviceIP={this.props.serviceIP}/>
+                                        </Tab>
+                                        <Tab eventKey={1} title="Terms Performance">
+                                            <TermPerformance serviceIP={this.props.serviceIP} classes={this.state.classes}/>
+                                        </Tab>
+                                    </Tabs>
+                                </Col>
+                            </Row>
                         </CardBody>
                     </Card>
                     </Col>

@@ -37,7 +37,7 @@ class TagStats extends Component {
 
     renderTagStats = () => {
         return (
-            <Card style={{overflow: "scroll", height: "60vh", backgroundColor: "transparent", border: "none"}}>
+            <Card style={{overflow: "scroll", height: "23vh", backgroundColor: "transparent", border: "none"}}>
                 <Table className="statsTable"> 
                     <tbody> 
                         {Object.keys(this.state.tags).map((item, i) => {
@@ -61,13 +61,11 @@ class TagStats extends Component {
 	render() { 
         return (
             <>
-                <Col>
-                    <div className="suCardBlue">
-                        Tags
-                        {Object.keys(this.state.tags).length !== 0 ? 
-                        this.renderTagStats() : <Wave chart="tag"/>}
-                    </div>
-                </Col>  
+                <div className="suCardBlue">
+                    Tags
+                    {Object.keys(this.state.tags).length !== 0 ? 
+                    this.renderTagStats() : <Wave chart="tag"/>}
+                </div>
             </>
         );
     }

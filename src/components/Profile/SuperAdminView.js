@@ -14,8 +14,7 @@ export default class SuperAdminView extends Component {
     render() { 
         return (     
             <div className="suContainer">
-                <br />
-                <Row>
+                <Row className="Top Row">
                     <Col className="Left Column" xs="3">
                         <Row>
                             <Col>
@@ -27,19 +26,23 @@ export default class SuperAdminView extends Component {
                         </Row>
                         <br />
                         <Row>
-                            <TagStats serviceIP={this.props.serviceIP}/>
+                            <Col>
+                                <TagStats serviceIP={this.props.serviceIP}/>
+                            </Col>
                         </Row>
                     </Col>
                 
                     <Col className="Right Column">
-                        <Row className="Top Row">
+                        <Row>
                             <PlatformStats serviceIP={this.props.serviceIP}/>
                         </Row>
-                        <br />
-                        <Row className="Bottom Row">
-                            <ModuleStats serviceIP={this.props.serviceIP}/>
-                        </Row>
                     </Col>
+                </Row>
+
+                <br />
+
+                <Row className="Bottom Row">
+                    <ModuleStats serviceIP={this.props.serviceIP}/>
                 </Row>
             </div>
         );

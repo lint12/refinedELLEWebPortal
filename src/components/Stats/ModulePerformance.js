@@ -1,19 +1,17 @@
 import React, { Component } from 'react'
-import { Col, Table, Card, Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
-import { Pie, Bar } from 'react-chartjs-2'; 
-import '../../stylesheets/superadmin.css'
+import { Row, Col, Table, Card, Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import { trackPromise } from 'react-promise-tracker';
-import Wave from '../Loading/Wave'; 
+import Spinner from '../Loading/Spinner';
+import { Bar } from 'react-chartjs-2'; 
 import axios from 'axios';   
-import languageCodes from '../../languageCodes3.json';
 
-class ModuleStats extends Component {
+class ModulePerformance extends Component {
 	constructor(props){
 		super(props);
 
 		this.state = {
-            modules: [],
-            languages: {},
+            modules: null,
+            modalOpen: false,
             termStats: []
         }
  
@@ -21,7 +19,6 @@ class ModuleStats extends Component {
 
     componentDidMount() {
         this.getModuleStats();
-        this.getLanguageStats(); 
     }
 
     getModuleStats = () => {
@@ -35,30 +32,14 @@ class ModuleStats extends Component {
                 console.log("module stats: ", res.data); 
                 this.setState({ modules: res.data }); 
             }).catch(error => {
-                console.log("module stats error: ", error); 
-            })
-        );
-    }
-
-    getLanguageStats = () => {
-        let header = {
-            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-        };
-
-        trackPromise(
-            axios.get(this.props.serviceIP + '/languagestats', header)
-            .then(res => {
-                console.log("language stats: ", res.data); 
-                this.setState({ languages: res.data }); 
-            }).catch(error => {
-                console.log("language stats error: ", error); 
+                console.log("module stats error: ", error.message); 
             })
         );
     }
 
     renderModulesChart = () => {
         return (
-            <Card style={{overflow: "scroll", height: "25vh", backgroundColor: "transparent", border: "none"}}>
+            this.state.modules.length !== 0 ?
                 <Table className="statsTable"> 
                     <thead>
                         <tr>
@@ -95,7 +76,7 @@ class ModuleStats extends Component {
                         })}
                     </tbody>
                 </Table>
-            </Card>
+            : <p style={{margin: "10px 15px"}}>There are currently no records.</p>
         )
     }
 
@@ -124,7 +105,7 @@ class ModuleStats extends Component {
         })
     }
 
-    renderBarChart = () => {
+    renderChart = () => {
         let terms = Object.entries(this.state.termStats).map(([i, term]) => {
             return( {front: term.front, percentage: term.correctness*100} )
         }); 
@@ -137,7 +118,7 @@ class ModuleStats extends Component {
             {
                 label: 'Correctness (%)',
                 data: terms.map(term => term.percentage),
-                backgroundColor: ['#96384e', '#eda48e', '#eed284', '#CD5C5C', '#F08080', '#E9967A', '#FA8072', '#20B2AA', '#2F4F4F', '#008080', '#008B8B', '#4682B4', '#6495ED', '#00BFFF', '#1E90FF', '#8B008B', '#9400D3', '#9932CC', '#BA55D3', '#C71585', '#DB7093', '#FF1493', '#FF69B4']
+                backgroundColor: ['#abc9cd', '#658e93', '#7abe80']
             }
             ]
         };
@@ -171,66 +152,26 @@ class ModuleStats extends Component {
         )
     }
 
-    renderLanguageChart = () => {
-        let languageData = {
-            labels: Object.keys(this.state.languages).map(item => languageCodes[item]),
-            datasets: [
-                {
-                    label: 'platforms',
-                    data: Object.keys(this.state.languages).map(item => (this.state.languages[item] * 100).toFixed(2)),
-                    backgroundColor: ['#96384e', '#eda48e', '#eed284', '#CD5C5C', '#F08080', '#E9967A', '#FA8072', '#20B2AA', '#2F4F4F', '#008080', '#008B8B', '#4682B4', '#6495ED', '#00BFFF', '#1E90FF', '#8B008B', '#9400D3', '#9932CC', '#BA55D3', '#C71585', '#DB7093', '#FF1493', '#FF69B4']
-                }
-            ]
-        };
-
-        return (
-            <Card style={{overflow: "scroll", backgroundColor: "transparent", border: "none"}}>
-                <Pie
-                    data={languageData}
-                    options={{
-                        cutoutPercentage: 50,
-                        legend: {
-                            position: 'right',
-                            align: "start",
-                            labels: {
-                                fontColor: 'white',
-                                boxWidth: 10
-                            },
-                            display: true
-                        }
-                    }}
-                />
-            </Card>
-        )
-    }
-
 	render() { 
-        console.log("language state: ", Object.keys(this.state.languages).length); 
         return (
-            <>
-                <Col className="Module Left Columns" xs="7">
-                    <div className="suCardGreen">
-                        Module Performance
-                        {this.state.modules.length !== 0 ?
-                        this.renderModulesChart() : <Wave chart="modules"/>}
-                    </div>
+            <Row>
+                <Col>
+                    <Card style={{backgroundColor: "#04354b", color: "aqua", overflow: "scroll", height: "45vh", borderTopLeftRadius: "0px"}}>
+                        {this.state.modules
+                        ? this.renderModulesChart() 
+                        : <Spinner chart="performance"/>}
+                    </Card>
+
                     <Modal isOpen={this.state.modalOpen} toggle={this.toggleModal}>
                         <ModalHeader toggle={this.toggleModal}>Terms Performance</ModalHeader>
                         <ModalBody>
-                            {this.renderBarChart()}
+                            {this.renderChart()}
                         </ModalBody>
                     </Modal>
                 </Col>
-                <Col className="Module Right Columns" xs="5" style={{paddingLeft: "0px"}}>
-                    <div className="suCardBlue">
-                        Module Languages
-                        {Object.keys(this.state.languages).length !== 0 ?
-                        this.renderLanguageChart() : <Wave chart="language"/>}
-                    </div>
-                </Col>
-            </>
+            </Row>
         );
     }
 }
 
-export default ModuleStats
+export default ModulePerformance

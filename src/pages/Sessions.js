@@ -135,15 +135,15 @@ export default class Sessions extends Component {
                     <Label for="platform">Platform <a style={{fontSize: "10px", color: "red"}}>*Only select to filter based on a platform</a></Label>
                     <div style={{display: "flex", justifyContent: "center"}}>
                       <CustomInput type="radio" id="mb" name="platform" inline checked={this.state.platform === 'mb'} onChange={e => this.handleChange(e)}>
-                        <img style={{width: "20px", height: "20px", marginRight: "5px"}} src={require('../Images/phoneGames.png')} alt="phone icon" />
+                        <img style={{width: "20px", height: "20px", marginLeft: "20px", marginRight: "5px"}} src={require('../Images/phoneGames.png')} alt="phone icon" />
                         Mobile
                       </CustomInput>
                       <CustomInput type="radio" id="cp" name="platform" inline checked={this.state.platform === 'cp'} onChange={e => this.handleChange(e)}>
-                        <img style={{width: "20px", height: "20px", marginRight: "5px"}} src={require('../Images/computerGames.png')} alt="computer icon" />
+                        <img style={{width: "20px", height: "20px", marginLeft: "20px", marginRight: "5px"}} src={require('../Images/computerGames.png')} alt="computer icon" />
                         PC
                       </CustomInput>                    
                       <CustomInput type="radio" id="vr" name="platform" inline checked={this.state.platform === 'vr'} onChange={e => this.handleChange(e)}>
-                        <img style={{width: "20px", height: "20px", marginRight: "5px"}} src={require('../Images/vrGames.png')} alt="vr icon" />
+                        <img style={{width: "20px", height: "20px", marginLeft: "20px", marginRight: "5px"}} src={require('../Images/vrGames.png')} alt="vr icon" />
                         VR
                       </CustomInput>
                     </div>

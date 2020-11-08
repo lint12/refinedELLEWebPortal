@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import { Row, Col, Modal, ModalHeader, ModalBody, ModalFooter, Badge, Button, Card, CardBody, ListGroup, ListGroupItem,
     Form, FormGroup, Label, Input } from 'reactstrap';
+import {Tabs, Tab} from 'react-bootstrap';
 import axios from 'axios';
 import ClassDetails from './ClassDetails';
 import Password from './Password';
+import ModulePerformance from '../Stats/ModulePerformance';
+import TermPerformance from '../Stats/TermPerformance';
 
 export default class AdminView extends Component {
 	constructor(props){
@@ -256,6 +259,18 @@ export default class AdminView extends Component {
                             <h1 style={{textDecoration: "underline", fontFamily: "auto"}}>
                                 Welcome back {this.props.username}!
                             </h1>
+                            <Row>
+                                <Col>
+                                    <Tabs defaultActiveKey={0} id="uncontrolled-tab-example" className="profileTabs">
+                                        <Tab eventKey={0} title="Module Performance">
+                                            <ModulePerformance serviceIP={this.props.serviceIP}/>
+                                        </Tab>
+                                        <Tab eventKey={1} title="Need Improvements">
+                                            <TermPerformance serviceIP={this.props.serviceIP} classes={this.state.classes}/>
+                                        </Tab>
+                                    </Tabs>
+                                </Col>
+                            </Row>
                         </CardBody>
                     </Card>
                     </Col>

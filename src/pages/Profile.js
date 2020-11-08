@@ -411,7 +411,7 @@ export default class Profile extends React.Component {
                             <Alert>
                               You currently have no valid logged sessions.
                             </Alert>
-                          </CardBody> : null}
+                          </CardBody> : null}  
                       </Card>
                     </Col>
                   </Row>

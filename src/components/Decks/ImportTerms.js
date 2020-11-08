@@ -262,7 +262,7 @@ export default class ImportTerms extends Component {
         <ModalFooter style={{display: "inline"}}>
           <Row>
             <Col style={{padding: "5px 15px 0 0"}}>
-              <p style={{margin: "0px"}}>Need the template? Click {' '}
+              <p style={{margin: "0px 15px"}}>Need the template? Click {' '}
                 <a
                   style={{textDecoration: "underline", color: "blue"}} 
                   href={ImportTemplate}

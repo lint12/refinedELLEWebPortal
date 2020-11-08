@@ -7,11 +7,11 @@ const Wave = (props) => {
   let height; 
   let width;
   if (props.chart === "language" || props.chart === "modules") {
-    height = 180; 
+    height = 190; 
     width = 50;
   }
   else if (props.chart === "tag") {
-    height = 440; 
+    height = 170; 
     width = 50;
   }
 
