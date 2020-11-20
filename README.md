@@ -28,6 +28,7 @@
 
 ----Form Validation when adding Modules and Terms---- 
 WILL THESE FUNCTIONS BE INEFFICIENT? 
+//will not include because we do not want to limit the users from using the same names for modules 
 - [ ] traverse through the modules array to check if that module name is taken already or not // or does this work like autocomplete? 
 - [ ] traverse through the terms array for that specific module to see if it exists already
 
@@ -35,8 +36,12 @@ WILL THESE FUNCTIONS BE INEFFICIENT?
 - [ ] Need to clear up the code for adding a Question, might need an API call to simplify this functionality 
 
 ---- Other ----
-- [ ] Figure out new layout of organizing each individual Module to reflect the new database 
+- [x] Figure out new layout of organizing each individual Module to reflect the new database 
 - [x] Super tiny fix: include module name next to the search bar on the card list side 
+- [ ] Move module info above the forms when the collapse is open 
+- [ ] Add information icon to inform users what the tag functionality is all about 
+- [ ] Add a handbook for admin users to understand how the games will utilize the terms in the module and how to maximize their student's experience when playing the games
+- [ ] Find bugs on the modules page and fix them (especially those regarding tags and questions) 
 
 ### Stat Page Functions
 - TBD 
@@ -45,13 +50,15 @@ WILL THESE FUNCTIONS BE INEFFICIENT?
 - TBD 
 
 ### Profile Page 
-- [ ] Finish up word of the day 
-- [ ] Include class invite code for professors/TAs
-- [ ] Include add additional class functionality for students 
+- [ ] Finish up word of the day ??? Maybe/probably not adding this 
+- [x] Include class invite code for professors/TAs
+- [x] Include add additional class functionality for students 
+- [ ] Color Code the modules based on how they are performing 
+- [ ] Request for an API to get how students are doing relative to their classmates 
 
 ### Register Page 
-- [ ] Create a randomizer for usernames, need an API call for this
-- [ ] Include add class functionality for students 
+- [x] Create a randomizer for usernames, need an API call for this
+- [x] Include add class functionality for students 
 
 ## Useful Resources 
 ### API 
