@@ -42,6 +42,7 @@ WILL THESE FUNCTIONS BE INEFFICIENT?
 - [ ] Add information icon to inform users what the tag functionality is all about 
 - [ ] Add a handbook for admin users to understand how the games will utilize the terms in the module and how to maximize their student's experience when playing the games
 - [ ] Find bugs on the modules page and fix them (especially those regarding tags and questions) 
+- [ ] Figure out a good design/layout for ELLE Downloads Page
 
 ### Stat Page Functions
 - TBD 
