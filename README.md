@@ -40,7 +40,7 @@ WILL THESE FUNCTIONS BE INEFFICIENT?
 - [x] Super tiny fix: include module name next to the search bar on the card list side 
 - [x] Move module info above the forms when the collapse is open 
 - [x] Add information icon to inform users what the tag functionality is all about 
-- [ ] Add a handbook for admin users to understand how the games will utilize the terms in the module and how to maximize their student's experience when playing the games
+- [x] Add a handbook for admin users to understand how the games will utilize the terms in the module and how to maximize their student's experience when playing the games
 - [ ] Find bugs on the modules page and fix them (especially those regarding tags and questions) 
 - [ ] Figure out a good design/layout for ELLE Downloads Page
 
@@ -54,7 +54,7 @@ WILL THESE FUNCTIONS BE INEFFICIENT?
 - [ ] Finish up word of the day ??? Maybe/probably not adding this 
 - [x] Include class invite code for professors/TAs
 - [x] Include add additional class functionality for students 
-- [ ] Color Code the modules based on how they are performing 
+- [x] Color Code the modules based on how they are performing 
 - [ ] Finish the student lookup functionality for professors 
 - [ ] Request for an API to get how students are doing relative to their classmates 
 
