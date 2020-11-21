@@ -38,8 +38,8 @@ WILL THESE FUNCTIONS BE INEFFICIENT?
 ---- Other ----
 - [x] Figure out new layout of organizing each individual Module to reflect the new database 
 - [x] Super tiny fix: include module name next to the search bar on the card list side 
-- [ ] Move module info above the forms when the collapse is open 
-- [ ] Add information icon to inform users what the tag functionality is all about 
+- [x] Move module info above the forms when the collapse is open 
+- [x] Add information icon to inform users what the tag functionality is all about 
 - [ ] Add a handbook for admin users to understand how the games will utilize the terms in the module and how to maximize their student's experience when playing the games
 - [ ] Find bugs on the modules page and fix them (especially those regarding tags and questions) 
 - [ ] Figure out a good design/layout for ELLE Downloads Page
