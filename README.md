@@ -55,8 +55,8 @@ WILL THESE FUNCTIONS BE INEFFICIENT?
 - [x] Include class invite code for professors/TAs
 - [x] Include add additional class functionality for students 
 - [x] Color Code the modules based on how they are performing 
-- [ ] Finish the student lookup functionality for professors 
-- [ ] Request for an API to get how students are doing relative to their classmates 
+- [x] Finish the student lookup functionality for professors 
+- [ ] Request for an API to get how students are doing relative to their classmates (leaving this for the future group to implement)
 
 ### Register Page 
 - [x] Create a randomizer for usernames, need an API call for this
