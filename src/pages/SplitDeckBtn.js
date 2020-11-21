@@ -18,7 +18,7 @@ import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Pop
       <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}> 
         <Button 
           style={{display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", backgroundColor: "#5faeb5",
-                  border: "none", borderRadius: '0px'}} 
+                  border: "none", borderRadius: '0px', overflowX: "scroll"}} 
           id={"deckButton" + props.curModule.moduleID}
           type="button"
           onClick={ () => { props.updateCurrentModule({ module: props.curModule }) }}

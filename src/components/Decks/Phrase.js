@@ -178,7 +178,6 @@ class Phrase extends React.Component {
                         <img src={require('../../Images/headphones.png')} alt="headphones icon" style={{width: '25px', height: '25px'}}/>
                         </Button>
                     </td>
-                    <td>{id}</td>
                     
                     {this.props.permissionLevel !== "st" 
                     ? 
@@ -238,7 +237,7 @@ class Phrase extends React.Component {
                             Upload Audio
                         </Tooltip>
                     </td>
-                    <td>{id}</td>
+
                     <td>
                     <ButtonGroup>
                         <Button style={{backgroundColor: 'lightcyan'}} onClick = {() => this.submitEdit()}>

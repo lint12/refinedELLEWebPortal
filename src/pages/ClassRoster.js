@@ -16,8 +16,6 @@ class ClassRoster extends Component {
     super(props)
     this.state = {
       permission: this.props.user.permission,
-      students: [],
-      tas: [],
       groups: [], 
       currentGroup: "st",
       search : "",

@@ -299,7 +299,6 @@ class Card extends React.Component {
                 />
             </Button>
           </td>
-          <td>{this.state.card.termID}</td>
 
           {this.props.permissionLevel !== "st" 
           ? 
@@ -452,8 +451,6 @@ class Card extends React.Component {
             Upload Audio
           </Tooltip>
         </td>
-
-        <td>{this.state.card.termID}</td>
 
         <td>
           <ButtonGroup>

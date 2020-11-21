@@ -270,6 +270,24 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /*--------------------------------------------------------------
+# Downloads Page
+--------------------------------------------------------------*/
+.downloadsBg {
+  background: linear-gradient(180deg, #c3d4e2, #6393d4);
+}
+
+.downloadsHdr {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  height: 90vh;
+  color: white;
+}
+
+
+/*--------------------------------------------------------------
 # Navigation Menu
 --------------------------------------------------------------*/
 /* Nav Menu Essentials */
@@ -673,7 +691,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 /* Call To Action Section
 --------------------------------*/
 #call-to-action {
-  background: #081e5b;
+  background: #c3d4e2;
   background-size: cover;
   padding: 40px 0;
 }
@@ -1187,4 +1205,18 @@ table.statsTable.table thead th {
 table.statsTable.table tbody td {
   border-right-style: hidden;
   border-bottom: hidden ;
+}
+
+.infoCard {
+  margin: 20px auto;
+  max-width: 600px;
+  padding: 20px;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);   
+  border-radius: 5px;
+  position: relative;
+  z-index: 1;
+  background: inherit;
+  overflow: hidden;
+  backdrop-filter: blur(30px);
+  background-color: #2e4652;
 }

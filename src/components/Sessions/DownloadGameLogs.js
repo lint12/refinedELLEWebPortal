@@ -11,12 +11,18 @@ const DownloadGameLogs = (props) => {
     
     const downloadLoggedAnswers = () => {
         trackPromise(
-            axios.get(props.serviceIP + '/getloggedanswercsv', {
+            axios({
+                url: props.serviceIP + '/getloggedanswercsv',
+                method: 'GET',
+                responseType: 'blob', 
                 headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-            }).then(res => {
-                console.log(res.data);
-            }).catch(function (error) {
-                console.log(error);
+            }).then((response) => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'logged_answers.csv');
+                document.body.appendChild(link);
+                link.click();
             }), 'gameLogsBtn'
         );
     }
@@ -25,8 +31,6 @@ const DownloadGameLogs = (props) => {
         <>
             <Button 
                 id="downloadLoggedAnswers"
-                href={props.serviceIP + "/getloggedanswercsv"}
-                download="logged_answers.csv"
                 style={{backgroundColor: "#37f0f9", color: "black", border: "none", marginRight: "15px", 
                     display: "grid", fontSize: "10px", fontWeight: "700", padding: "2px 2px 0 2px"}} 
                 onClick={() => downloadLoggedAnswers()}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Form, FormGroup, Label, Input, CustomInput, Row, Col, Alert} from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, CustomInput, Row, Col, Alert, Tooltip } from 'reactstrap';
 import axios from 'axios';
 
 import TagList from './TagList';
@@ -22,6 +22,9 @@ class AddTerm extends React.Component {
 
 			imgLabel: "Pick an image for the term", 
 			audioLabel: "Pick an audio for the term",
+
+			tooltipOpen: false,
+			tagInfoModalOpen: false 
 		};
 	}
 
@@ -168,14 +171,16 @@ class AddTerm extends React.Component {
   	})
   }
 
+  toggleTooltip = () => {
+    this.setState({ tooltipOpen: !this.state.tooltipOpen });
+  }
+
 render () {
     return (
 		<div>
 		 
 		<Form onSubmit={e => this.submitTerm(e)}>
 			<input type="hidden" value="prayer" />
-			
-			<br/>
 
 			<Alert style={{color: '#004085', backgroundColor: 'lightskyblue', border: "none"}}>
 			<Row>
@@ -265,8 +270,21 @@ render () {
 			<Row>
 				<Col>
 					<Label for="tags">
-						Tags:
+						Tags: {' '}
+						<img 
+							style={{width: "15px", height: "15px", cursor: "pointer"}} 
+							src={require('../../Images/info.png')}
+							id="infoLbl"
+							onClick={this.toggleTagInfoModal}
+						/>
 					</Label>
+
+					<Tooltip placement="right" isOpen={this.state.tooltipOpen} target="infoLbl" toggle={this.toggleTooltip}>
+						<p style={{textAlign: "left"}}>Tags:</p>
+						<p style={{textAlign: "left"}}>Adding a tag to a term allows you to associate it with a category.</p>
+						<p style={{textAlign: "left"}}>This can be really helpful when you are trying to make a module based on a specific category by using the add existing term form.</p>
+						<p style={{textAlign: "left"}}>i.e. The term "apple" can have the tags: "fruit" and "food".</p>
+					</Tooltip>
 
 					<br/>
 					
@@ -287,10 +305,10 @@ render () {
 				    {/*Lists all of the tags on this term, displayed as buttons*/}
 					<Alert color="warning">
 				    	<TagList 
-				    	tags={this.state.tags} 
-				    	handleDeleteTag={this.handleDeleteTag} 
-				    	updateTagList={this.updateTagList} 
-				    	deletable={true}
+							tags={this.state.tags} 
+							handleDeleteTag={this.handleDeleteTag} 
+							updateTagList={this.updateTagList} 
+							deletable={true}
 				    	/>
 					</Alert>
 				    
@@ -305,11 +323,11 @@ render () {
 						</Label>
 
 						<CustomInput 
-						type="file" 
-						accept=".png, .jpg, .jpeg" 
-						id="imgFile" 
-						label={this.state.imgLabel} 
-						onChange={this.imgFileChangedHandler}
+							type="file" 
+							accept=".png, .jpg, .jpeg" 
+							id="imgFile" 
+							label={this.state.imgLabel} 
+							onChange={this.imgFileChangedHandler}
 						/>
 					</FormGroup>
 				</Col>
@@ -326,7 +344,7 @@ render () {
 							id="audioFile" 
 							label={this.state.audioLabel} 
 							onChange={this.audioFileChangedHandler}
-							/>
+						/>
 					</FormGroup>
 				</Col>
 			</Row>
@@ -341,7 +359,7 @@ render () {
 				</Col>
 			</Row>
 			</Alert>
-		</Form> 
+		</Form>
 		</div>
 )
 }

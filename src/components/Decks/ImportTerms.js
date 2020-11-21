@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Button } from 'react-bootstrap'
-import { Card, Label, Modal, ModalHeader, ModalBody, ModalFooter, Table, Row, Col, Badge, Alert, Tooltip, Input } from 'reactstrap'
+import { Card, Label, Modal, ModalHeader, ModalBody, ModalFooter, Table, Row, Col, Badge, Alert, Tooltip } from 'reactstrap'
 import Form from 'react-bootstrap/Form'
 import { CSVReader } from 'react-papaparse'
 import axios from 'axios';
@@ -299,7 +299,7 @@ export default class ImportTerms extends Component {
         />
       </Button>
 
-      <Tooltip placement="left" isOpen={this.state.tooltipOpen} target="importBtn" toggle={() => this.toggleTooltip()}>
+      <Tooltip placement="right" isOpen={this.state.tooltipOpen} target="importBtn" toggle={() => this.toggleTooltip()}>
         Mass Import
       </Tooltip>
     </>

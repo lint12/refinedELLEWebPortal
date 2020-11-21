@@ -256,7 +256,7 @@ export default class AdminView extends Component {
                     <Col xs="9">
                     <Card style={{backgroundColor: "cadetblue", height: "65vh"}}>
                         <CardBody style={{color: "#04354b"}}>
-                            <h1 style={{textDecoration: "underline", fontFamily: "auto"}}>
+                            <h1>
                                 Welcome back {this.props.username}!
                             </h1>
                             <Row>
@@ -265,8 +265,12 @@ export default class AdminView extends Component {
                                         <Tab eventKey={0} title="Module Performance">
                                             <ModulePerformance serviceIP={this.props.serviceIP}/>
                                         </Tab>
-                                        <Tab eventKey={1} title="Need Improvements">
-                                            <TermPerformance serviceIP={this.props.serviceIP} classes={this.state.classes}/>
+                                        <Tab eventKey={1} title="Term Performance">
+                                            <TermPerformance 
+                                              serviceIP={this.props.serviceIP} 
+                                              permission={this.props.permission}
+                                              classes={this.state.classes}
+                                            />
                                         </Tab>
                                     </Tabs>
                                 </Col>

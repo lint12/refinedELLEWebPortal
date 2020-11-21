@@ -108,7 +108,8 @@ export default class Modules extends Component {
         }
       }
       else {
-        let groupSpecificModules = allModules.filter((module) => module.groupID === this.state.selectedClass.value);
+        let groupSpecificModules = allModules.filter((module) => 
+          module.groupID !== null && module.groupID.indexOf(this.state.selectedClass.value) !== -1);
 
         if(groupSpecificModules.length === 0) {
           this.setState({ 
@@ -385,6 +386,7 @@ export default class Modules extends Component {
 
   updateClassContext = (value) => {
     if (value !== null) {
+      console.log("GROUP PERMISSION LEVELS: ", this.state.groupPermissionLevels);
       let currentClass = this.state.groupPermissionLevels.find((group) => group.groupID === value.value);
 
       this.setState({
@@ -392,6 +394,7 @@ export default class Modules extends Component {
         classChanged: true,
       }); 
 
+      console.log("CURRENT CLASS: ", currentClass);
       value.value === 0 ? this.verifyPermission() : this.setState({currentPermissionLevel: currentClass.accessLevel}); 
     }
     else {

@@ -12,7 +12,7 @@ class ModulePerformance extends Component {
 		this.state = {
             modules: null,
             modalOpen: false,
-            termStats: []
+            termStats: null
         }
  
     }
@@ -37,7 +37,7 @@ class ModulePerformance extends Component {
         );
     }
 
-    renderModulesChart = () => {
+    renderModulesTable = () => {
         return (
             this.state.modules.length !== 0 ?
                 <Table className="statsTable"> 
@@ -48,15 +48,16 @@ class ModulePerformance extends Component {
                             <th>Average Score</th>
                             <th>Average Duration</th>
                             <th></th>
-                        </tr>
+                        </tr>   
                     </thead>
                     <tbody> 
                         {this.state.modules.map((module, i) => {
+                            let avgScore = module.averageScore * 100; 
                             return (
-                                <tr key={i}>
+                                <tr key={i} style={{color: this.getRangeColor(avgScore)}}>
                                     <td>{module.moduleID}</td>
                                     <td>{module.name}</td>
-                                    <td>{(module.averageScore).toFixed(2)}</td>
+                                    <td>{avgScore.toFixed(2)}%</td>
                                     <td>{module.averageSessionLength}</td>
                                     <td>
                                         <Button 
@@ -80,11 +81,35 @@ class ModulePerformance extends Component {
         )
     }
 
+    getRangeColor = (value) => {
+        let color = ""
+        if (value >= 90) {
+            color = "limegreen"
+        }
+        else if (value >= 80) {
+            color = "lawngreen"
+        }
+        else if (value >= 70) {
+            color = "yellow"
+        }   
+        else if (value >= 60) { 
+            color = "orange"
+        }
+        else {
+            color = "red"
+        }
+
+        return color; 
+    }
+
     toggleModal = (id) => {
         this.setState({ modalOpen: !this.state.modalOpen });
 
         if (this.state.modalOpen === false)
             this.getTermStats(id); 
+        else {
+            this.setState({ termStats: null })
+        }
     }
 
     getTermStats = (id) => {
@@ -93,22 +118,25 @@ class ModulePerformance extends Component {
             params: { moduleID: id }
         }
 
-        axios.get(this.props.serviceIP + '/termsperformance', header)
-        .then(res => {
-            console.log(res.data); 
-            if (res.data.Message)
-                this.setState({ termStats: [] })
-            else 
-                this.setState({ termStats: res.data })
-        }).catch(error => {
-            console.log(error.response); 
-        })
+        trackPromise(
+            axios.get(this.props.serviceIP + '/termsperformance', header)
+            .then(res => {
+                console.log(res.data); 
+                if (res.data.Message)
+                    this.setState({ termStats: [] })
+                else 
+                    this.setState({ termStats: res.data })
+            }).catch(error => {
+                console.log(error.response); 
+        }));
     }
 
     renderChart = () => {
         let terms = Object.entries(this.state.termStats).map(([i, term]) => {
             return( {front: term.front, percentage: term.correctness*100} )
         }); 
+
+        let chartColors = this.getColors(terms.length); 
 
         console.log("Terms: ", terms); 
 
@@ -117,8 +145,8 @@ class ModulePerformance extends Component {
             datasets: [
             {
                 label: 'Correctness (%)',
-                data: terms.map(term => term.percentage),
-                backgroundColor: ['#abc9cd', '#658e93', '#7abe80']
+                data: terms.map(term => term.percentage.toFixed(2)),
+                backgroundColor: chartColors
             }
             ]
         };
@@ -152,20 +180,36 @@ class ModulePerformance extends Component {
         )
     }
 
+    getColors = (len) => {
+        let list = []; 
+        let possibleColors = ['#abc9cd', '#658e93', '#7abe80', '#ecf8b1', '#c7eab4', '#7fcdbb', '#40b6c4', '#1e91c0', '#225ea8', '#263494', '#091d58']; 
+
+        let index = 0; 
+        for (let i = 0; i < len; i++) {
+            list.push(possibleColors[index]); 
+
+            index++; 
+            if(index >= possibleColors.length)
+                index = 0; 
+        }
+
+        return list; 
+    }
+
 	render() { 
         return (
             <Row>
                 <Col>
                     <Card style={{backgroundColor: "#04354b", color: "aqua", overflow: "scroll", height: "45vh", borderTopLeftRadius: "0px"}}>
                         {this.state.modules
-                        ? this.renderModulesChart() 
+                        ? this.renderModulesTable() 
                         : <Spinner chart="performance"/>}
                     </Card>
 
                     <Modal isOpen={this.state.modalOpen} toggle={this.toggleModal}>
                         <ModalHeader toggle={this.toggleModal}>Terms Performance</ModalHeader>
                         <ModalBody>
-                            {this.renderChart()}
+                            {this.state.termStats ? this.renderChart() : <Spinner />}
                         </ModalBody>
                     </Modal>
                 </Col>

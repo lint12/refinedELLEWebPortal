@@ -325,7 +325,6 @@ class Question extends React.Component {
                 />
             </Button>
           </td>
-          <td>{this.state.question.questionID}</td>
 
           {this.props.permissionLevel !== "st"
           ?
@@ -438,8 +437,6 @@ class Question extends React.Component {
             Upload Audio
           </Tooltip>
         </td>
-
-        <td>{this.state.question.questionID}</td>
 
         <td>
           <ButtonGroup>

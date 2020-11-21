@@ -104,7 +104,6 @@ class AddPhrase extends React.Component {
     render () {
         return (
             <div>
-            <br></br>
             <Form onSubmit={e => this.submitPhrase(e)}>
             <Alert color='none' style={{color: '#004085', backgroundColor: 'lightskyblue', border: "none"}}>
                 <Row>

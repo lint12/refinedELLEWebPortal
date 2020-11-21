@@ -332,13 +332,9 @@ class AddQuestion extends React.Component {
 		}
 
 	    return (
-		
-			
 			<div>
 			<Form onSubmit={e => this.submitQuestion(e)}>
 				<input type="hidden" value="prayer" />
-				
-				<br/>
 
 				<Alert style={{color: '#004085', backgroundColor: 'lightskyblue', border: "none"}}>
 				<Row>

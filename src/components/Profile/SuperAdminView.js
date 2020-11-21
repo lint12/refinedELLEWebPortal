@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'reactstrap';
 import '../../stylesheets/superadmin.css'
-import PlatformStats from '../Stats/PlatformStats';
-import ModuleStats from '../Stats/ModuleStats';
-import TagStats from '../Stats/TagStats';
+import PlatformStats from '../Stats/SuperAdmin/PlatformStats';
+import ModuleStats from '../Stats/SuperAdmin/ModuleStats';
+import TagStats from '../Stats/SuperAdmin/TagStats';
 import Password from './Password';
 
 export default class SuperAdminView extends Component {

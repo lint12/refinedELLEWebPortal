@@ -128,97 +128,11 @@ export default class Home extends Component {
 	<section id="team" className="wow fadeInUp">
 		<div className="container">
 			<div className="section-header">
-				<h2>Group Members</h2>
-			</div>
-			<div className="row">
-				<div className="col-lg-1"><div className="member" /></div>
-				
-				<div className="col-lg-2 col-md-6">
-					<div className="member">
-					{/*<div className="pic"><img src={require('../Images/ELLE/team-1.jpg')} alt=""/></div>*/}
-						<div className="details">
-							<h4>Kalonte Jackson-Tate</h4>
-							<span>Database Front End</span>
-							<div className="social">
-								{/*<a href><i className="fa fa-twitter" /></a>
-								<a href><i className="fa fa-facebook" /></a>
-							<a href><i className="fa fa-linkedin" /></a>*/}
-							</div>
-						</div>
-					</div>
-				</div>
-				
-				<div className="col-lg-2 col-md-6">
-					<div className="member">
-						{/*<div className="pic"><img src={require('../Images/ELLE/team-2.jpg')} alt=""/></div>*/}
-						<div className="details">
-							<h4>Eugene</h4>
-							<h4>Lucino</h4>
-							<span>Website Front End</span>
-							<div className="social">
-								{/*<a href><i className="fa fa-facebook" /></a>
-							<a href><i className="fa fa-linkedin" /></a>*/}
-							</div>
-						</div>
-					</div>
-				</div>
-				
-				<div className="col-lg-2 col-md-6">
-					<div className="member">
-						{/*<div className="pic"><img src={require('../Images/ELLE/team-3.jpg')} alt=""/></div>*/}
-						<div className="details">
-							<h4>Christopher Rodbourne</h4>
-							<span>Database, API, Mobile</span>
-							<div className="social">
-							{/*<a href><i className="fa fa-twitter" /></a>
-								<a href><i className="fa fa-facebook" /></a>
-							<a href><i className="fa fa-linkedin" /></a>*/}
-							</div>
-							</div>
-					</div>
-				</div>
-				
-				<div className="col-lg-2 col-md-6">
-					<div className="member">
-						{/*<div className="pic"><img src={require('../Images/ELLE/team-4.jpg')} alt=""/></div>*/}
-						<div className="details">
-							<h4>Josh</h4>
-							<h4>Sewnath</h4>
-							<span>Project ELLE</span>
-							<div className="social">
-								{/*<a href><i className="fa fa-twitter" /></a>
-								<a href><i className="fa fa-facebook" /></a>
-							<a href><i className="fa fa-linkedin" /></a>*/}
-							</div>
-						</div>
-					</div>
-				</div>
-				
-				<div className="col-lg-2 col-md-6">
-					<div className="member">
-						{/*<div className="pic"><img src={require('../Images/ELLE/testimonial-4.jpg')} alt=""/></div>*/}
-						<div className="details">
-							<h4>Patrick Thompson</h4>
-							<span>Project Manager</span>
-							<div className="social">
-								{/*<a href><i className="fa fa-twitter" /></a>
-								<a href><i className="fa fa-facebook" /></a>
-							<a href><i className="fa fa-linkedin" /></a>*/}
-							</div>
-						</div>
-					</div>
-				</div>
-				
-				<div className="col-lg-1"><div className="member" /></div>
-			</div> <br />
-			
-
-			<div className="section-header">
 				<h2>Sponsors</h2>
 			</div>
 			<div className="row" style={{textAlign: 'center'}}>
 				<div className="col-lg-12">
-					<h2><a href="https://gamesresearch.cah.ucf.edu/elle-the-endless-learner/">
+					<h2><a href="https://gamesresearch.cah.ucf.edu/">
 						UCF GaIM Research Group</a></h2>
 					<p>Orlando Tech Center Bldg 500, Orlando, FL 32826</p>
 					<p><br /></p>

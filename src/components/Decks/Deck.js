@@ -14,6 +14,7 @@ import AddExistingTerm from './AddExistingTerm';
 import AddQuestion from './AddQuestion';   
 import AddPhrase from './AddPhrase'; 
 import ImportTerms from './ImportTerms';
+import Manual from './Manual';
 
 
 class Deck extends React.Component {
@@ -267,9 +268,33 @@ class Deck extends React.Component {
             </>
             : null}
             </InputGroup>
-
+          </Row>
+          
+          <Row style={{marginBottom: "8px"}}>
             <Col>
+              <Badge pill variant="info">
+                Module ID: {this.props.curModule.moduleID}
+              </Badge>{' '}
+              <Badge pill variant="info">
+                Language: {this.props.curModule.language}
+              </Badge>
+            </Col>
+            {this.props.permissionLevel !== "st" ?
+              <Col style={{display: "flex", justifyContent: "flex-end"}}>
+                <Manual />
+                <ImportTerms 
+                  serviceIP={this.props.serviceIP} 
+                  permissionLevel={this.props.permissionLevel}
+                  module={this.props.curModule} 
+                  updateCurrentModule={this.props.updateCurrentModule}
+                  currentClass={this.props.currentClass}
+                />
+              </Col>
+            : null}
+          </Row>
 
+          <Row>
+            <Col>
               {/*Form for adding a new Term*/}
               <Collapse isOpen={this.state.openForm === 2}>     
                 <AddTerm
@@ -333,28 +358,6 @@ class Deck extends React.Component {
                   />
               </Collapse>
             </Col>
-          </Row>
-
-          <Row style={{marginBottom: "8px"}}>
-            <Col>
-              <Badge pill variant="info">
-                Module ID: {this.props.curModule.moduleID}
-              </Badge>{' '}
-              <Badge pill variant="info">
-                Language: {this.props.curModule.language}
-              </Badge>
-            </Col>
-            {this.props.permissionLevel !== "st" ?
-              <Col style={{display: "flex", justifyContent: "flex-end"}}>
-                <ImportTerms 
-                  serviceIP={this.props.serviceIP} 
-                  permissionLevel={this.props.permissionLevel}
-                  module={this.props.curModule} 
-                  updateCurrentModule={this.props.updateCurrentModule}
-                  currentClass={this.props.currentClass}
-                />
-              </Col>
-            : null}
           </Row>
 
           <Row>

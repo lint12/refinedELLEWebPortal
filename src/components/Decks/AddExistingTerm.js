@@ -258,8 +258,6 @@ render () {
 		<Form onSubmit={e => this.submitExistingTerms(e)}>
 			<input type="hidden" value="prayer" />
 			
-			<br/>
-
 			<Alert style={{color: '#004085', backgroundColor: 'lightskyblue', border: "none"}}>
 			<Row>
 				<Col>
