@@ -8,7 +8,6 @@ class AuthAdmin extends Component {
 
   componentDidMount() {
     const jwt = localStorage.getItem('jwt');;
-    console.log("jwt: " + jwt); 
 
     if (!jwt) {
       this.props.history.push('/home');
@@ -17,7 +16,6 @@ class AuthAdmin extends Component {
       var jwtDecode = require('jwt-decode');
 
       var decoded = jwtDecode(jwt);
-      console.log("Auth Super Admin JWT DECODED: ", decoded);
 
       if (decoded.user_claims.permission !== "su" && this.props.location.pathname === "/userlist") {
         this.props.history.push('profile'); 

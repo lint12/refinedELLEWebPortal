@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Button, Form, FormGroup, Input, Label, InputGroup, InputGroupAddon, FormFeedback, Alert } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import MainTemplate from '../pages/MainTemplate';
 import '../stylesheets/loginstyle.css';

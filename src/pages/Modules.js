@@ -61,7 +61,6 @@ export default class Modules extends Component {
       var jwtDecode = require('jwt-decode');
 
       var decoded = jwtDecode(jwt);
-      console.log("JWT DECODED: ", decoded);
 
       this.setState({ currentPermissionLevel: decoded.user_claims.permission }); 
     }
@@ -76,7 +75,6 @@ export default class Modules extends Component {
 
     axios.get(this.props.serviceIP + '/retrieveusermodules', header)
     .then(res => {
-      console.log("RETRIEVE USER MODULES RESPONSE: ", res.data); 
       let allModules = res.data; 
 
       if(allModules.length === 0) {
@@ -93,7 +91,6 @@ export default class Modules extends Component {
 
         //when a new module is added you want to display that new module 
         if (task === "add") {
-          console.log("SHOWING ADDED MODULE");
           let newModule = allModules.find((module) => module.moduleID === moduleID);
           this.updateCurrentModule({ module: newModule }); 
           this.toggleModificationWarning("new");
@@ -129,7 +126,6 @@ export default class Modules extends Component {
 
         //when a new module is added you want to display that new module 
         if (task === "add") {
-          console.log("SHOWING ADDED MODULE");
           let newModule = groupSpecificModules.find((module) => module.moduleID === moduleID);
           this.updateCurrentModule({ module: newModule }); 
           this.toggleModificationWarning("new");
@@ -151,7 +147,6 @@ export default class Modules extends Component {
 
   //function for getting the elements in the current module
   updateCurrentModule = (event) => {
-    console.log("updateCurrentModule, event.module: ", event.module);
     var data = {
       moduleID: event.module.moduleID
     }
@@ -162,8 +157,6 @@ export default class Modules extends Component {
 
     axios.post(this.props.serviceIP + '/modulequestions', data, header)
       .then( res => {
-        console.log("updateCurrentModule res.data: ", res.data);
-
         let cards = res.data;
 
         this.setState({
@@ -192,8 +185,6 @@ export default class Modules extends Component {
       .then(res => {
         allAnswersInDB = res.data;
 
-        console.log("ALL ANS IN DB before filter: ", allAnswersInDB); 
-
         //gets rid of responses that have type "PH", for phrases
         allAnswersInDB = allAnswersInDB.filter((answer) => {
           if(answer.type !== 'PH'){
@@ -211,8 +202,6 @@ export default class Modules extends Component {
                   })
         });
 
-        console.log("ALL ANS IN DB: ", allAnswersInDB); 
-
         //---
         //removes duplicates
         let frontArray = [];
@@ -224,8 +213,6 @@ export default class Modules extends Component {
           }
         }
         //---
-
-        console.log("ALL ANS MINUS THE DUPES: ", allAnswersMinusDupes); 
 
         this.setState({
           allAnswers: allAnswersMinusDupes
@@ -249,7 +236,6 @@ export default class Modules extends Component {
       groupID: this.state.currentPermissionLevel === "st" ? this.state.selectedClass.value : null
     }
 
-    console.log("EDIT MODULE DATA: ", data); 
     let header = {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }
@@ -260,7 +246,6 @@ export default class Modules extends Component {
         this.updateModuleList("edit", null); 
  
         if (this.state.currentModule.moduleID === event.module.moduleID) {
-          console.log("MODULE NAME BEING UPDATED IS THE SAME ONE THAT IS BEING DISPLAYED")
           this.setState({ currentModule: res.data }); 
         }
 
@@ -280,8 +265,7 @@ export default class Modules extends Component {
       }, 
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }
-
-    console.log("DELETE MODULE DATA: ", header.data); 
+ 
     axios.delete(this.props.serviceIP + '/module', header)
       .then( res => {
 
@@ -361,7 +345,6 @@ export default class Modules extends Component {
   }
 
   toggleModificationWarning = (condition) => {
-    console.log("Toggling warning"); 
     if (condition === "new") {
       this.setState({ modificationWarning: true }); 
     }
@@ -386,7 +369,6 @@ export default class Modules extends Component {
 
   updateClassContext = (value) => {
     if (value !== null) {
-      console.log("GROUP PERMISSION LEVELS: ", this.state.groupPermissionLevels);
       let currentClass = this.state.groupPermissionLevels.find((group) => group.groupID === value.value);
 
       this.setState({
@@ -394,7 +376,6 @@ export default class Modules extends Component {
         classChanged: true,
       }); 
 
-      console.log("CURRENT CLASS: ", currentClass);
       value.value === 0 ? this.verifyPermission() : this.setState({currentPermissionLevel: currentClass.accessLevel}); 
     }
     else {
@@ -410,8 +391,7 @@ export default class Modules extends Component {
     axios.get(this.props.serviceIP + '/userlevels', {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then(res => {
-      console.log("PERMISSION LEVELS: ", res.data); 
-      this.setState({ groupPermissionLevels: res.data })
+      this.setState({ groupPermissionLevels: res.data });
     }).catch(error => {
       console.log("getPermissionLevels error: ", error); 
     })

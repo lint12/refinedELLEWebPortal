@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Row, Col, Card, Table } from 'reactstrap';
+import { Card, Table } from 'reactstrap';
 import '../../../stylesheets/superadmin.css';
 import axios from 'axios';
 import { trackPromise } from 'react-promise-tracker';

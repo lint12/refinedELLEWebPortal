@@ -55,24 +55,31 @@ export default class Downloads extends Component {
 
 				<Row>
 					<Col>
-						<video width="340" height="220" autoPlay loop muted>
-							<source src={betterRacerPromo} type="video/mp4" />
-						</video>
+						<a href="#ELLEBetterRacer">
+							<video width="340" height="220" autoPlay loop muted>
+								<source src={betterRacerPromo} type="video/mp4" />
+							</video>
+						</a>
 					</Col>
 					<Col>
-						<video width="340" height="220" autoPlay loop muted>
-							<source src={elleCardGamePromo} type="video/mp4" />
-						</video>
+						<a href="#ELLECardGame">
+							<video width="340" height="220" autoPlay loop muted>
+								<source src={elleCardGamePromo} type="video/mp4" />
+							</video>
+						</a>
 					</Col>
 					<Col>
-						<video width="340" height="220" autoPlay loop muted>
-							<source src={betterRacerPromo} type="video/mp4" />
-						</video>
+						<a href="#ELLEVR">
+							<video width="340" height="220" autoPlay loop muted>
+								<source src={betterRacerPromo} type="video/mp4" />
+							</video>
+						</a>
 					</Col>
 				</Row>
 			</div>
 		</section>
 		
+		<a id="ELLEBetterRacer">
 		<section style={{color: "white"}}>
 		<div className="container" style={{display: "flex"}}>
 			<Row>
@@ -125,7 +132,9 @@ export default class Downloads extends Component {
 			</Row>
 			</div>
 			</section>
+			</a>
 
+			<a id="ELLECardGame">
 			<section style={{color: "white"}}>
 			<div className="container" style={{display: "flex", justifyContent: "flex-end"}}>
 			<Row>
@@ -172,7 +181,9 @@ export default class Downloads extends Component {
 			</Row>
 			</div>
 			</section>
+			</a>
 
+			<a id="ELLEVR">
 			<section style={{color: "white"}}>
 			<div className="container" style={{display: "flex"}}>
 			<Row>
@@ -210,6 +221,7 @@ export default class Downloads extends Component {
 			</Row>
 		</div>
 		</section>
+		</a>
 		
 		<footer id="footer">
 			<div className="container">

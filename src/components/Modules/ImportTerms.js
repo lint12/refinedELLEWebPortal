@@ -44,10 +44,10 @@ export default class ImportTerms extends Component {
     var listTerms = [];
     for (var i=1; i < data.length; i++) {
       var formData = {};
-      formData['front'] = data[i]['data'][frontIndex] == "" ? null : data[i]['data'][frontIndex]
-      formData['back'] = data[i]['data'][backIndex] == "" ? null : data[i]['data'][backIndex]
-      formData['type'] = data[i]['data'][typeIndex] == "" ? "" : data[i]['data'][typeIndex]
-      formData['gender'] = data[i]['data'][genderIndex] == "" ? null : data[i]['data'][genderIndex]
+      formData['front'] = data[i]['data'][frontIndex] === "" ? null : data[i]['data'][frontIndex]
+      formData['back'] = data[i]['data'][backIndex] === "" ? null : data[i]['data'][backIndex]
+      formData['type'] = data[i]['data'][typeIndex] === "" ? "" : data[i]['data'][typeIndex]
+      formData['gender'] = data[i]['data'][genderIndex] === "" ? null : data[i]['data'][genderIndex]
       formData['selected'] = true
 
       if (formData['front'] !== null && formData['back'] !== null)
