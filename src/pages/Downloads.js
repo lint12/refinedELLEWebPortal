@@ -129,6 +129,11 @@ export default class Downloads extends Component {
 						</video>
 					</Col>
 				</div>
+				<div>
+					<Col>
+						<img style={{widht: "300px", height: "400px"}} src={require('../Images/ELLEBetterRacerLogo.png')} />
+					</Col>
+				</div>
 			</Row>
 			</div>
 			</section>

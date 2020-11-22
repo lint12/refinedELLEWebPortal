@@ -235,7 +235,7 @@ export default class AdminView extends Component {
                     {this.state.classDetailModalOpen ? this.revealClassDetails(this.state.currentClassDetails) : null}
 
                     <Form onSubmit={e => this.createClass(e)}>
-                        <h4 style={{marginTop: "8px"}}>Create a New Class</h4>
+                        <h5 style={{marginTop: "8px"}}>Create a New Class</h5>
                         <FormGroup>
                             <Label for="className">Class Name: </Label>
                             <Input 
