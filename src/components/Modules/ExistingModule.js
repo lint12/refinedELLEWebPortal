@@ -12,8 +12,6 @@ class ExistingModule extends Component {
     }
     
     link = () => {
-        console.log("selected class val: ", this.props.selectedClass)
-
         var data = {
             moduleID: this.props.module.moduleID,
             groupID: this.props.selectedClass.value
@@ -25,7 +23,6 @@ class ExistingModule extends Component {
       
         axios.post(this.props.serviceIP + '/addmoduletogroup', data, header)
         .then(res => {
-            console.log("link Module res.data: ", res.data);
             this.setState({ linked: true })
             this.props.updateModuleList("add", this.props.module.moduleID);  
         }).catch(function (error) {

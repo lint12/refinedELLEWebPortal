@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button, Form, FormGroup, Label, Input, Row, Col, Alert, CustomInput } from 'reactstrap';
-import '../../stylesheets/style.css';
 import axios from 'axios';
 
 class AddPhrase extends React.Component {
@@ -20,13 +19,6 @@ class AddPhrase extends React.Component {
     }
 
     submitPhrase = (event) => {
-		console.log("FRONT: ", this.state.phFront)
-        console.log("BACK: ", this.state.phBack)
-        console.log("IMG: ", this.state.selectedImgFile)
-		console.log("Audio: " ,this.state.selectedAudioFile)
-		console.log("language: ", this.props.curModule.language)
-		console.log("id: ", this.props.curModule.moduleID)
-
 		if (this.state.phFront.length !== 0 && this.state.phBack.length !== 0)
 		{   
 			event.preventDefault();
@@ -43,7 +35,8 @@ class AddPhrase extends React.Component {
             //the type of a term must be PH in order to added as a phrase in the backend, so this will be hardcoded 
             data.append('type', "PH");  
 
-            this.props.permissionLevel === "ta" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
+            if (this.props.permissionLevel === "ta")
+                data.append('groupID', this.props.currentClass.value);
             
             //optional fields for adding a phrase 
 			if (this.state.selectedImgFile !== null || this.state.selectedImgFile !== undefined)
@@ -52,17 +45,16 @@ class AddPhrase extends React.Component {
 			if (this.state.selectedAudioFile !== null || this.state.selectedAudioFile !== undefined)
 				data.append('audio', this.state.selectedAudioFile);
 
-
 			axios.post(this.props.serviceIP + '/term', data, header)
-				.then(res => {
-                    console.log(res.data); 
-                    this.resetFields(); 
-					this.props.updateCurrentModule({ module: this.props.curModule });
-				}) 
-				.catch(function (error) {
-					console.log("submitPhrase error: ", error);
-				});
-		} else {
+            .then(res => {
+                this.resetFields(); 
+                this.props.updateCurrentModule({ module: this.props.curModule });
+            }) 
+            .catch(function (error) {
+                console.log("submitPhrase error: ", error.response);
+            });
+        } 
+        else {
 			event.preventDefault();
 			alert("Please fill all inputs!");
 		}
@@ -78,27 +70,27 @@ class AddPhrase extends React.Component {
 
 			imgLabel: "Pick an image for the term", 
 			audioLabel: "Pick an audio for the term",
-        })
+        });
     }
 
     imgFileChangedHandler = (event) => {
         this.setState({
-          selectedImgFile: event.target.files[0],
-          imgLabel: event.target.files[0] === undefined ? "Pick an image for the term" : event.target.files[0].name
-      })
+            selectedImgFile: event.target.files[0],
+            imgLabel: event.target.files[0] === undefined ? "Pick an image for the term" : event.target.files[0].name
+        });
     }
 
     audioFileChangedHandler = (event) => {
         this.setState({
             selectedAudioFile: event.target.files[0],
             audioLabel: event.target.files[0] === undefined ? "Pick an audio for the term" : event.target.files[0].name
-        })
+        });
     }
 
     change(e) {
         this.setState({
-          [e.target.name]: e.target.value
-        })
+            [e.target.name]: e.target.value
+        });
     }
 
     render () {

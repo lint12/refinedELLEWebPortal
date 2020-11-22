@@ -29,12 +29,11 @@ class AddModule extends React.Component {
         tempCodeList.push({label: languageCodes[key], value:key});
     }
 
-    this.setState({languageCodes: tempCodeList})
+    this.setState({languageCodes: tempCodeList});
   }
 
   submitModule = (e) => {
     e.preventDefault();
-    console.log("submit button has been pressed"); 
 
     if (this.props.permissionLevel === 'su'){
       var data = {
@@ -50,8 +49,6 @@ class AddModule extends React.Component {
         groupID: this.props.currentClass.value === 0 ? this.state.class.value : this.props.currentClass.value
       }
     }
-
-    console.log("ADD MODULE DATA: ", data); 
         
     let header = {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
@@ -59,7 +56,6 @@ class AddModule extends React.Component {
 
     axios.post(this.props.serviceIP + '/module', data, header)
     .then(res => {
-      console.log("submitModule res.data: ", res.data);
       this.setState({
         success: true
       }); 
@@ -74,7 +70,7 @@ class AddModule extends React.Component {
   }
 
   updateName = (e) => {
-      this.setState({name: e.target.value}); 
+    this.setState({name: e.target.value}); 
   } 
 
   updateLanguage = (value) => {
@@ -82,7 +78,6 @@ class AddModule extends React.Component {
   } 
 
   updateClass = (value) => {
-    console.log("Selected Class: ", value); 
     this.setState({class: value}); 
   } 
 
@@ -102,11 +97,9 @@ class AddModule extends React.Component {
 
   renderStatus = () => {
     if (this.state.status && this.state.success) {
-      console.log("success")
         return  <Alert color="success" isOpen={this.state.status}>{this.state.name} has been added successfully! </Alert>
     }
     else if (this.state.status && !this.state.success) {
-      console.log("failure")
         return <Alert color="danger" isOpen={this.state.status}>Failure to add {this.state.name}</Alert>
     }
   } 

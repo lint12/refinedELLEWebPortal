@@ -28,10 +28,9 @@ class AnswerButtonList extends Component {
 		return list;
 	}
 
-	render(){
-		return(
+	render() {
+		return (
 			<div>
-				
 				<Row>					
 					{this.renderList(this.props.answers, this.props.handleDeleteAnswer)}
 				</Row>

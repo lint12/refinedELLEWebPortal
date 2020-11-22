@@ -7,6 +7,7 @@ import axios from 'axios';
 
 import ImportTemplate from '../../Template.csv'
 import TermFields from '../MassImport/TermFields'
+
 const buttonRef = React.createRef()
  
 export default class ImportTerms extends Component {
@@ -28,9 +29,6 @@ export default class ImportTerms extends Component {
   }
   
   handleOnFileLoad = (data) => {
-    console.log('---------------------------')
-    console.log(data)
-    console.log('---------------------------')
     if (data.length < 2){
       console.log("Provided CSV doesn't contain header")
     }
@@ -43,9 +41,9 @@ export default class ImportTerms extends Component {
     var typeIndex = data[0]["data"].indexOf("type")
     var genderIndex = data[0]["data"].indexOf("gender")
 
-    var listTerms = []
+    var listTerms = [];
     for (var i=1; i < data.length; i++) {
-      var formData = {}
+      var formData = {};
       formData['front'] = data[i]['data'][frontIndex] == "" ? null : data[i]['data'][frontIndex]
       formData['back'] = data[i]['data'][backIndex] == "" ? null : data[i]['data'][backIndex]
       formData['type'] = data[i]['data'][typeIndex] == "" ? "" : data[i]['data'][typeIndex]
@@ -53,12 +51,12 @@ export default class ImportTerms extends Component {
       formData['selected'] = true
 
       if (formData['front'] !== null && formData['back'] !== null)
-        listTerms.push(formData)
+        listTerms.push(formData);
     }
 
     this.setState({
       terms: listTerms
-    })
+    });
   }
 
   uploadTerms = () => {
@@ -91,10 +89,8 @@ export default class ImportTerms extends Component {
 
         axios(config)
         .then(res => {
-          console.log(res.data);
           this.props.updateCurrentModule({ module: this.props.module });
-        })
-        .catch(error => {
+        }).catch(error => {
           console.log(error);
           if (error.response) {
             this.setState({

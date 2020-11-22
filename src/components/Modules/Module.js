@@ -17,7 +17,7 @@ import ImportTerms from './ImportTerms';
 import Manual from './Manual';
 
 
-class Deck extends React.Component {
+class Module extends React.Component {
   constructor(props) {
     super(props);
     this.toggleTab = this.toggleTab.bind(this); 
@@ -159,21 +159,14 @@ class Deck extends React.Component {
       //Gets all answers not in this module
       let termIDArray = terms.map(term => term.termID);
 
-      let allAnswersNotInThisModule = this.props.allAnswers.filter(
-                                      answer =>{                                   
-                                        if(termIDArray.indexOf(answer.id) === -1){
-                                          return true;
-                                        } else{
-                                          return false;
-                                        }
-                                      })
-
-      
-      console.log("Got into Deck.js render()")
-      console.log("cards: ", this.props.cards)
-      console.log("terms: ", terms);
-      console.log("phrases: ", phrases); 
-      console.log("questions: ", questions); 
+      let allAnswersNotInThisModule = this.props.allAnswers.filter(answer => {                                   
+        if (termIDArray.indexOf(answer.id) === -1) {
+          return true;
+        } 
+        else{
+          return false;
+        }
+      });
 
       ////Variable that stores all of the terms that contain a substring that matches searchCard
       let filteredTerms = terms.filter(
@@ -323,7 +316,7 @@ class Deck extends React.Component {
                   allTags={this.state.allTags}
                   allAnswers={allAnswersNotInThisModule}
                   setOpenForm={this.setOpenForm}
-                  />        
+                />        
               </Collapse>
 
             {/*Form for adding a new Phrase*/}
@@ -449,4 +442,4 @@ class Deck extends React.Component {
     };
   }
 
-export default Deck
+export default Module

@@ -52,9 +52,9 @@ class Question extends React.Component {
   //TODO: handleAddAnswer and createAnswer kinda do the same thing. Maybe they should be one thing?
   //function that adds a answer to list of answers on this question(only available when editmode is true)
   handleAddAnswer = (event) => {
-    //console.log("EVENT being passed in: ", event); 
     let ansList = this.state.answers; 
     let idList = this.state.ids; 
+
     ansList.push(event.answer); 
     idList.push(event.answerID); 
 
@@ -67,7 +67,6 @@ class Question extends React.Component {
 
   //function that adds a new answer from user input to list of answers on this question(only when editmode is true)
   createAnswer = (answer) => {
-    //console.log("CreateAnswer was pressed"); 
     this.setState({
 			submittingAnswer: true,
 			userCreatedAnswer: answer
@@ -82,31 +81,29 @@ class Question extends React.Component {
     let allAnswers = this.state.answers; 
     allAnswers.push(answer.front); 
 
-		//console.log("NEWLY CREATED ANSWERS: ", answer); 
 		this.setState({
       newlyCreatedAnswers: tempNewlyCreatedAnswers,
       answers: allAnswers, 
 			submittingAnswer: false
-		})
+		});
 	}
 
   	//function that allows user to cancel AddAnswer form
 	cancelCreateAnswer = () => {
 		this.setState({
 			submittingAnswer: false
-		})
+		});
 	}
 
   handleDeleteAnswer = (event) => {
-    //console.log("Got into handleDeleteAnswer, event.answer: ", event.answer)
-
     let tempAnswerButtonList = this.state.answers;
     let idList = this.state.ids; 
     
     let answerObject = this.state.answers.find((answer) => {
       if(answer === event.answer){
         return true;
-      } else {
+      } 
+      else {
         return false;
       }
     });
@@ -121,23 +118,25 @@ class Question extends React.Component {
     this.setState({
       answers: tempAnswerButtonList,
       ids: idList
-    })
+    });
 
   }
 
   //function that gets called when the edit button is pushed. Sets editmode to true
   toggleEditMode = () => {
-    this.setState({editMode: true,
-                  collapseAnswers: true, 
-                  answers: this.props.question.answers.map((answer) => {return answer.front}),
-                  ids: this.props.question.answers.map((answer) => {return answer.termID})})
+    this.setState({
+      editMode: true,
+      collapseAnswers: true, 
+      answers: this.props.question.answers.map((answer) => {return answer.front}),
+      ids: this.props.question.answers.map((answer) => {return answer.termID})
+    });
   }
 
   //function that changes the state of front, back, type, and gender based off of the name given to the input objects
   change(e) {
     this.setState({
-        [e.target.name]: e.target.value
-    })
+      [e.target.name]: e.target.value
+    });
   }
 
   //function that inputs image when user uploads a new image to the question
@@ -153,17 +152,11 @@ class Question extends React.Component {
     this.setState({
       selectedAudioFile: event.target.files[0], 
       changedAudio: true //remember to change it back to false later 
-    })
+    });
   }
 
   //function that submits all of the edited data put on a question 
-  submitEdit = (event) => {
-
-    console.log("QUESTIONTEXT: ", this.state.editedQuestionText)
-    console.log("WUESTIONID: ", this.props.question.questionID)
-    console.log("NEW ANSWERS IDS OF TERMS THAT EXIST IN THE DATABASE ALREADY: ", this.state.ids)
-    console.log("NEWLY CREATED ANSWERS INSIDE OF SUBMITEDIT: ", this.state.newlyCreatedAnswers)
-
+  submitEdit = () => {
     this.setState({editMode: false});
 
     let NewlyCreatedAnswerJSONList = this.state.newlyCreatedAnswers.map((answer) => {
@@ -173,15 +166,11 @@ class Question extends React.Component {
         "language": this.props.curModule.language,
         "tags": answer.tags
       }
-    })
-
-    console.log("JSON LIST: ", NewlyCreatedAnswerJSONList); 
+    });
 
     let stringyAnswerList = JSON.stringify(NewlyCreatedAnswerJSONList.map((entry) => {return entry})); 
-    console.log("STRINGIFY: ", stringyAnswerList)
 
     let stringifyIDList = JSON.stringify(this.state.ids.map((entry) => {return entry})); 
-    console.log("STRINGIFY ID: ", stringifyIDList);
 
     const data = new FormData(); 
     let header = {
@@ -200,25 +189,21 @@ class Question extends React.Component {
     this.props.permissionLevel === "ta" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
     
     axios.post(this.props.serviceIP + '/modifyquestion', data, header)
-      .then(res => {
-
-        console.log("res.data in submitEdit in Question.js: ", res.data);
-        
-        this.setState({
-          changedImage: false, 
-          changedAudio: false
-        });
-
-        this.props.updateCurrentModule({ module: this.props.curModule });  
-      })
-      .catch(error => {
-        console.log("submitEdit in question.js error: ", error);
+    .then(res => {
+      this.setState({
+        changedImage: false, 
+        changedAudio: false
       });
+
+      this.props.updateCurrentModule({ module: this.props.curModule });  
+    })
+    .catch(error => {
+      console.log("submitEdit in question.js error: ", error);
+    });
   }
 
   //toggling delete modal, is not related to delete question API 
   handleDelete = () => {
-    console.log(this.state.question); 
     this.toggleModal(); 
   }
 
@@ -235,22 +220,22 @@ class Question extends React.Component {
     };
 
     axios.delete(this.props.serviceIP + '/deletequestion', header)
-      .then( res => {
-        console.log("res.data in deleteQuestion: ", res.data);
-        this.props.updateCurrentModule({ module: this.props.curModule });  
-      })
-      .catch(error => {
-        console.log("deleteQuestion in Question.js error: ", error.message);
-      });
+    .then( res => {
+      console.log("res.data in deleteQuestion: ", res.data);
+      this.props.updateCurrentModule({ module: this.props.curModule });  
+    })
+    .catch(error => {
+      console.log("deleteQuestion in Question.js error: ", error.message);
+    });
   }
 
   //function that toggles whether or not answers a visible
   toggleCollapsedAnswers = () => {
-    this.setState({collapseAnswers: !this.state.collapseAnswers})
+    this.setState({ collapseAnswers: !this.state.collapseAnswers });
   }
 
   toggleModal = () => {
-    this.setState({ modal: !this.state.modal })
+    this.setState({ modal: !this.state.modal });
   }
 
   toggleImgTooltipOpen = () => {
@@ -261,9 +246,8 @@ class Question extends React.Component {
     this.setState({ audioTooltipOpen: !this.state.audioTooltipOpen }); 
   }
 
-
   //function that cancels the edit and sets everything back to what it was initially
-  handleCancelEdit = (event) => {
+  handleCancelEdit = () => {
     this.setState({
       question: this.props.question,
       modal: false,
@@ -281,7 +265,7 @@ class Question extends React.Component {
       ids: JSON.parse(JSON.stringify(this.props.question.answers.map((answer) => {return answer.termID}))), 
       newlyCreatedAnswers: [], 
       userCreatedAnswer: ""
-    })
+    });
   }
 
   render() {
@@ -291,14 +275,12 @@ class Question extends React.Component {
     let imgLink = "https://endlesslearner.com" + selectedImgFile;
     let audioLink = "https://endlesslearner.com" + selectedAudioFile;
 
-    //console.log("this.state.answers: ", this.state.answers, " ANS: ", this.props.question.answers, " IDS: ", this.state.ids, " Original Answers: ", this.state.originalAnswers); 
     if (this.state.editMode === false){
       return (
         <Fragment>
         <tr onClick={this.toggleCollapsedAnswers}>
           <td>{question.questionText}</td>
           <td>
-            {/* favicon is just a placeholder for now more testing needs to be done after deployment */}
             <Button 
               style={{backgroundColor: 'white', width: '100%'}} 
               href={imgLink} 

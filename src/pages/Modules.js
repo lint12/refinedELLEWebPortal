@@ -5,12 +5,12 @@ import axios from 'axios';
 import Select from 'react-select';
   
 import Template from './Template';
-import AddExistingModule from '../components/Decks/AddExistingModule';
-import AddModule from '../components/Decks/AddModule';
+import AddExistingModule from '../components/Modules/AddExistingModule';
+import AddModule from '../components/Modules/AddModule';
 import StudentView from '../components/ModuleList/StudentView';
 import AdminView from '../components/ModuleList/AdminView';
 import SuperAdminView from '../components/ModuleList/SuperAdminView';
-import Deck from '../components/Decks/Deck';
+import Module from '../components/Modules/Module';
 
 export default class Modules extends Component {
   constructor(props) {
@@ -292,7 +292,7 @@ export default class Modules extends Component {
 
       })
       .catch(function (error) {
-        console.log("deleteModule error: ", error.message);
+        console.log("deleteModule error: ", error.response);
       });
   }
 
@@ -560,7 +560,7 @@ export default class Modules extends Component {
             {/*Either the contents of current module, or alert saying there are no modules*/}
             {
               this.state.currentModule.length !== 0 ? 
-                <Deck
+                <Module
                   permissionLevel={this.state.currentPermissionLevel}
                   currentClass={this.state.selectedClass}
                   curModule={this.state.currentModule}

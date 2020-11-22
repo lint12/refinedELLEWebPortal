@@ -5,7 +5,7 @@ import axios from 'axios';
 import TagList from './TagList';
 import Autocomplete from './Autocomplete';
 
-class Card extends React.Component {
+class Term extends React.Component {
   constructor(props){
     super(props);
     this.editCard = this.editCard.bind(this);
@@ -46,9 +46,8 @@ class Card extends React.Component {
   }
 
   componentDidMount() {
-    this.getTermTags(this.props.card.termID)
-
-    }
+    this.getTermTags(this.props.card.termID);
+  }
 
   //TODO: handleAddTag and createTag kinda do the same thing. Maybe they should be one thing?
   //function that adds a tag to list of tags on this card(only available when editmode is true)
@@ -57,15 +56,16 @@ class Card extends React.Component {
 
     this.setState({
       tags: list
-    })
+    });
   }
 
 
   //function that adds a new tag from user input to list of tags on this card(only when editmode is true)
   createTag = (tag) => {
-
     let tempTags = this.state.tags;
+
     tempTags.push(tag);
+
     this.setState({
       tags: tempTags
     });
@@ -73,15 +73,17 @@ class Card extends React.Component {
 
   //function that gets called when the edit button is pushed. Sets editmode to true
   editCard = () => {
-    this.setState({editMode: true,
-                  collapseTags: true})
+    this.setState({
+      editMode: true,
+      collapseTags: true
+    });
   }
 
   //function that changes the state of front, back, type, and gender based off of the name given to the input objects
   change(e) {
     this.setState({
-        [e.target.name]: e.target.value
-    })
+      [e.target.name]: e.target.value
+    });
   }
 
   //function that inputs image when user uploads a new image to the card
@@ -97,19 +99,11 @@ class Card extends React.Component {
     this.setState({
       selectedAudioFile: event.target.files[0], 
       changedAudio: true //remember to change it back to false later 
-    })
+    });
   }
 
   //function that submits all of the edited data put on a card 
   submitEdit = (event) => {
-    console.log("Changed image?: ", this.state.changedImage); 
-    console.log("selectedImg: ", this.state.selectedImgFile);
-
-    console.log("FRONT: ", this.state.editedFront); 
-    console.log("BACK: ", this.state.editedBack); 
-    console.log("TYPE: ", this.state.editedType); 
-    console.log("GENDER: ", this.state.editedGender); 
-
     this.setState({editMode: false});
 
     const data = new FormData(); 
@@ -123,7 +117,8 @@ class Card extends React.Component {
     data.append('back', this.state.editedBack); 
     data.append('language', this.props.card.language); //not editable 
 
-    this.props.permissionLevel === "ta" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
+    if (this.props.permissionLevel === "ta") 
+      data.append('groupID', this.props.currentClass.value);
 
     //map through all the tags and make a tag field object for them 
     this.state.tags.map((label) => {
@@ -135,18 +130,18 @@ class Card extends React.Component {
     data.append('termID', this.props.card.termID); //not editable
     
     axios.post(this.props.serviceIP + '/term', data, header)
-      .then(res => {
-        this.setState({
-          changedImage: false, 
-          changedAudio: false, 
-        });
-
-        this.getTermTags(this.props.card.termID); 
-        this.props.updateCurrentModule({ module: this.props.curModule });  
-      })
-      .catch(error => {
-        console.log("submitEdit in Card.js error: ", error);
+    .then(res => {
+      this.setState({
+        changedImage: false, 
+        changedAudio: false, 
       });
+
+      this.getTermTags(this.props.card.termID); 
+      this.props.updateCurrentModule({ module: this.props.curModule });  
+    })
+    .catch(error => {
+      console.log("submitEdit in Card.js error: ", error.response);
+    });
   }
 
   //toggling delete modal, is not related to delete card API 
@@ -172,17 +167,17 @@ class Card extends React.Component {
         this.props.updateCurrentModule({ module: this.props.curModule });  
       })
       .catch(error => {
-        console.log("deleteCard in Card.js error: ", error);
+        console.log("deleteTerm in Card.js error: ", error.response);
       });
   }
 
   //function that toggles whether or not tags a visible
   toggleCollapsedTags = () => {
-    this.setState({collapseTags: !this.state.collapseTags})
+    this.setState({ collapseTags: !this.state.collapseTags });
   }
 
   toggleModal = () => {
-    this.setState({ modal: !this.state.modal })
+    this.setState({ modal: !this.state.modal });
   }
 
   toggleImgTooltipOpen = () => {
@@ -216,8 +211,6 @@ class Card extends React.Component {
 
   //function that deletes a tag from the list of tags
   handleDeleteTag = (event) => {
-    //var list = this.props.deleteTag(this.state.tags, event.tag);
-
     let tempTagList = this.state.tags;
     let tagIndex = tempTagList.indexOf(event.tag);
 
@@ -225,18 +218,13 @@ class Card extends React.Component {
       tempTagList.splice(tagIndex, 1);
     }
 
-
-    console.log("middle of delete, this.state.tags: ", this.state.tags, "this.state.originalTags: ", this.state.originalTags)
     this.setState({
       tags: tempTagList
-    })
-
+    });
   }
 
-
-
   //function that cancels the edit and sets everything back to what it was initially
-  handleCancelEdit = (event) => {
+  handleCancelEdit = () => {
     this.setState({
       card: this.props.card,
       modal: false,
@@ -272,7 +260,6 @@ class Card extends React.Component {
           <td>{editedType}</td>
           <td>{editedGender}</td>
           <td>
-            {/* favicon is just a placeholder for now more testing needs to be done after deployment */}
             <Button 
               style={{backgroundColor: 'white', width: '100%'}} 
               href={imgLink}
@@ -354,7 +341,6 @@ class Card extends React.Component {
       )
     } 
     else{
-      console.log("GENDER: ", editedGender)
       return (
       <Fragment>
         
@@ -507,4 +493,4 @@ class Card extends React.Component {
   }
 }
 
-export default Card
+export default Term

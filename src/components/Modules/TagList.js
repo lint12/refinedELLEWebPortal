@@ -14,7 +14,6 @@ class TagList extends Component {
 		};
 	}
 
-
 	//function that returns a list of tagItem elements
 	renderList = (tags, handleDeleteTag) => {
 		let list = [];

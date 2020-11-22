@@ -1,14 +1,11 @@
 import React from 'react'
 import { Table, Alert } from 'reactstrap';
 
-import Card from './Card';
+import Term from './Term';
 import Phrase from './Phrase';
 import Question from './Question';
 
-import '../../stylesheets/style.css';
-
 const CardList = (props) => {
-
     const removeDuplicates = () => {
       let idList = []; 
       let filteredList = []; 
@@ -47,17 +44,18 @@ const CardList = (props) => {
           <tbody>
             {list.map((card) => {
               return (
-                <Card
-                key={card.termID}
-                card={card}
-                currentClass={props.currentClass}
-                permissionLevel={props.permissionLevel}
-                serviceIP={props.serviceIP}
-                curModule={props.curModule}
-                updateCurrentModule={props.updateCurrentModule}
-                deleteTag={props.deleteTag}
-                addTag={props.addTag}
-                allTags={props.allTags}/>
+                <Term
+                  key={card.termID}
+                  card={card}
+                  currentClass={props.currentClass}
+                  permissionLevel={props.permissionLevel}
+                  serviceIP={props.serviceIP}
+                  curModule={props.curModule}
+                  updateCurrentModule={props.updateCurrentModule}
+                  deleteTag={props.deleteTag}
+                  addTag={props.addTag}
+                  allTags={props.allTags}
+                />
               )
             })}
           </tbody>
@@ -66,7 +64,7 @@ const CardList = (props) => {
         </div>
       )
     }
-    else if(props.type === 1) {
+    else if (props.type === 1) {
       return (
         <div>
         {len === 0 ? 
@@ -93,7 +91,8 @@ const CardList = (props) => {
                   permissionLevel={props.permissionLevel}
                   serviceIP={props.serviceIP}
                   curModule={props.curModule}
-                  updateCurrentModule={props.updateCurrentModule}/>
+                  updateCurrentModule={props.updateCurrentModule}
+                />
               )
             })}
           </tbody>
@@ -102,7 +101,7 @@ const CardList = (props) => {
         </div>
       )
     }
-    else if(props.type === 2) {
+    else if (props.type === 2) {
       return (
         <div>
         {props.cards.length === 0 ? 
@@ -132,7 +131,7 @@ const CardList = (props) => {
                   deleteTag={props.deleteTag}
                   addTag={props.addTag}
                   allTags={props.allTags}
-                  />
+                />
               )
             })}
           </tbody>

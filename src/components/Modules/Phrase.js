@@ -1,6 +1,5 @@
 import React from 'react'
 import { Alert, Button, ButtonGroup, Input, Modal, ModalHeader, ModalBody, ModalFooter, Tooltip } from 'reactstrap';
-import '../../stylesheets/style.css';
 import axios from 'axios';
 
 class Phrase extends React.Component {
@@ -34,12 +33,10 @@ class Phrase extends React.Component {
     }
 
     editPhrase = () => {
-        console.log("edit btn for phrase is pressed")
         this.setState({ editMode: true }); 
     }
 
-    submitEdit = (event) => {
-        console.log("need to call api to edit phrase"); 
+    submitEdit = () => {
         this.setState({editMode: false});
 
         const data = new FormData(); 
@@ -58,7 +55,8 @@ class Phrase extends React.Component {
         data.append('language', this.props.card.language); //not editable 
         data.append('termID', this.props.card.termID); //not editable
 
-        this.props.permissionLevel === "ta" ? data.append('groupID', this.props.currentClass.value) : data.append('groupID', null);
+        if (this.props.permissionLevel === "ta") 
+            data.append('groupID', this.props.currentClass.value);
 
         axios.post(this.props.serviceIP + '/term', data, header)
         .then(res => {
@@ -67,10 +65,9 @@ class Phrase extends React.Component {
             changedAudio: false
           });
           
-          console.log(res.data);
           this.props.updateCurrentModule({ module: this.props.curModule });  
         }).catch(error => {
-          console.log("submitEdit in Phrase.js error: ", error); 
+          console.log("submitEdit in Phrase.js error: ", error.response); 
         });
     }
 
@@ -91,14 +88,10 @@ class Phrase extends React.Component {
     }
       
     handleDelete = () => {
-        console.log("delete btn for phrase is pressed", this.state.card); 
         this.toggleModal(); 
     }
 
     deletePhrase = () => {
-        console.log("call api to delete phrase");
-        console.log("deleting this phrase: ", this.state.card)
-
         this.toggleModal(); 
 
         let header = { 
@@ -110,24 +103,22 @@ class Phrase extends React.Component {
         };
     
         axios.delete(this.props.serviceIP + '/term', header)
-          .then( res => {
-            console.log("deletePhrase res.data: ", res.data)
+        .then( res => {
             this.props.updateCurrentModule({ module: this.props.curModule });  
-          })
-          .catch(error => {
-            console.log("deletePhrase error: ", error);
-          });
-        console.log("now leaving deletePhrase")
+        })
+        .catch(error => {
+            console.log("deletePhrase error: ", error.response);
+        });
+
     }
 
     change(e) {
 	    this.setState({
-	      [e.target.name]: e.target.value
-		})
+	        [e.target.name]: e.target.value
+		});
     }
     
     imgFileSelectedHandler = (event) => {
-        console.log("CLICKED ON IMG SELECTER")
         this.setState({ 
             selectedImgFile: event.target.files[0], 
             changedImage: true //remember to change it back to false later 
@@ -135,11 +126,10 @@ class Phrase extends React.Component {
     }
 
     audioFileSelectedHandler = (event) => {
-        console.log("CLICKED ON AUDIO SELECTER")
         this.setState({
             selectedAudioFile: event.target.files[0], 
             changedAudio: true //remember to change it back to false later 
-        })
+        });
     }
 
     toggleImgTooltipOpen = () => {
@@ -151,7 +141,7 @@ class Phrase extends React.Component {
     }
 
     toggleModal = () => {
-        this.setState({ modal: !this.state.modal })
+        this.setState({ modal: !this.state.modal });
     }
 
     render () {

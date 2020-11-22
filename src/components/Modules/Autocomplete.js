@@ -2,8 +2,6 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import {Button, Input} from 'reactstrap'
 
-
-
 //TODO: make it so that when you press enter on the input field, it adds an item to the component
 //that called it. Also need to make it so that when it renders an "Add new" button, it enables the
 //user to add a new thing
@@ -19,7 +17,6 @@ class Autocomplete extends Component {
 
   constructor(props) {
     super(props);
-
 
     this.state = {
       // The active selection's index
@@ -40,31 +37,32 @@ class Autocomplete extends Component {
   }
 
   handleCreate = () => {
-    if(this.props.createTag !== undefined){
+    if(this.props.createTag !== undefined) {
       this.handleCreateTag();
-    } else if(this.props.createAnswer !== undefined){
+    } 
+    else if(this.props.createAnswer !== undefined) {
       this.handleCreateAnswer();
     }
   }
 
   handleCreateTag = () => {
-
     this.props.createTag(this.state.userInput);
+
     this.setState({
       activeSuggestion: 0,
       showSuggestions: false,
       userInput: ""
-    })
+    });
   }
 
   handleCreateAnswer = () => {
-
     this.props.createAnswer(this.state.userInput);
+
     this.setState({
       activeSuggstion: 0,
       showSuggestions: false,
       userInput: ""
-    })
+    });
   }
 
   // Event fired when the input value is changed
@@ -98,13 +96,13 @@ class Autocomplete extends Component {
       userInput: ""
     });
 
-    if(this.props.handleAddTag !== undefined){
+    if (this.props.handleAddTag !== undefined) {
       this.props.handleAddTag({tag: e.currentTarget.innerText});
-    } else if(this.props.handleAddAnswer !== undefined){
-
-      //console.log("SUGGESTIONS: ", this.props.suggestions, " INDEX", index, " TERM ID at INDEX: ", this.props.termIDs[index]); 
-      if (this.props.needID === 0)
+    } 
+    else if(this.props.handleAddAnswer !== undefined) {
+      if (this.props.needID === 0) {
         this.props.handleAddAnswer({answer: e.currentTarget.innerText});
+      }
       else {
         let index = this.props.suggestions.findIndex((entry) => entry === e.currentTarget.innerText); 
         this.props.handleAddAnswer({answer: e.currentTarget.innerText, answerID: this.props.termIDs[index]});
@@ -121,7 +119,7 @@ class Autocomplete extends Component {
     // suggestions
     if (e.keyCode === 13) {
       e.preventDefault(); 
-      if(filteredSuggestions.length === 1){
+      if (filteredSuggestions.length === 1) {
         this.setState({
           activeSuggestion: 0,
           showSuggestions: false,
@@ -131,16 +129,17 @@ class Autocomplete extends Component {
         if(this.props.handleAddTag !== undefined){
           this.props.handleAddTag({tag: filteredSuggestions[0]});
         } 
-        else if(this.props.handleAddAnswer !== undefined){
-          if (this.props.needID === 0)
+        else if (this.props.handleAddAnswer !== undefined) {
+          if (this.props.needID === 0) {
             this.props.handleAddAnswer({answer: filteredSuggestions[0]});
+          }
           else {
             let index = this.props.suggestions.findIndex((entry) => entry === filteredSuggestions[0]); 
             this.props.handleAddAnswer({answer: filteredSuggestions[0], answerID: this.props.termIDs[index]});
           }
         }
-      
-      } else if(filteredSuggestions.length > 1) {
+      } 
+      else if(filteredSuggestions.length > 1) {
         
         let tempUserInput = filteredSuggestions[activeSuggestion];
 
@@ -153,9 +152,8 @@ class Autocomplete extends Component {
           showSuggestions: true,
           userInput: tempUserInput,
           filteredSuggestions: tempFilteredSuggestions
-        })
+        });
       }
-
     }
     // User pressed the up arrow, decrement the index
     else if (e.keyCode === 38) {
@@ -173,7 +171,7 @@ class Autocomplete extends Component {
 
       this.setState({ activeSuggestion: activeSuggestion + 1 });
     }
-  };
+  }
 
   render() {
     const {

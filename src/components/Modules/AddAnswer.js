@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, Form, FormGroup, Label, Input, Row, Col, Alert} from 'reactstrap';
-//import axios from 'axios';
+import { Button, Form, FormGroup, Label, Input, Row, Col, Alert } from 'reactstrap';
 
 import TagList from './TagList';
 import Autocomplete from './Autocomplete';
@@ -18,33 +17,31 @@ class AddAnswer extends React.Component {
 			tags: [], //array of tags associated with word
 
 		};
-
-		console.log("in constructor of AddAnswer, this.state.front: ", this.state.front);
 	}
 
-	componentDidMount(){
+	componentDidMount() {
 		this.setState({
-			front:this.props.front
-		})
+			front: this.props.front
+		});
 	}
 
 
 	//function that sets the taglist on this form
 	updateTagList = (tagList) => {
-		this.setState({tags: tagList})
+		this.setState({ tags: tagList });
 	}
 
 
 	change(e) {
 	    this.setState({
 	      [e.target.name]: e.target.value
-		})
+		});
   	}
 
   	changeFront(e) {
   		this.setState({
   			front: this.state.front
-  		})
+  		});
   	}
 
 
@@ -53,54 +50,47 @@ class AddAnswer extends React.Component {
 
   	//function that submits the data
 	submitTerm = (e) => {
-		console.log("Got into submitTerm from addQuestion")
-		console.log("FRONT: ", this.state.front)
-		console.log("BACK: ", this.state.back)
-		console.log("language: ", this.props.curModule.language)
-
 		e.preventDefault();
 
-		if (this.state.front.length !== 0 && this.state.back.length !== 0)
-		{   
+		if (this.state.front.length !== 0 && this.state.back.length !== 0) {   
 			this.props.addNewAnswerToList(this.state);
-		} else {
+		} 
+		else {
 			e.preventDefault();
 			alert("Please fill all inputs!");
 		}
-		
-  }
+  	}
 
 
-  //TODO: handleAddTag and createTag kinda do the same thing. Maybe they should be one thing?
-  //function that adds a tag to list of tags on this form
-  handleAddTag = (event) => {
-  	
-  	let list = this.props.addTag(this.state.tags, event.tag);
+	//TODO: handleAddTag and createTag kinda do the same thing. Maybe they should be one thing?
+	//function that adds a tag to list of tags on this form
+	handleAddTag = (event) => {
+		let list = this.props.addTag(this.state.tags, event.tag);
 
-  	this.setState({
-  		tags: list
-  	})
-  }
+		this.setState({
+			tags: list
+		})
+	}
 
-  //function that adds a new tag from user input to list of tags on this form
-  createTag = (tag) => {
+	//function that adds a new tag from user input to list of tags on this form
+	createTag = (tag) => {
+		let tempTags = this.state.tags;
 
-  	console.log("Got into createTag, tag: ", tag);
+		tempTags.push(tag);
 
-  	let tempTags = this.state.tags;
-  	tempTags.push(tag);
-  	this.setState({
-  		tags: tempTags
-  	});
-  }
+		this.setState({
+			tags: tempTags
+		});
+	}
 
-  //function that removes a tag from the list of tags on this form
-  handleDeleteTag = (event) => {
-  	let list = this.props.deleteTag(this.state.tags, event.tag);
-  	this.setState({
-  		tags: list
-  	})
-  }
+	//function that removes a tag from the list of tags on this form
+	handleDeleteTag = (event) => {
+		let list = this.props.deleteTag(this.state.tags, event.tag);
+
+		this.setState({
+			tags: list
+		});
+	}
 
 	render () {
 	    return (
@@ -199,7 +189,8 @@ class AddAnswer extends React.Component {
 						</Col>
 					</Row>
 				</Alert>
-			</Form> : null  }</div>
+			</Form> : null  }
+			</div>
 		);
 	}
 }

@@ -10,38 +10,41 @@ class TagItem extends React.Component {
       removeMode: false //determines whether or not this tag will be able to be deleted via click
     }
 
-
   }
 
   //function that sets the style of the button, either removable or not
   setStyle = () => {
-    if(this.state.removeMode === false){
+    if (this.state.removeMode === false) {
       return {margin: "3px", border: "1px solid black"}
-    } else {
+    } 
+    else {
       return {margin: "3px", border: "1px solid black", backgroundColor: "red"}
     }
   };
 
   render() {
-    if(this.props.deletable === true){
+    if (this.props.deletable === true) {
       return (
         <div>
-          <Button style={this.setStyle()}  
-          color="secondary" 
-          onClick={() => {this.props.handleDeleteTag({tag: this.props.tag})}}
-          onMouseOver={() => {this.setState({removeMode: true})}}
-          onMouseOut={() => this.setState({removeMode: false})}
+          <Button 
+            style={this.setStyle()}  
+            color="secondary" 
+            onClick={() => {this.props.handleDeleteTag({tag: this.props.tag})}}
+            onMouseOver={() => {this.setState({removeMode: true})}}
+            onMouseOut={() => this.setState({removeMode: false})}
           >
             {this.props.tag}
           </Button>
           {' '}
         </div>
       );
-    } else {
+    } 
+    else {
       return(
         <div>
-          <Button style={this.setStyle()}  
-          color="secondary" 
+          <Button 
+            style={this.setStyle()}  
+            color="secondary" 
           >
             {this.props.tag}
           </Button>
