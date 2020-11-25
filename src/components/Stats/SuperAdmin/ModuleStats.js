@@ -194,7 +194,7 @@ class ModuleStats extends Component {
             labels: Object.keys(this.state.languages).map(item => languageCodes[item]),
             datasets: [
                 {
-                    label: 'platforms',
+                    label: 'Platforms',
                     data: Object.keys(this.state.languages).map(item => (this.state.languages[item] * 100).toFixed(2)),
                     backgroundColor: ['#96384e', '#eda48e', '#eed284', '#CD5C5C', '#F08080', '#E9967A', '#FA8072', '#20B2AA', '#2F4F4F', '#008080', '#008B8B', '#4682B4', '#6495ED', '#00BFFF', '#1E90FF', '#8B008B', '#9400D3', '#9932CC', '#BA55D3', '#C71585', '#DB7093', '#FF1493', '#FF69B4']
                 }
@@ -223,7 +223,6 @@ class ModuleStats extends Component {
     }
 
 	render() { 
-        console.log("language state: ", Object.keys(this.state.languages).length); 
         return (
             <>
                 <Col className="Module Left Columns" xs="7">

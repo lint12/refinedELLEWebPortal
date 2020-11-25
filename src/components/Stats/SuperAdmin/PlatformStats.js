@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Bar, Pie } from 'react-chartjs-2'; 
 import { trackPromise } from 'react-promise-tracker';
 import Spinner from '../../Loading/Spinner'; 
+import ThreeDots from '../../Loading/ThreeDots';
 
 class PlatformStats extends Component {
 	constructor(props){
@@ -81,7 +82,7 @@ class PlatformStats extends Component {
                     }     
                 }
             />
-                <p style={{margin: "0px", display: "flex", justifyContent: "flex-end", fontSize: "12px"}}>
+                <p style={{margin: "0 0 2px 0", display: "flex", justifyContent: "flex-end", fontSize: "12px"}}>
                     Total Records Available: Mobile({this.state.mb.total_records_avail}){' '}
                     PC({this.state.cp.total_records_avail}) VR({this.state.vr.total_records_avail})
                 </p>
@@ -94,7 +95,7 @@ class PlatformStats extends Component {
                 labels: ['Mobile', 'PC', 'VR'],
                 datasets: [
                     {
-                        label: 'platforms',
+                        label: 'Platforms',
                         data: [
                             (this.state.mb.frequency * 100).toFixed(2), 
                             (this.state.cp.frequency * 100).toFixed(2), 
@@ -138,12 +139,11 @@ class PlatformStats extends Component {
     timeToString = (time) => {
         let str = ""; 
         let hoursMinutesSeconds = time.split(/[.:]/);
-        let hours = parseInt(hoursMinutesSeconds[0]) > 0 ? hoursMinutesSeconds[0] + "hrs " : ""; 
-        let minutes = parseInt(hoursMinutesSeconds[1]) > 0 ? hoursMinutesSeconds[1] + "min " : ""; 
-        let seconds = parseInt(hoursMinutesSeconds[2]) > 0 ? hoursMinutesSeconds[2] + "s" : "";      
+        let hours = parseInt(hoursMinutesSeconds[0]) > 0 ? parseInt(hoursMinutesSeconds[0]) + "hrs " : ""; 
+        let minutes = parseInt(hoursMinutesSeconds[1]) > 0 ? parseInt(hoursMinutesSeconds[1]) + "min " : ""; 
+        let seconds = parseInt(hoursMinutesSeconds[2]) > 0 ? parseInt(hoursMinutesSeconds[2]) + "s" : "";      
 
         str = hours + minutes + seconds; 
-        console.log("str", str); 
         return str; 
     }
 
@@ -169,7 +169,7 @@ class PlatformStats extends Component {
                             Average Platform Duration
                             {this.state.mb.avg_time_spent !== undefined && this.state.cp.avg_time_spent !== undefined 
                             && this.state.vr.avg_time_spent !== undefined ?
-                            this.renderPlatformDurations() : <Spinner chart="duration" />}
+                            this.renderPlatformDurations() : <ThreeDots />}
                         </div>
                     </Row>
                     <br />

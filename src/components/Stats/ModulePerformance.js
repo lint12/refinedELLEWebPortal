@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Row, Col, Table, Card, Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import { trackPromise } from 'react-promise-tracker';
 import Spinner from '../Loading/Spinner';
+import ThreeDots from '../Loading/ThreeDots'; 
 import { Bar } from 'react-chartjs-2'; 
 import axios from 'axios';   
 
@@ -209,7 +210,7 @@ class ModulePerformance extends Component {
                     <Modal isOpen={this.state.modalOpen} toggle={this.toggleModal}>
                         <ModalHeader toggle={this.toggleModal}>Terms Performance</ModalHeader>
                         <ModalBody>
-                            {this.state.termStats ? this.renderChart() : <Spinner />}
+                            {this.state.termStats ? this.renderChart() : <ThreeDots />}
                         </ModalBody>
                     </Modal>
                 </Col>

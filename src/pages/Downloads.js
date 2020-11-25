@@ -55,6 +55,7 @@ export default class Downloads extends Component {
 
 				<Row>
 					<Col>
+					ELLE Better Racer
 						<a href="#ELLEBetterRacer">
 							<video width="340" height="220" autoPlay loop muted>
 								<source src={betterRacerPromo} type="video/mp4" />
@@ -62,6 +63,7 @@ export default class Downloads extends Component {
 						</a>
 					</Col>
 					<Col>
+					ELLE Card Game
 						<a href="#ELLECardGame">
 							<video width="340" height="220" autoPlay loop muted>
 								<source src={elleCardGamePromo} type="video/mp4" />
@@ -69,6 +71,7 @@ export default class Downloads extends Component {
 						</a>
 					</Col>
 					<Col>
+					ELLEments of Learning 
 						<a href="#ELLEVR">
 							<video width="340" height="220" autoPlay loop muted>
 								<source src={betterRacerPromo} type="video/mp4" />
@@ -81,9 +84,9 @@ export default class Downloads extends Component {
 		
 		<a id="ELLEBetterRacer">
 		<section style={{color: "white"}}>
-		<div className="container" style={{display: "flex"}}>
-			<Row>
-				<div className="infoCard">
+		<div className="container">
+				<div className="infoCard" style={{backgroundColor: "#7b56de"}}>
+					<Row>
 					<Col>
 						<h3 className="cta-title">ELLE Better Racer</h3>
 						<p className="cta-text">Senior Design Team:</p>
@@ -128,40 +131,42 @@ export default class Downloads extends Component {
 							<source src={betterRacer} type="video/mp4" />
 						</video>
 					</Col>
-				</div>
-				<div>
 					<Col>
-						<img style={{widht: "300px", height: "400px"}} src={require('../Images/ELLEBetterRacerLogo.png')} />
+						<img style={{widht: "350px", height: "475px", marginLeft: "80px"}} src={require('../Images/ELLEBetterRacerLogo.png')} />
 					</Col>
+					</Row>
 				</div>
-			</Row>
 			</div>
 			</section>
 			</a>
 
 			<a id="ELLECardGame">
 			<section style={{color: "white"}}>
-			<div className="container" style={{display: "flex", justifyContent: "flex-end"}}>
-			<Row>
-				<div className="infoCard">
-					<Col>
-						<h3 className="cta-title">ELLE Card Game</h3>
-						<p className="cta-text">Senior Design Team:</p>
-						<ul style={{color: '#ffffff'}}>
-								<li>Noah Corlew</li>
-								<li>Kalvin Miller</li>
-								<li>Michael Santiago</li>
-						</ul>
-						<div className="cta-text">
+			<div className="container">
+				<div className="infoCard" style={{backgroundColor: "rgb(212 145 167)"}}>
+					<Row>
+						<Col>
+							<img style={{width: "350px", height: "475px", marginLeft: "50px"}} src={require('../Images/ELLECardGameLogo.png')} />
+						</Col>
+						<Col>
+							<h3 className="cta-title">ELLE Card Game</h3>
+							<p className="cta-text">Senior Design Team:</p>
+							<ul style={{color: '#ffffff'}}>
+									<li>Noah Corlew</li>
+									<li>Kalvin Miller</li>
+									<li>Michael Santiago</li>
+							</ul>
 							<Row>
 								<Col>
-									Download here:
-									<a href="https://drive.google.com/file/d/1QEuztOPjE1_LfoZWZGrtaDIxPbZKcnOG/view">
-										<img 
-											style={{width: "25px", height: "25px", margin: "5px 5px 10px 5px"}} 
-											src={require('../Images/google-drive.png')}
-										/>
-									</a>
+									<p className="cta-text">
+										Download here:
+										<a href="https://drive.google.com/file/d/1QEuztOPjE1_LfoZWZGrtaDIxPbZKcnOG/view">
+											<img 
+												style={{width: "25px", height: "25px", margin: "5px 5px 10px 5px"}} 
+												src={require('../Images/google-drive.png')}
+											/>
+										</a>
+									</p>
 								</Col>
 								<Col>
 									<p className="cta-text">
@@ -177,53 +182,55 @@ export default class Downloads extends Component {
 									</p>
 								</Col>
 							</Row>
-						</div>
-						<video width="450" height="280" controls>
-							<source src={ellePC} type="video/mp4" />
-						</video>
-					</Col>
+							<video width="450" height="280" controls>
+								<source src={ellePC} type="video/mp4" />
+							</video>
+						</Col>
+					</Row>
 				</div>
-			</Row>
 			</div>
 			</section>
 			</a>
 
 			<a id="ELLEVR">
 			<section style={{color: "white"}}>
-			<div className="container" style={{display: "flex"}}>
-			<Row>
-				<div className="infoCard">
-					<Col>
-						<h3 className="cta-title">ELLE VR</h3>
-						<p className="cta-text">Senior Design Team:</p>
-						<ul style={{color: '#ffffff'}}>
-							<Row>
-								<Col>
-									<li>Kaarthik Alagappan</li>
-									<li>Jonathan Jules</li>
-									<li>Tiffany Lin</li>
-								</Col>
-								<Col>
-									<li>Catalina Morales</li>
-									<li>Samuel Tungol</li>
-								</Col>
-							</Row>
-						</ul>
-						<p className="cta-text">
-							Available on: 
-							<a href="">
-								<img 
-									style={{width: "40px", height: "25px", margin: "5px 5px 10px 5px"}} 
-									src={require('../Images/steam.png')}
-								/>
-							</a>
-						</p>
-						<video width="450" height="280" controls>
-							<source src={elleVR} type="video/mp4" />
-						</video>
-					</Col>
+			<div className="container">
+				<div className="infoCard" style={{backgroundColor: "#00a1cd"}}>
+					<Row>
+						<Col>
+							<h3 className="cta-title">ELLE VR</h3>
+							<p className="cta-text">Senior Design Team:</p>
+							<ul style={{color: '#ffffff'}}>
+								<Row>
+									<Col>
+										<li>Kaarthik Alagappan</li>
+										<li>Jonathan Jules</li>
+										<li>Tiffany Lin</li>
+									</Col>
+									<Col>
+										<li>Catalina Morales</li>
+										<li>Samuel Tungol</li>
+									</Col>
+								</Row>
+							</ul>
+							<p className="cta-text">
+								Available on: 
+								<a href="">
+									<img 
+										style={{width: "40px", height: "25px", margin: "5px 5px 10px 5px"}} 
+										src={require('../Images/steam.png')}
+									/>
+								</a>
+							</p>
+							<video width="450" height="280" controls>
+								<source src={elleVR} type="video/mp4" />
+							</video>
+						</Col>
+						<Col>
+							<img style={{widht: "350px", height: "475px", marginLeft: "80px"}} src={require('../Images/ELLEmentsOfLearningLogo.png')} />
+						</Col>
+					</Row>
 				</div>
-			</Row>
 		</div>
 		</section>
 		</a>

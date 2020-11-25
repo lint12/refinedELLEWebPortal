@@ -1209,7 +1209,6 @@ table.statsTable.table tbody td {
 
 .infoCard {
   margin: 20px auto;
-  max-width: 600px;
   padding: 20px;
   box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);   
   border-radius: 5px;
@@ -1218,5 +1217,4 @@ table.statsTable.table tbody td {
   background: inherit;
   overflow: hidden;
   backdrop-filter: blur(30px);
-  background-color: #2e4652;
 }

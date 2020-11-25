@@ -5,7 +5,7 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { trackPromise } from 'react-promise-tracker';
 import axios from 'axios';
-import Spinner from '../Loading/Spinner'; 
+import ThreeDots from '../Loading/ThreeDots'; 
 import TermStats from './TermStats';
 import TermBarChart from './TermBarChart';
 
@@ -126,7 +126,7 @@ class SpecificStudentStats extends Component {
                         </div>
                     : 
                         <p>No records found.</p> 
-                    : <Spinner />}
+                    : <ThreeDots />}
                 </Card>
             </div>
         );

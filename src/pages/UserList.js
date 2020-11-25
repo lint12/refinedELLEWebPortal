@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Table, Row, Col, Input, Button, InputGroup, InputGroupAddon, Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { Container, Table, Row, Col, Input, Button, InputGroup, InputGroupAddon, Modal, ModalHeader, ModalBody, Card, CardBody } from 'reactstrap';
 import ListGroup from 'react-bootstrap/ListGroup'
 import Tab from 'react-bootstrap/Tab'
 import Select from 'react-select';
@@ -8,6 +8,8 @@ import '../stylesheets/style.css';
 
 import User from '../components/UserList/User';
 import Template from './Template';
+import Spinner from '../components/Loading/Spinner'; 
+import { trackPromise } from 'react-promise-tracker';
 
 class UserList extends Component {
 
@@ -18,9 +20,9 @@ class UserList extends Component {
       currentGroup: "su",
       selectedUser: '',
       users: [], 
-      superAdmins: [],
-      professors: [],
-      students: [],
+      superAdmins: null,
+      professors: null,
+      students: null,
       search: "", 
       elevateModalOpen: false, 
     }
@@ -57,24 +59,26 @@ class UserList extends Component {
   }
 
   getUsers = () => {
-    axios.get(this.props.serviceIP + '/users', {
-      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
-    }).then(res => {
-      console.log(res.data);
+    trackPromise(
+      axios.get(this.props.serviceIP + '/users', {
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
+      }).then(res => {
+        console.log(res.data);
 
-      let su = res.data.filter((user) => user.permissionGroup === "su"); 
-      let pf = res.data.filter((user) => user.permissionGroup === "pf"); 
-      let st = res.data.filter((user) => user.permissionGroup === "st"); 
+        let su = res.data.filter((user) => user.permissionGroup === "su"); 
+        let pf = res.data.filter((user) => user.permissionGroup === "pf"); 
+        let st = res.data.filter((user) => user.permissionGroup === "st"); 
 
-      this.setState({
-         users : res.data,
-         superAdmins: su, 
-         professors: pf, 
-         students: st 
-      });
-    }).catch(function (error) {
-      console.log(error);
-    });
+        this.setState({
+          users : res.data,
+          superAdmins: su, 
+          professors: pf, 
+          students: st 
+        });
+      }).catch(function (error) {
+        console.log(error);
+      })
+    );
   }
 
   elevateUser = (group) => {
@@ -98,7 +102,8 @@ class UserList extends Component {
   }
 
   renderUserTable = (group) => {
-    let userList = []; 
+    let userList; 
+    let filteredUsers;
     let nonAdminList = []; 
     let searchLength = 11; 
     let addButton = (     
@@ -124,7 +129,7 @@ class UserList extends Component {
       addButton = null; 
     }
 
-    if (this.state.currentGroup === "su") {
+    if (this.state.currentGroup === "su" && this.state.students && this.state.superAdmins) {
       let list = this.state.students.concat(this.state.professors); 
       nonAdminList = list.map((user) => {return( {value: user.userID, label: user.username} )});
     }
@@ -132,14 +137,16 @@ class UserList extends Component {
       nonAdminList = this.state.students.map((user) => {return( {value: user.userID, label: user.username})}); 
     }
 
-    let filteredUsers = userList.filter(
-      (user) => { 
-        if (user) 
-          return (user.username.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1);
-        else 
-          return null; 
-      }
-    );
+    if (userList) {
+      filteredUsers = userList.filter(
+        (user) => { 
+          if (user) 
+            return (user.username.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1);
+          else 
+            return null; 
+        }
+      );
+    }
 
     return (
       <>
@@ -164,22 +171,46 @@ class UserList extends Component {
         {addButton}
       </Row>
       <br />
-      <Table hover className="userListTable">
-        <thead>
-          <tr>
-            <th style={{borderTopLeftRadius: "8px"}}>ID</th>
-            <th>Username</th>
-            <th style={{borderTopRightRadius: "8px"}}></th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredUsers.map((user) => {
-            return (
-              <User key={user.userID} user={user} type="su" group={group} serviceIP={this.props.serviceIP} getUsers={this.getUsers}/>
-            )
-          })}
-        </tbody>
-      </Table>
+
+      {this.state.students && this.state.professors && this.state.superAdmins ?
+        userList.length !== 0 ?
+        <Table hover className="userListTable">
+          <thead>
+            <tr>
+              <th style={{borderTopLeftRadius: "8px"}}>ID</th>
+              <th>Username</th>
+              <th style={{borderTopRightRadius: "8px"}}></th>
+            </tr>
+          </thead>
+            <tbody>
+              {filteredUsers.length !== 0 ?
+                filteredUsers.map((user) => {
+                  return (
+                    <User key={user.userID} user={user} type="su" group={group} serviceIP={this.props.serviceIP} getUsers={this.getUsers}/>
+                  )  
+                }) :
+                <tr>
+                  <td colSpan="3">
+                    {this.state.search} cannot be found.
+                  </td>
+                </tr>}
+            </tbody>
+        </Table>
+        : 
+        <Card>
+          <CardBody>
+            <Row>
+              <Col xs="1">
+                <img style={{width: "25px", height: "25px"}} src={require('../Images/exclamation.png')} />
+              </Col>
+              <Col xs="10" style={{padding: "0px"}}>
+                {group === "su" ? "There are no other super admins." : group === "pf" ? 
+                "There are currently no professors." : "There are currently no students."}
+              </Col>
+            </Row>
+          </CardBody>
+        </Card>
+      : <Spinner />}
       <Modal isOpen={this.state.elevateModalOpen} toggle={() => this.toggleElevateModal()} backdrop={true}>
         <ModalHeader toggle={() => this.toggleElevateModal()}>Modify Permission</ModalHeader>
         <ModalBody>

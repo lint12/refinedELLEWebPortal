@@ -39,7 +39,6 @@ export default class Sessions extends Component {
       var jwtDecode = require('jwt-decode');
 
       var decoded = jwtDecode(jwt);
-      console.log("JWT DECODED: ", decoded);
 
       this.setState({ permission: decoded.user_claims.permission }); 
     }
@@ -103,8 +102,6 @@ export default class Sessions extends Component {
   }
 
   render() {
-    console.log("PLATFORM: ", this.state.platform);
-    console.log("DATE: ", this.state.date);
     return (
       <Container>
       <Template permission={this.state.permission}/>
@@ -113,14 +110,16 @@ export default class Sessions extends Component {
         <Col xs="4">
           <h3>Your ELLE Sessions:</h3>
         </Col>
-        <Col xs="6" style={{padding: "0 0 0 30px"}}>
+        <Col xs={this.state.permission === "su" ? "6" : "8"} style={{padding: this.state.permission === "su" ?  "0 0 0 30px" :  "0 30px 0 30px"}}>
           {this.state.searched && this.state.sessions.length !== 0 && this.state.loading === false ? 
             <Alert color="info" style={{margin: "0px", textAlign: "center"}}>Click on a row to reveal logged answers.</Alert>
           : null}
         </Col>
+        {this.state.permission === "su" ? 
         <Col xs="2" style={{padding: "0px"}}>
-          {this.state.permission === "su" ? <Downloads serviceIP={this.props.serviceIP}/> : null}
+          <Downloads serviceIP={this.props.serviceIP}/> 
         </Col>
+        : null}
       </Row>
 
       <br />
