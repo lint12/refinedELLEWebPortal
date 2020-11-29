@@ -40,7 +40,6 @@ export default class Downloads extends Component {
 		  var jwtDecode = require('jwt-decode');
 	
 		  var decoded = jwtDecode(jwt);
-		  console.log("JWT DECODED: ", decoded);
 	
 		  this.setState({ permission: decoded.user_claims.permission }); 
 		}
@@ -50,52 +49,6 @@ export default class Downloads extends Component {
 	return (  
 	<div className="downloadsBg">
 		{localStorage.getItem('jwt') === null ? <MainTemplate /> : <Template permission={this.state.permission}/>}
-
-		<section>
-
-			<Row>
-              <Col style={{display: "flex", justifyContent: "center", zIndex: "1", position: "relative", top: "20px"}}>
-			  <div className="downloadsHdr" style={{zIndex: 1}}>
-					<h1>Downloads</h1>
-					<Row>
-						<Col>
-							<a href="#ELLEBetterRacer">
-								<Card style={{width: "340px", height: "220px", margin: "0px 60px", backgroundColor: "#7b57dd"}}>
-									<img 
-										style={{width: "340px", height: "180px", marginTop: "20px", padding: "20px"}} 
-										src={require('../Images/ELLEBetterRacerLogo.png')}
-									/>
-								</Card>
-							</a>
-						</Col>
-						<Col>
-							<a href="#ELLECardGame">
-								<Card style={{width: "340px", height: "220px", margin: "0px 60px", backgroundColor: "#d392a6"}}>
-									<img 
-										style={{width: "250px", height: "220px", marginLeft: "40px", padding: "10px"}} 
-										src={require('../Images/ELLECardGameLogo.png')}
-									/>
-								</Card>
-							</a>
-						</Col>
-						<Col>
-							<a href="#ELLEVR">
-								<Card style={{width: "340px", height: "220px", margin: "0px 60px", backgroundColor: "#00a1cd"}}>
-									<img 
-										style={{width: "270px", height: "200px", margin: "10px 40px", padding: "10px"}} 
-										src={require('../Images/ELLEmentsOfLearningLogo.png')}
-									/>
-								</Card>
-							</a>
-						</Col>
-					</Row>
-				</div>
-              </Col>
-            </Row>			
-				<video width="100%" height="30%" style={{marginTop: "-660px"}} autoPlay loop muted>
-					<source src={banner} type="video/mp4" />
-				</video>
-		</section>
 		
 		<a id="ELLEBetterRacer">
 		<section style={{color: "white"}}>
@@ -147,7 +100,7 @@ export default class Downloads extends Component {
 						</video>
 					</Col>
 					<Col>
-						<img style={{width: "375px", height: "255px", marginLeft: "80px"}} src={require('../Images/ELLEBetterRacerLogo.png')} />
+						<img style={{width: "375px", height: "225px", marginLeft: "80px"}} src={require('../Images/ELLEBetterRacerLogo.png')} />
 					</Col>
 					</Row>
 				</div>

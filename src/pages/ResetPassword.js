@@ -112,7 +112,7 @@ export default class ResetPassword extends Component {
       this.setState({
         success: true,
         error: false, 
-        msg: res.data
+        msg: res.data.message
       })
     }).catch(error => {
       if (error.response) {
@@ -135,7 +135,7 @@ export default class ResetPassword extends Component {
             <h4 style={{display: "flex", justifyContent: "center"}}>Reset Your Password</h4>
             {this.state.success ? <Alert color="success">{this.state.msg}</Alert> : null}
             {this.state.error ? <Alert color="danger">{this.state.msg}</Alert> : null}
-            <Form style={{marginBottom: "10px"}}>
+            <Form onSubmit={e => this.resetPassword(e)} style={{marginBottom: "10px"}}>
               <FormGroup>
                 <Label>Email:</Label>
                 <InputGroup style={{borderRadius: "12px"}}>
@@ -242,8 +242,8 @@ export default class ResetPassword extends Component {
               </FormGroup>
               <Button 
                 block 
+                type="submit" 
                 disabled={this.state.validConfirm ? false : true}
-                onClick={e => this.resetPassword(e)}
               >
                 Reset
               </Button>

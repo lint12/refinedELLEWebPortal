@@ -50,13 +50,6 @@ export default class Home extends Component {
 					<Link to='/downloads' className="btn-projects scrollto">Download ELLE</Link>
 				</div>
 			</div>
-			<div id="intro-carousel" className="owl-carousel">
-				<div className="item" style={{backgroundImage: 'url("../Images/intro-carousel/1.jpg")'}} />
-				<div className="item" style={{backgroundImage: 'url("../Images/intro-carousel/2.jpg")'}} />
-				<div className="item" style={{backgroundImage: 'url("../Images/intro-carousel/3.jpg")'}} />
-				<div className="item" style={{backgroundImage: 'url("../Images/intro-carousel/4.jpg")'}} />
-				<div className="item" style={{backgroundImage: 'url("../Images/intro-carousel/5.jpg")'}} />
-			</div>
 		</section>
 
 
