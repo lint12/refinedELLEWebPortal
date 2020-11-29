@@ -112,7 +112,7 @@ export default class ResetPassword extends Component {
       this.setState({
         success: true,
         error: false, 
-        msg: res.data.message
+        msg: res.response.data.Message
       })
     }).catch(error => {
       if (error.response) {
