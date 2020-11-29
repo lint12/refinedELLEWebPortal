@@ -92,8 +92,7 @@ export default class Modules extends Component {
         //when a new module is added you want to display that new module 
         if (task === "add") {
           let newModule = allModules.find((module) => module.moduleID === moduleID);
-          this.updateCurrentModule({ module: newModule }); 
-          this.toggleModificationWarning("new");
+          this.updateCurrentModule({ module: newModule, task: "all" }); 
         }
         else if (task === "unlink") {
           if (moduleID === this.state.currentModule.moduleID)
@@ -127,8 +126,7 @@ export default class Modules extends Component {
         //when a new module is added you want to display that new module 
         if (task === "add") {
           let newModule = groupSpecificModules.find((module) => module.moduleID === moduleID);
-          this.updateCurrentModule({ module: newModule }); 
-          this.toggleModificationWarning("new");
+          this.updateCurrentModule({ module: newModule, task: "add" }); 
         }
         else if (task === "unlink") {
           if (moduleID === this.state.currentModule.moduleID)
@@ -163,6 +161,12 @@ export default class Modules extends Component {
           cards: cards,
           currentModule: event.module
         });
+
+        if (event.task) {
+          this.toggleModificationWarning("new"); 
+        }
+        else 
+          this.toggleModificationWarning("update"); 
 
         this.getAllAnswers();
 
@@ -342,11 +346,14 @@ export default class Modules extends Component {
   //function that toggles whether or not the empty collection alert is shown
   toggleEmptyCollectionAlert() {
     this.setState({ emptyCollection: true });
-  }
+  }  
 
   toggleModificationWarning = (condition) => {
     if (condition === "new") {
       this.setState({ modificationWarning: true }); 
+    }
+    else if (condition === "update") {
+      this.setState({ modificationWarning: false }); 
     }
     else {
       this.setState({ modificationWarning: !this.state.modificationWarning }); 

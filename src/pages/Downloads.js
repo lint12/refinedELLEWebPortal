@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'reactstrap';
+import { Row, Col, Card } from 'reactstrap';
 import MainTemplate from '../pages/MainTemplate'; 
 import Template from '../pages/Template';
 
@@ -14,6 +14,8 @@ import betterRacer from '../Images/ELLEBetterRacer.mp4';
 import elleCardGamePromo from '../Images/ELLECardGamePromo.mp4';
 import ellePC from '../Images/ELLEPC.mp4';
 import elleVR from '../Images/ELLEVR.mp4';
+
+import banner from '../Images/ELLEDownloadsBanner.mp4';
 
 export default class Downloads extends Component {
 	constructor(props) {
@@ -50,36 +52,49 @@ export default class Downloads extends Component {
 		{localStorage.getItem('jwt') === null ? <MainTemplate /> : <Template permission={this.state.permission}/>}
 
 		<section>
-			<div className="downloadsHdr">
-				<h1>Downloads</h1>
 
-				<Row>
-					<Col>
-					ELLE Better Racer
-						<a href="#ELLEBetterRacer">
-							<video width="340" height="220" autoPlay loop muted>
-								<source src={betterRacerPromo} type="video/mp4" />
-							</video>
-						</a>
-					</Col>
-					<Col>
-					ELLE Card Game
-						<a href="#ELLECardGame">
-							<video width="340" height="220" autoPlay loop muted>
-								<source src={elleCardGamePromo} type="video/mp4" />
-							</video>
-						</a>
-					</Col>
-					<Col>
-					ELLEments of Learning 
-						<a href="#ELLEVR">
-							<video width="340" height="220" autoPlay loop muted>
-								<source src={betterRacerPromo} type="video/mp4" />
-							</video>
-						</a>
-					</Col>
-				</Row>
-			</div>
+			<Row>
+              <Col style={{display: "flex", justifyContent: "center", zIndex: "1", position: "relative", top: "20px"}}>
+			  <div className="downloadsHdr" style={{zIndex: 1}}>
+					<h1>Downloads</h1>
+					<Row>
+						<Col>
+							<a href="#ELLEBetterRacer">
+								<Card style={{width: "340px", height: "220px", margin: "0px 60px", backgroundColor: "#7b57dd"}}>
+									<img 
+										style={{width: "340px", height: "180px", marginTop: "20px", padding: "20px"}} 
+										src={require('../Images/ELLEBetterRacerLogo.png')}
+									/>
+								</Card>
+							</a>
+						</Col>
+						<Col>
+							<a href="#ELLECardGame">
+								<Card style={{width: "340px", height: "220px", margin: "0px 60px", backgroundColor: "#d392a6"}}>
+									<img 
+										style={{width: "250px", height: "220px", marginLeft: "40px", padding: "10px"}} 
+										src={require('../Images/ELLECardGameLogo.png')}
+									/>
+								</Card>
+							</a>
+						</Col>
+						<Col>
+							<a href="#ELLEVR">
+								<Card style={{width: "340px", height: "220px", margin: "0px 60px", backgroundColor: "#00a1cd"}}>
+									<img 
+										style={{width: "270px", height: "200px", margin: "10px 40px", padding: "10px"}} 
+										src={require('../Images/ELLEmentsOfLearningLogo.png')}
+									/>
+								</Card>
+							</a>
+						</Col>
+					</Row>
+				</div>
+              </Col>
+            </Row>			
+				<video width="100%" height="30%" style={{marginTop: "-660px"}} autoPlay loop muted>
+					<source src={banner} type="video/mp4" />
+				</video>
 		</section>
 		
 		<a id="ELLEBetterRacer">
@@ -132,7 +147,7 @@ export default class Downloads extends Component {
 						</video>
 					</Col>
 					<Col>
-						<img style={{widht: "350px", height: "475px", marginLeft: "80px"}} src={require('../Images/ELLEBetterRacerLogo.png')} />
+						<img style={{width: "375px", height: "255px", marginLeft: "80px"}} src={require('../Images/ELLEBetterRacerLogo.png')} />
 					</Col>
 					</Row>
 				</div>
@@ -146,7 +161,7 @@ export default class Downloads extends Component {
 				<div className="infoCard" style={{backgroundColor: "rgb(212 145 167)"}}>
 					<Row>
 						<Col>
-							<img style={{width: "350px", height: "475px", marginLeft: "50px"}} src={require('../Images/ELLECardGameLogo.png')} />
+							<img style={{width: "250px", height: "255px", marginLeft: "100px"}} src={require('../Images/ELLECardGameLogo.png')} />
 						</Col>
 						<Col>
 							<h3 className="cta-title">ELLE Card Game</h3>
@@ -227,7 +242,7 @@ export default class Downloads extends Component {
 							</video>
 						</Col>
 						<Col>
-							<img style={{widht: "350px", height: "475px", marginLeft: "80px"}} src={require('../Images/ELLEmentsOfLearningLogo.png')} />
+							<img style={{width: "350px", height: "255px", marginLeft: "100px"}} src={require('../Images/ELLEmentsOfLearningLogo.png')} />
 						</Col>
 					</Row>
 				</div>

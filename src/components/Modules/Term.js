@@ -133,7 +133,7 @@ class Term extends React.Component {
     .then(res => {
       this.setState({
         changedImage: false, 
-        changedAudio: false, 
+        changedAudio: false,   
       });
 
       this.getTermTags(this.props.card.termID); 
@@ -247,9 +247,9 @@ class Term extends React.Component {
 
 
   render() {
-    let {editedFront, editedBack, editedType, editedGender, selectedImgFile, selectedAudioFile} = this.state;
-    let imgLink = "https://endlesslearner.com" + selectedImgFile;
-    let audioLink = "https://endlesslearner.com" + selectedAudioFile;
+    let {editedFront, editedBack, editedType, editedGender} = this.state;
+    let imgLink = "https://endlesslearner.com" + this.props.card.imageLocation;
+    let audioLink = "https://endlesslearner.com" + this.props.card.audioLocation;
 
     if (this.state.editMode === false){
       return (

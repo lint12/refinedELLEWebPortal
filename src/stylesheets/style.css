@@ -273,7 +273,7 @@ h1, h2, h3, h4, h5, h6 {
 # Downloads Page
 --------------------------------------------------------------*/
 .downloadsBg {
-  background: linear-gradient(180deg, #c3d4e2, #6393d4);
+  background: #0b163f;
 }
 
 .downloadsHdr {

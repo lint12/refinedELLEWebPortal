@@ -24,7 +24,9 @@ class AddTerm extends React.Component {
 			audioLabel: "Pick an audio for the term",
 
 			tooltipOpen: false,
-			tagInfoModalOpen: false 
+			tagInfoModalOpen: false, 
+			error: false, 
+			errMsg: ""
 		};
 	}
 
@@ -104,12 +106,18 @@ class AddTerm extends React.Component {
 			}) 
 			.catch(function (error) {
 				console.log("submitTerm error: ", error);
+				if (error.response) {
+					this.setState({
+						error: true,
+						errMsg: error.response.data.Message
+					})
+				}
 			});
 
 		} 
 		else {
 			e.preventDefault();
-			alert("Please fill all inputs!");
+			alert("Please fill out the English Word and Translated Word. Those fields are required!");
 		}
   }
 
@@ -125,6 +133,9 @@ class AddTerm extends React.Component {
 
 			imgLabel: "Pick an image for the term", 
 			audioLabel: "Pick an audio for the term",
+
+			error: false,
+			errMsg: ""
 		});
 	}
 
@@ -168,7 +179,7 @@ class AddTerm extends React.Component {
 			
 			<Form onSubmit={e => this.submitTerm(e)}>
 				<input type="hidden" value="prayer" />
-
+				{this.state.error ? <Alert color="danger">{this.state.errMsg}</Alert> : null}
 				<Alert style={{color: '#004085', backgroundColor: 'lightskyblue', border: "none"}}>
 				<Row>
 					<Col>

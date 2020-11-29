@@ -40,10 +40,9 @@ export default class ForgotPassword extends Component {
 
     axios.post(this.props.serviceIP + '/forgotpassword', { email: this.state.email }, header)
     .then(res => {
-      console.log("forgot pw msg: ", res.data); 
       this.setState({ alertOpen: true });
     }).catch(error => {
-      console.log("forgot pw error: ", error.response); 
+      console.log("forgot pw error: ", error); 
     })
   }
 

@@ -354,7 +354,7 @@ class Module extends React.Component {
           </Row>
 
           <Row>
-            <Alert color="info" style={{marginLeft: "5px"}} isOpen={this.props.modificationWarning} toggle={this.props.toggleModificationWarning}>
+            <Alert color="info" style={{marginLeft: "15px"}} isOpen={this.props.modificationWarning} toggle={this.props.toggleModificationWarning}>
                 Modifying anything in this module will affect all the users who are currently using this module as well. 
             </Alert>
           </Row>
