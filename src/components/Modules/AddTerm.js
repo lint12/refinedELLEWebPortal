@@ -104,12 +104,12 @@ class AddTerm extends React.Component {
 				this.resetFields(); 
 				this.props.updateCurrentModule({ module: this.props.curModule });
 			}) 
-			.catch(function (error) {
+			.catch(error => {
 				console.log("submitTerm error: ", error.response);
 				if (error.response) {
 					this.setState({
 						error: true,
-						errMsg: error.response.data.Error 
+						errMsg: error.response.data
 					});
 				}
 			});

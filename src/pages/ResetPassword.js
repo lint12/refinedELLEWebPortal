@@ -109,25 +109,27 @@ export default class ResetPassword extends Component {
 
     axios.post(this.props.serviceIP + '/resetpassword', data, header)
     .then(res => {
-      console.log("res data: ", res.data); 
+      console.log("res data: ", res.data.Message); 
       this.setState({
         success: true,
         error: false, 
-        msg: res.response.data.Message
-      })
+        msg: res.data.Message
+      });
     }).catch(error => {
       if (error.response) {
+        console.log("here in error");
         this.setState({
           success: false,
           error: true,
           msg: error.response.data.Error
-        })
+        });
       }
     })
   }
 
   render() {
-    console.log("Success? : ", this.state.success); 
+    console.log("Success : ", this.state.success); 
+    console.log("Error: ", this.state.error); 
     return (
         <div className="reset-bg">
         <MainTemplate/>
