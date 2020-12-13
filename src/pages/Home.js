@@ -32,7 +32,6 @@ export default class Home extends Component {
 		  var jwtDecode = require('jwt-decode');
 	
 		  var decoded = jwtDecode(jwt);
-		  console.log("JWT DECODED: ", decoded);
 	
 		  this.setState({ permission: decoded.user_claims.permission }); 
 		}

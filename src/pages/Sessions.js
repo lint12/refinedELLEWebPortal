@@ -84,7 +84,6 @@ export default class Sessions extends Component {
 
     axios.get(this.props.serviceIP + '/searchsessions', header)
     .then(res => {
-      console.log(res.data);
 
       this.setState(()=>{
         window.setTimeout(()=>{

@@ -42,7 +42,6 @@ class UserList extends Component {
       var jwtDecode = require('jwt-decode');
 
       var decoded = jwtDecode(jwt);
-      console.log("JWT DECODED: ", decoded);
 
       this.setState({ permission: decoded.user_claims.permission }); 
     }
@@ -63,7 +62,6 @@ class UserList extends Component {
       axios.get(this.props.serviceIP + '/users', {
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
       }).then(res => {
-        console.log(res.data);
 
         let su = res.data.filter((user) => user.permissionGroup === "su"); 
         let pf = res.data.filter((user) => user.permissionGroup === "pf"); 
@@ -86,14 +84,13 @@ class UserList extends Component {
       userID: this.state.selectedUser.value,
       accessLevel: group
     }
-    console.log(data);
+
     var headers = {
       'Authorization': 'Bearer ' + localStorage.getItem('jwt')
     }
 
     axios.post(this.props.serviceIP + '/elevateaccess', data, {headers:headers})
     .then(res => {
-      console.log(res.data);
       this.toggleElevateModal(); 
       this.getUsers(); 
     }).catch(function (error) {

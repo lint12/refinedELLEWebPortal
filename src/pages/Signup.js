@@ -43,8 +43,6 @@ export default class Signup extends React.Component {
 
     axios.get(this.props.serviceIP + '/generateusername', header)
     .then(res => {
-      console.log(res.data.username);
-
       this.setState({username: res.data.username});
     }).catch(error => {
       console.log(error);
@@ -102,7 +100,6 @@ export default class Signup extends React.Component {
   }
 
   togglePWPrivacy = (e) => {
-    console.log(e.target)
     if (e.target.name === "hiddenPassword") {
       this.setState({
         hiddenPassword: !this.state.hiddenPassword
@@ -116,7 +113,6 @@ export default class Signup extends React.Component {
   }
 
   submit(e) {
-    console.log(this.state.username + " " + this.state.email + " " + this.state.password + " " + this.state.confirmation + " " + this.state.classCode);
     e.preventDefault();
 
     var data = {
@@ -126,8 +122,6 @@ export default class Signup extends React.Component {
       password_confirm: this.state.confirmation,
       groupCode: this.state.classCode
     }
-
-    console.log("REGISTER DATA: ", data); 
 
     axios.post(this.props.serviceIP + '/register', data)
     .then(res => {
@@ -165,7 +159,7 @@ export default class Signup extends React.Component {
           <h4 style={{textAlign: 'center', color: "white"}}>Start your ELLE experience today.</h4>
           {this.state.registerErr ? this.generateErrorMsg() : null}
           <Form onSubmit={e => this.submit(e)} className="signup-form-details">
-            <FormGroup>
+            <FormGroup> 
               <Label for="userName">Username:</Label>
               <InputGroup>
                 <Input value={this.state.username}

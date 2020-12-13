@@ -29,7 +29,6 @@ class ClassPerformance extends Component {
 
         axios.get(this.props.serviceIP + '/termsperformance', header)
         .then(res => {
-            console.log(res.data); 
             this.setState({ termStats: res.data })
         }).catch(error => {
             console.log(error.response); 

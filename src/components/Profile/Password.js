@@ -81,7 +81,6 @@ export default class Password extends Component {
   
         axios.post(this.props.serviceIP + '/changepassword', data, {headers:headers})
         .then(res => {
-          console.log(res.data);
           this.toggleModal(); 
         }).catch(function (error) {
           console.log(error.response);
@@ -89,7 +88,6 @@ export default class Password extends Component {
     }
 
     togglePWPrivacy = (e) => {
-        console.log(e.target)
         if (e.target.name === "hiddenPassword") {
           this.setState({
             hiddenPassword: !this.state.hiddenPassword
@@ -132,7 +130,6 @@ export default class Password extends Component {
 
       axios.put(this.props.serviceIP + '/user', data, header)
       .then(res => {
-        console.log(res.data);
         this.toggleEditBtn();
       }).catch(error => {
         console.log(error); 

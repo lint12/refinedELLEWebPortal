@@ -146,7 +146,6 @@ class Term extends React.Component {
 
   //toggling delete modal, is not related to delete card API 
   handleDelete = () => {
-    console.log(this.state.card); 
     this.toggleModal(); 
   }
 

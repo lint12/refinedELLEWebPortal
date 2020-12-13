@@ -71,7 +71,6 @@ class User extends Component {
 	
 		axios.get(this.props.serviceIP + '/generategroupcode', header)
 		.then(res => {
-		  console.log("NEW GROUP CODE: ", res.data);
 		  this.props.getUsers(); 
 		}).catch(error => {
 		  console.log("ERROR in generating new group code: ", error);
@@ -90,7 +89,6 @@ class User extends Component {
 	
 		axios.post(this.props.serviceIP + '/changepassword', data, header)
 		.then(res => {
-			console.log("change pw msg: ", res.data);
 			this.setState({ 
 				tempPW: "",
 				alertOpen: true,

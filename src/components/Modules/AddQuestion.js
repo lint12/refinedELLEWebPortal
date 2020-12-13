@@ -103,7 +103,6 @@ class AddQuestion extends React.Component {
 
 			axios.post(this.props.serviceIP + '/question', data, header)
 			.then(res => {
-				console.log("SUCCESSFULLY ADDED THE QUESTION")
 				this.resetFields();
 				this.props.updateCurrentModule({ module: this.props.curModule });
 			})

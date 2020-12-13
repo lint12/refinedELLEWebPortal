@@ -166,7 +166,7 @@ export default class Downloads extends Component {
 				<div className="infoCard" style={{backgroundColor: "#00a1cd"}}>
 					<Row>
 						<Col>
-							<h3 className="cta-title">ELLE VR</h3>
+							<h3 className="cta-title">ELLEments Of Learning</h3>
 							<p className="cta-text">Senior Design Team:</p>
 							<ul style={{color: '#ffffff'}}>
 								<Row>

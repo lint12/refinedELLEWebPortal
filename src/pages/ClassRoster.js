@@ -41,7 +41,6 @@ class ClassRoster extends Component {
       var jwtDecode = require('jwt-decode');
 
       var decoded = jwtDecode(jwt);
-      console.log("JWT DECODED: ", decoded);
 
       this.setState({ permission: decoded.user_claims.permission }); 
     }
@@ -61,8 +60,6 @@ class ClassRoster extends Component {
     axios.get(this.props.serviceIP + '/searchusergroups', {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
     }).then(res => {
-      console.log(res.data);
-
       this.setState({
         groups: res.data
       });
@@ -95,14 +92,13 @@ class ClassRoster extends Component {
       accessLevel: group, 
       groupID: this.state.selectedClass.value
     }
-    console.log(data);
+
     var headers = {
       'Authorization': 'Bearer ' + localStorage.getItem('jwt')
     }
 
     axios.post(this.props.serviceIP + '/elevateaccess', data, {headers:headers})
     .then(res => {
-      console.log(res.data);
       this.toggleElevateModal(); 
       this.getGroups(); 
     }).catch(function (error) {
@@ -126,8 +122,6 @@ class ClassRoster extends Component {
         </Button>
       </Col>
     );
-
-    console.log("CLASS OPTIONS: ", classOptions); 
 
     let classColors = this.getColors();
 
@@ -154,8 +148,6 @@ class ClassRoster extends Component {
       addButton = null; 
     }
 
-    console.log("CLASSES: ", classes);
-
     if (this.state.currentGroup === "ta") {
       this.state.groups.map((group) => group.group_users.filter(
         (user) => user.accessLevel === "st" 
@@ -165,7 +157,6 @@ class ClassRoster extends Component {
         }) 
         : null)
       ); 
-      console.log("STUDENTS: ", students);
     }
 
     let filteredClass = classes.filter(

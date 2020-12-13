@@ -30,7 +30,6 @@ class ModulePerformance extends Component {
         trackPromise(
             axios.get(this.props.serviceIP + '/allmodulestats', header)
             .then(res => {
-                console.log("module stats: ", res.data); 
                 this.setState({ modules: res.data }); 
             }).catch(error => {
                 console.log("module stats error: ", error.message); 
@@ -122,7 +121,6 @@ class ModulePerformance extends Component {
         trackPromise(
             axios.get(this.props.serviceIP + '/termsperformance', header)
             .then(res => {
-                console.log(res.data); 
                 if (res.data.Message)
                     this.setState({ termStats: [] })
                 else 
@@ -138,8 +136,6 @@ class ModulePerformance extends Component {
         }); 
 
         let chartColors = this.getColors(terms.length); 
-
-        console.log("Terms: ", terms); 
 
         let performanceData = {
             labels: terms.map(term => term.front),

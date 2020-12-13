@@ -33,7 +33,6 @@ class SpecificStudentStats extends Component {
 
         axios.get(this.props.serviceIP + '/usersingroup', header)
         .then(res => {
-            console.log(res.data); 
             let students = res.data.filter((entry) => entry.accessLevel === "st")
             .map((student) => {return {label: student.username, value: student.userID}}); 
 
@@ -48,7 +47,6 @@ class SpecificStudentStats extends Component {
     }
 
     getTermStats = () => {
-        console.log("user id: ", this.state.selectedStudent.value)
         let header = {
             headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') },
             params: { userID: this.state.selectedStudent.value, groupID: this.props.groupID }
@@ -57,7 +55,6 @@ class SpecificStudentStats extends Component {
         trackPromise(
             axios.get(this.props.serviceIP + '/termsperformance', header)
             .then(res => {
-                console.log(res.data); 
                 if (res.data.Message)
                     this.setState({ termStats: [] })
                 else 

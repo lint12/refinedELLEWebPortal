@@ -27,7 +27,6 @@ class PlatformStats extends Component {
         trackPromise(
             axios.get(this.props.serviceIP + '/platformstats', header)
             .then(res => {
-                console.log(res.data); 
 
                 this.setState({
                     cp: res.data.cp,

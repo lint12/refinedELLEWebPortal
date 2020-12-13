@@ -221,7 +221,6 @@ class Question extends React.Component {
 
     axios.delete(this.props.serviceIP + '/deletequestion', header)
     .then( res => {
-      console.log("res.data in deleteQuestion: ", res.data);
       this.props.updateCurrentModule({ module: this.props.curModule });  
     })
     .catch(error => {

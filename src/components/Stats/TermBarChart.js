@@ -13,8 +13,6 @@ class TermBarChart extends Component {
 
         let percentage = (filteredTerms.length/Object.keys(this.props.termStats).length) * 100; 
 
-        console.log("Terms with this threshold or greater: ", filteredTerms); 
-
         let chartColors = this.getColors(filteredTerms.length); 
 
         let performanceData = {

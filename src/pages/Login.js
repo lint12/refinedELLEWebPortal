@@ -30,26 +30,20 @@ export default class Login extends Component {
 
   submit(e) {
     e.preventDefault();
-    console.log("pressed submit");
-    console.log(this.state.username); 
-    console.log(this.state.password);
+
     axios.post(this.props.serviceIP + '/login', {
       username: this.state.username,
       password: this.state.password   
     }).then(res => {
       var jwtDecode = require('jwt-decode');
-      console.log(res.data);
-      console.log(res.data.access_token);
+
       localStorage.setItem('jwt', res.data.access_token); 
 
       var decoded = jwtDecode(res.data.access_token);
-      console.log("JWT DECODED: ", decoded);
   
       localStorage.setItem('per', decoded.user_claims.permission);
-      console.log("PERMISSION in Login: ", localStorage.getItem('per'));
 
       localStorage.setItem('id', decoded.identity);
-      console.log("USER ID in Login: ", localStorage.getItem('id'));
 
       let user = {
         username: this.state.username, 

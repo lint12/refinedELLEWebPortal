@@ -41,7 +41,6 @@ export default class AdminView extends Component {
         axios.get(this.props.serviceIP + '/searchusergroups', {
           headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
         }).then(res => {
-          console.log(res.data); 
           this.setState({ classes: res.data })
         }).catch(error => {
           console.log(error.response); 
@@ -72,7 +71,6 @@ export default class AdminView extends Component {
     }
 
     toggleClassDetailModal = (item) => {
-        console.log("ITEM", item)
         this.setState({ 
           classDetailModalOpen: !this.state.classDetailModalOpen, 
           currentClassDetails: item,
@@ -85,7 +83,6 @@ export default class AdminView extends Component {
     }
     
     handleOnEditName = (e) => {
-        console.log("VALUE: ", e.target.value)
         let temp = this.state.currentClassDetails;
     
         let newClassDetails = {
@@ -113,7 +110,6 @@ export default class AdminView extends Component {
     
         axios.put(this.props.serviceIP + '/group', config, header)
         .then(res => {
-          console.log("class name edit response: ", res.data);
           this.getClasses(); 
         }).catch(error => {
           console.log("updateClassName error: ", error); 
@@ -127,9 +123,7 @@ export default class AdminView extends Component {
         }
     
         axios.get(this.props.serviceIP + '/generategroupcode', header)
-        .then(res => {
-          console.log("NEW GROUP CODE: ", res.data);
-    
+        .then(res => {    
           let temp = this.state.currentClassDetails;
     
           let newClassDetails = {
@@ -148,7 +142,7 @@ export default class AdminView extends Component {
 
     createClass = (e) => {
         e.preventDefault(); 
-        console.log("Class name: ", this.state.className);
+
         var data = {
           groupName: this.state.className
         }
@@ -159,7 +153,6 @@ export default class AdminView extends Component {
     
         axios.post(this.props.serviceIP + '/group', data, {headers:headers}
         ).then(res => {
-          console.log(res.data); 
           this.getClasses(); 
     
           this.setState({ className: "" }); 
@@ -176,7 +169,6 @@ export default class AdminView extends Component {
     
         axios.delete(this.props.serviceIP + '/group', header)
         .then(res => {
-          console.log("DELETE CLASS WAS SUCCESSFUL: ", res.data);
           this.toggleClassDetailModal(); 
           this.getClasses(); 
         }).catch(error => {

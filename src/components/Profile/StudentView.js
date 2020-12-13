@@ -32,7 +32,6 @@ export default class StudentView extends Component {
         axios.get(this.props.serviceIP + '/searchusergroups', {
           headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwt') }
         }).then(res => {
-          console.log(res.data); 
           this.setState({ classes: res.data })
         }).catch(error => {
           console.log(error.response); 
@@ -41,7 +40,7 @@ export default class StudentView extends Component {
 
     submitClassCode = (e) => {
         e.preventDefault(); 
-        console.log("CODE: ", this.state.classCode); 
+
         var data = {
           groupCode: this.state.classCode
         }
@@ -52,7 +51,6 @@ export default class StudentView extends Component {
     
         axios.post(this.props.serviceIP + '/groupregister', data, {headers:headers}
         ).then(res => {
-          console.log(res.data); 
           this.getClasses(); 
           this.setState({ classCode: "" }); 
         }).catch(error => {

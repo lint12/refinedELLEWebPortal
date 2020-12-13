@@ -29,7 +29,6 @@ class TagStats extends Component {
         trackPromise(
             axios.get(this.props.serviceIP + '/tagcount', header)
             .then(res => {
-                console.log("tag stats: ", res.data); 
                 this.setState({ tags: res.data }); 
             }).catch(error => {
                 console.log("tag stats error: ", error); 

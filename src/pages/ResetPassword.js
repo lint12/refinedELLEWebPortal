@@ -80,7 +80,6 @@ export default class ResetPassword extends Component {
   }
 
   togglePWPrivacy = (e) => {
-    console.log(e.target)
     if (e.target.name === "hiddenPassword") {
       this.setState({
         hiddenPassword: !this.state.hiddenPassword
@@ -109,15 +108,14 @@ export default class ResetPassword extends Component {
 
     axios.post(this.props.serviceIP + '/resetpassword', data, header)
     .then(res => {
-      console.log("res data: ", res.data.Message); 
       this.setState({
         success: true,
         error: false, 
         msg: res.data.Message
       });
+      this.resetField(); 
     }).catch(error => {
       if (error.response) {
-        console.log("here in error");
         this.setState({
           success: false,
           error: true,
@@ -127,9 +125,20 @@ export default class ResetPassword extends Component {
     })
   }
 
+  resetField = () => {
+    this.setState({
+      email: "",
+      token: "", 
+      password: "",
+      confirm: "",
+      validConfirm: false,
+      invalidConfirm: false,
+      hiddenPassword: true,
+      hiddenConfirm: true, 
+    })
+  }
+
   render() {
-    console.log("Success : ", this.state.success); 
-    console.log("Error: ", this.state.error); 
     return (
         <div className="reset-bg">
         <MainTemplate/>

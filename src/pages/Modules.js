@@ -297,7 +297,6 @@ export default class Modules extends Component {
   
     axios.post(this.props.serviceIP + '/addmoduletogroup', data, header)
     .then(res => {
-      console.log("unlink Module res.data: ", res.data);
 
       this.updateModuleList("unlink", id); 
 

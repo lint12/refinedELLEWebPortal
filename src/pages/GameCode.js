@@ -30,7 +30,6 @@ export default class GameCode extends Component {
       var jwtDecode = require('jwt-decode');
 
       var decoded = jwtDecode(jwt);
-      console.log("JWT DECODED: ", decoded);
 
       this.setState({ permission: decoded.user_claims.permission }); 
     }
@@ -51,7 +50,6 @@ export default class GameCode extends Component {
 
     axios.get(this.props.serviceIP + '/generateotc', header)
     .then(res => {
-      console.log("OTC: ", res.data);
       this.setState({ OTC: res.data.otc }); 
     }).catch(error => {
       console.log("OTC error: ", error); 

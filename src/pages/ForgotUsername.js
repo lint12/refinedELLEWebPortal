@@ -41,7 +41,6 @@ export default class ForgotUsername extends Component {
   
       axios.post(this.props.serviceIP + '/forgotusername', { email: this.state.email }, header)
       .then(res => {
-        console.log("forgot username msg: ", res.data); 
         this.setState({ alertOpen: true });
       }).catch(error => {
         console.log("forgot username error: ", error.response); 
