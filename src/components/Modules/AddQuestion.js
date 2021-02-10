@@ -8,6 +8,8 @@ import AnswerButtonList from './AnswerButtonList';
 import AddAnswer from './AddAnswer';
 import SearchAnswersByTag from './SearchAnswersByTag'
 
+import MicRecorder from 'mic-recorder-to-mp3';
+
 class AddQuestion extends React.Component {
 	constructor(props) {
 		super(props);
@@ -36,11 +38,83 @@ class AddQuestion extends React.Component {
 			searchingByTag: false,
 
 			questionID: "",
+
+			Mp3Recorder: new MicRecorder({ bitRate: 128 }),
+
+			isRecording: false,
+			blobURL: '',
+			isBlocked: false,
+			disable: true,
+			file: null,
+
+			didUpload: false,
 		};
 	};
 
+	// componentDidMount() {
+	// 	this.setValidAnswers();
+	// }
+
 	componentDidMount() {
 		this.setValidAnswers();
+
+		navigator.getUserMedia({ audio: true },
+			() => {
+					console.log('Permission Granted');
+					this.setState({ isBlocked: false });
+			},
+			() => {
+					console.log('Permission Denied');
+					this.setState({ isBlocked: true })
+			},
+		);
+
+	}
+
+	start = () => {
+		if (this.state.isBlocked) {
+			console.log('Permission Denied');
+		} else {
+			this.state.Mp3Recorder
+			.start()
+			.then(() => {
+					this.setState({ isRecording: true });
+			}).catch((e) => console.error(e));
+
+			this.state.disable = true
+		}
+	}
+
+	stop = () => {
+		this.state.Mp3Recorder
+		.stop()
+		.getMp3()
+		.then(([buffer, blob]) => {
+			const blobURL = URL.createObjectURL(blob)
+			this.setState({ blobURL, isRecording: false });
+
+			const moduleIdentifier = document.getElementById('module-name').textContent.replace(/\s+/g, '-').toLowerCase();
+			const phraseName = document.getElementById('questionText').value.replace(/\s+/g, '-').toLowerCase();
+
+			this.state.file = new File(buffer, `question_${moduleIdentifier}_${phraseName}.mp3`, {
+					type: blob.type,
+					lastModified: Date.now()
+			});
+			
+			console.log(this.state.file)
+				
+		}).catch((e) => console.log(e));
+		
+		this.state.disable = false
+	}
+	
+	upload = () => {
+		this.state.selectedAudioFile = this.state.file
+		this.setState({ didUpload: true });
+
+		document.getElementById('qstAudioFile').disabled = true;
+
+		console.log(this.state.selectedAudioFile)
 	}
 
 	//function that sets the image file to the one selected
@@ -400,6 +474,26 @@ class AddQuestion extends React.Component {
 							<Label for="qstAudioFile">
 								Audio:
 							</Label>
+
+							<br></br>
+							<div style={{paddingBottom: '5px', display: 'flex',  justifyContent:'center', alignItems:'center'}}>
+								<button type="button" onClick={this.start} disabled={this.state.isRecording} style={{border: "none", margin: '5px'}}>
+									Record
+								</button>
+								<button type="button" onClick={this.stop} disabled={!this.state.isRecording} style={{border: "none", margin: '5px'}}>
+									Stop
+								</button>
+
+								<button type="button" onClick={this.upload} disabled={this.state.disable} style={{border: "none", margin: '5px'}}>
+									Upload
+								</button>
+							</div>
+
+							{this.state.didUpload ? <div style={{color: 'red', paddingBottom: '5px', display: 'flex',  justifyContent:'center', alignItems:'center', fontSize: '12px'}}>Successfully uploaded recorded audio file!</div> : '' }  
+
+							<div style={{paddingBottom: '5px', display: 'flex',  justifyContent:'center', alignItems:'center'}}>
+								<audio src={this.state.blobURL} controls="controls" />
+							</div>
 
 							<CustomInput 
 								type="file" 

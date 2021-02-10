@@ -2,6 +2,11 @@ import React from 'react'
 import { Button, Form, FormGroup, Label, Input, Row, Col, Alert, CustomInput } from 'reactstrap';
 import axios from 'axios';
 
+import {Recorder} from 'react-voice-recorder'
+import 'react-voice-recorder/dist/index.css'
+
+import MicRecorder from 'mic-recorder-to-mp3';
+
 class AddPhrase extends React.Component {
     constructor(props) {
         super(props);
@@ -14,8 +19,79 @@ class AddPhrase extends React.Component {
 			selectedAudioFile: null, //file location of the audio selected
 
 			imgLabel: "Pick an image for the term", 
-			audioLabel: "Pick an audio for the term",
-		};
+            audioLabel: "Pick an audio for the term",
+            
+            Mp3Recorder: new MicRecorder({ bitRate: 128 }),
+
+            isRecording: false,
+            blobURL: '',
+            isBlocked: false,
+            disable: true,
+            file: null,
+
+			didUpload: false,
+        };
+    }
+
+    componentDidMount() {
+        navigator.getUserMedia({ audio: true },
+            () => {
+                console.log('Permission Granted');
+                this.setState({ isBlocked: false });
+            },
+            () => {
+                console.log('Permission Denied');
+                this.setState({ isBlocked: true })
+            },
+        );
+
+    }
+
+    start = () => {
+        if (this.state.isBlocked) {
+            console.log('Permission Denied');
+        } else {
+            this.state.Mp3Recorder
+            .start()
+            .then(() => {
+                this.setState({ isRecording: true });
+            }).catch((e) => console.error(e));
+
+            this.state.disable = true
+        }
+    }
+
+    stop = () => {
+        this.state.Mp3Recorder
+        .stop()
+        .getMp3()
+        .then(([buffer, blob]) => {
+            const blobURL = URL.createObjectURL(blob)
+            this.setState({ blobURL, isRecording: false });
+
+            const moduleIdentifier = document.getElementById('module-name').textContent.replace(/\s+/g, '-').toLowerCase();
+            const phraseName = document.getElementById('phFront').value.replace(/\s+/g, '-').toLowerCase();
+
+            this.state.file = new File(buffer, `phrase_${moduleIdentifier}_${phraseName}.mp3`, {
+                type: blob.type,
+                lastModified: Date.now()
+            });
+            
+            console.log(this.state.file)
+            
+            
+        }).catch((e) => console.log(e));
+        
+        this.state.disable = false
+    }
+    
+    upload = () => {
+        this.state.selectedAudioFile = this.state.file
+		this.setState({ didUpload: true });
+
+        document.getElementById('phAudioFile').disabled = true;
+
+        console.log(this.state.selectedAudioFile)
     }
 
     submitPhrase = (event) => {
@@ -43,7 +119,9 @@ class AddPhrase extends React.Component {
 				data.append('image', this.state.selectedImgFile);
 
 			if (this.state.selectedAudioFile !== null || this.state.selectedAudioFile !== undefined)
-				data.append('audio', this.state.selectedAudioFile);
+                data.append('audio', this.state.selectedAudioFile);
+            
+            console.log(this.state.selectedAudioFile)
 
 			axios.post(this.props.serviceIP + '/term', data, header)
             .then(res => {
@@ -148,14 +226,33 @@ class AddPhrase extends React.Component {
 						<Label for="phAudioFile">
 							Audio:
 						</Label>
+                        <br></br>
+                        <div style={{paddingBottom: '5px', display: 'flex',  justifyContent:'center', alignItems:'center'}}>
+                            <button type="button" onClick={this.start} disabled={this.state.isRecording} style={{border: "none", margin: '5px'}}>
+                                Record
+                            </button>
+                            <button type="button" onClick={this.stop} disabled={!this.state.isRecording} style={{border: "none", margin: '5px'}}>
+                                Stop
+                            </button>
 
+                            <button type="button" onClick={this.upload} disabled={this.state.disable} style={{border: "none", margin: '5px'}}>
+                                Upload
+                            </button>
+                        </div>
+
+						{this.state.didUpload ? <div style={{color: 'red', paddingBottom: '5px', display: 'flex',  justifyContent:'center', alignItems:'center', fontSize: '12px'}}>Successfully uploaded recorded audio file!</div> : '' }  
+
+                        <div style={{paddingBottom: '5px', display: 'flex',  justifyContent:'center', alignItems:'center'}}>
+                            <audio src={this.state.blobURL} controls="controls" />
+                        </div>
+                        
 						<CustomInput 
                             type="file"
                             accept=".ogg, .wav, .mp3" 
 							id="phAudioFile" 
 							label={this.state.audioLabel} 
 							onChange={this.audioFileChangedHandler}
-							/>
+						/>
 					</FormGroup>
 				</Col>
                 </Row>

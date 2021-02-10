@@ -150,6 +150,8 @@ class Phrase extends React.Component {
         let imgLink = "https://endlesslearner.com" + selectedImgFile;
         let audioLink = "https://endlesslearner.com" + selectedAudioFile;
 
+        // let audioLink = "http://localhost:3000" + selectedAudioFile;
+
         return (
             <>
             {editMode === false ? 
