@@ -65,7 +65,8 @@ class AddTerm extends React.Component {
 							this.setState({ isRecording: true });
 					}).catch((e) => console.error(e));
 
-					this.state.disable = true
+					// this.state.disable = true
+		      this.setState({ disable: true });
 			}
 	}
 
@@ -80,21 +81,28 @@ class AddTerm extends React.Component {
 					const moduleIdentifier = document.getElementById('module-name').textContent.replace(/\s+/g, '-').toLowerCase();
 					const termName = document.getElementById('back').value.replace(/\s+/g, '-').toLowerCase();
 
-					this.state.file = new File(buffer, `term_${moduleIdentifier}_${termName}.mp3`, {
-							type: blob.type,
-							lastModified: Date.now()
-					});
+					// this.state.file = new File(buffer, `term_${moduleIdentifier}_${termName}.mp3`, {
+					// 		type: blob.type,
+					// 		lastModified: Date.now()
+					// });
+
+					this.setState({
+						file: new File(buffer, `term_${moduleIdentifier}_${termName}.mp3`, { type: blob.type, lastModified: Date.now() }) 
+					})
 					
 					console.log(this.state.file)
 					
 					
 			}).catch((e) => console.log(e));
 			
-			this.state.disable = false
+			// this.state.disable = false
+    	this.setState({ disable: false });
 	}
 	
 	upload = () => {
 			this.state.selectedAudioFile = this.state.file
+			// this.setState({ selectedAudioFile: this.state.file })
+
 			this.setState({ didUpload: true });
 
 			document.getElementById('audioFile').disabled = true;

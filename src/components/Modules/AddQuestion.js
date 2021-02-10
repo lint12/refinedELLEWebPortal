@@ -81,7 +81,9 @@ class AddQuestion extends React.Component {
 					this.setState({ isRecording: true });
 			}).catch((e) => console.error(e));
 
-			this.state.disable = true
+			// this.state.disable = true
+      this.setState({ disable: true });
+
 		}
 	}
 
@@ -96,20 +98,27 @@ class AddQuestion extends React.Component {
 			const moduleIdentifier = document.getElementById('module-name').textContent.replace(/\s+/g, '-').toLowerCase();
 			const phraseName = document.getElementById('questionText').value.replace(/\s+/g, '-').toLowerCase();
 
-			this.state.file = new File(buffer, `question_${moduleIdentifier}_${phraseName}.mp3`, {
-					type: blob.type,
-					lastModified: Date.now()
-			});
+			// this.state.file = new File(buffer, `question_${moduleIdentifier}_${phraseName}.mp3`, {
+			// 		type: blob.type,
+			// 		lastModified: Date.now()
+			// });
+
+			this.setState({
+				file: new File(buffer, `question_${moduleIdentifier}_${phraseName}.mp3`, { type: blob.type, lastModified: Date.now() }) 
+			})
 			
 			console.log(this.state.file)
 				
 		}).catch((e) => console.log(e));
 		
-		this.state.disable = false
+		// this.state.disable = false
+    this.setState({ disable: false });
 	}
 	
 	upload = () => {
 		this.state.selectedAudioFile = this.state.file
+    // this.setState({ selectedAudioFile: this.state.file })
+
 		this.setState({ didUpload: true });
 
 		document.getElementById('qstAudioFile').disabled = true;

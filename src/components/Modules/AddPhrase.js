@@ -1,10 +1,6 @@
 import React from 'react'
 import { Button, Form, FormGroup, Label, Input, Row, Col, Alert, CustomInput } from 'reactstrap';
 import axios from 'axios';
-
-import {Recorder} from 'react-voice-recorder'
-import 'react-voice-recorder/dist/index.css'
-
 import MicRecorder from 'mic-recorder-to-mp3';
 
 class AddPhrase extends React.Component {
@@ -57,7 +53,8 @@ class AddPhrase extends React.Component {
                 this.setState({ isRecording: true });
             }).catch((e) => console.error(e));
 
-            this.state.disable = true
+            // this.state.disable = true
+            this.setState({ disable: true });
         }
     }
 
@@ -72,21 +69,27 @@ class AddPhrase extends React.Component {
             const moduleIdentifier = document.getElementById('module-name').textContent.replace(/\s+/g, '-').toLowerCase();
             const phraseName = document.getElementById('phFront').value.replace(/\s+/g, '-').toLowerCase();
 
-            this.state.file = new File(buffer, `phrase_${moduleIdentifier}_${phraseName}.mp3`, {
-                type: blob.type,
-                lastModified: Date.now()
-            });
+            // this.state.file = new File(buffer, `phrase_${moduleIdentifier}_${phraseName}.mp3`, {
+            //     type: blob.type,
+            //     lastModified: Date.now()
+            // });
+            this.setState({
+                file: new File(buffer, `phrase_${moduleIdentifier}_${phraseName}.mp3`, { type: blob.type, lastModified: Date.now() }) 
+            })
             
             console.log(this.state.file)
             
             
         }).catch((e) => console.log(e));
         
-        this.state.disable = false
+        // this.state.disable = false
+        this.setState({ disable: false });
     }
     
     upload = () => {
         this.state.selectedAudioFile = this.state.file
+        // this.setState({ selectedAudioFile: this.file })
+        
 		this.setState({ didUpload: true });
 
         document.getElementById('phAudioFile').disabled = true;
