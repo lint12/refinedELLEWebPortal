@@ -58,7 +58,8 @@ class AddQuestion extends React.Component {
 	componentDidMount() {
 		this.setValidAnswers();
 
-		navigator.getUserMedia({ audio: true },
+		// navigator.getUserMedia({ audio: true },
+    navigator.mediaDevices.getUserMedia({ audio: true },
 			() => {
 					console.log('Permission Granted');
 					this.setState({ isBlocked: false });
