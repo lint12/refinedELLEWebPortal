@@ -31,16 +31,37 @@ class AddPhrase extends React.Component {
 
     componentDidMount() {
         // navigator.getUserMedia({ audio: true },
-        navigator.mediaDevices.getUserMedia({ audio: true },
-            () => {
-                console.log('Permission Granted');
-                this.setState({ isBlocked: false });
-            },
-            () => {
-                console.log('Permission Denied');
-                this.setState({ isBlocked: true })
-            },
-        );
+
+        try {
+            console.log("currently not working in production because getUserMedia CANNOT be run over unsecure netowrk...we need SSL.")
+
+            navigator.mediaDevices.getUserMedia({ audio: true },
+                () => {
+                    console.log('Permission Granted');
+                    this.setState({ isBlocked: false });
+                },
+                () => {
+                    console.log('Permission Denied');
+                    this.setState({ isBlocked: true })
+                },
+            );
+
+        } catch (err) {
+            console.log("couldnt find mic.")
+            console.log("currently not working in production because getUserMedia CANNOT be run over unsecure netowrk...we need SSL.")
+            console.log(err)
+        }
+
+        // navigator.mediaDevices.getUserMedia({ audio: true },
+        //     () => {
+        //         console.log('Permission Granted');
+        //         this.setState({ isBlocked: false });
+        //     },
+        //     () => {
+        //         console.log('Permission Denied');
+        //         this.setState({ isBlocked: true })
+        //     },
+        // );
 
     }
 
