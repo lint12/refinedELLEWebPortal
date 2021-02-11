@@ -30,7 +30,8 @@ class AddPhrase extends React.Component {
     }
 
     componentDidMount() {
-        navigator.getUserMedia({ audio: true },
+        // navigator.getUserMedia({ audio: true },
+        navigator.mediaDevices.getUserMedia({ audio: true },
             () => {
                 console.log('Permission Granted');
                 this.setState({ isBlocked: false });
@@ -125,6 +126,7 @@ class AddPhrase extends React.Component {
                 data.append('audio', this.state.selectedAudioFile);
             
             console.log(this.state.selectedAudioFile)
+            console.log(this.props.serviceIP)
 
 			axios.post(this.props.serviceIP + '/term', data, header)
             .then(res => {
