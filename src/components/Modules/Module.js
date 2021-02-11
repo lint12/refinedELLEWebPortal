@@ -208,7 +208,7 @@ class Module extends React.Component {
             {/*Search Bar for all cards in a deck, with the buttons for adding new items as appendages*/}
             <InputGroup style={{borderRadius: '12px'}}>          
               <InputGroupAddon addonType="prepend">
-                <InputGroupText style={{border: "none"}}>
+                <InputGroupText id="module-name" style={{border: "none"}}>
                   {this.props.curModule.name}
                 </InputGroupText>
               </InputGroupAddon>
