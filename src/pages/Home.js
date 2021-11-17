@@ -133,23 +133,15 @@ export default class Home extends Component {
 						<div className="row" style={{ textAlign: 'center' }}>
 							<div className="col-lg-4">
 								<h4>Dr. Emily Johnson</h4>
-								<p>Assistant Professor, English</p>
+								<p>Postdoctoral Research Associate</p>
 							</div>
 							<div className="col-lg-4">
 								<h4>Dr. Amy Giroux</h4>
-								<p>Associate Director, Center for Humanities and Digital Researchh</p>
+								<p>Computer Research Specialist, Center of Humanities and Digital Research</p>
 							</div>
 							<div className="col-lg-4">
 								<h4>Dr. Don Merritt</h4>
-								<p>Director, Division of Digital Learning</p>
-							</div>
-							<div className="col-lg-4">
-								<h4>Dr. Sandra Sousa</h4>
-								<p>Associate Professor, Portuguese</p>
-							</div>
-							<div className="col-lg-4">
-								<h4>Dr. Gergana Vitanova</h4>
-								<p>Professor, Modern Languages and Literatures</p>
+								<p>Director, Office of Instructional Resources</p>
 							</div>
 						</div>
 					</div>
@@ -168,8 +160,7 @@ export default class Home extends Component {
 
 				<footer id="footer">
 					<div className="container">
-						<div className="copyright">&copy; Copyright <script>document.write( new Date().getFullYear() );</script>
-							<strong>Reveal</strong>. All Rights Reserved</div>
+						<div className="copyright">&copy; Copyright 2019 <strong>Reveal</strong>. All Rights Reserved</div>
 						<div className="credits">
 							{/*
 			All the links in the footer should remain intact.
