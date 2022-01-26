@@ -133,6 +133,7 @@ export default class Home extends Component {
 						<div className="row" style={{ textAlign: 'center' }}>
 							<div className="col-lg-4">
 								<h4>Dr. Emily Johnson</h4>
+
 								<p>Assistant Professor, English</p>
 							</div>
 							<div className="col-lg-4">
@@ -150,6 +151,7 @@ export default class Home extends Component {
 							<div className="col-lg-4">
 								<h4>Dr. Gergana Vitanova</h4>
 								<p>Professor, Modern Languages and Literatures</p>
+
 							</div>
 						</div>
 					</div>
@@ -168,7 +170,9 @@ export default class Home extends Component {
 
 				<footer id="footer">
 					<div className="container">
+
 						<div className="copyright">&copy; Copyright <script>document.write( new Date().getFullYear() );</script> <strong>Reveal</strong>. All Rights Reserved</div>
+
 						<div className="credits">
 							{/*
 			All the links in the footer should remain intact.
