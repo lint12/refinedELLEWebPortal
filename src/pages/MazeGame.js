@@ -9,12 +9,6 @@ import '../lib/font-awesome/css/font-awesome.min.css';
 import '../lib/owlcarousel/assets/owl.carousel.min.css';
 import '../lib/ionicons/css/ionicons.min.css';
 
-import betterRacerPromo from '../Images/ELLEBetterRacerPromo.mp4';
-import betterRacer from '../Images/ELLEBetterRacer.mp4';
-import elleCardGamePromo from '../Images/ELLECardGamePromo.mp4';
-import ellePC from '../Images/ELLEPC.mp4';
-import elleVR from '../Images/ELLEVR.mp4';
-
 import banner from '../Images/ELLEDownloadsBanner.mp4';
 
 export default class Downloads extends Component {
@@ -58,8 +52,8 @@ export default class Downloads extends Component {
                                 <li>Daniel Rodriguez</li>
                                 <li>Tanner Williams</li>
 						</ul>
-		
-	<iframe src="https://drive.google.com/drive/folders/1AmOvimiZW716dLY-FLZgsYDxHceXTpIy?usp=sharing" style="border:0px #000000 none;" name="Game name" scrolling="no" frameborder="1" marginheight="px" marginwidth="320px" height="320px" width="480px"></iframe>
+						<center>
+						<iframe src="https://i.simmer.io/@abland/elle-amazeing-game-dev-build" width="1400" height="800" allowFullScreen></iframe></center>
 		<footer id="footer">
 			<div className="container">
 				<div className="copyright">&copy; Copyright <strong>Reveal</strong>. All Rights Reserved</div>
