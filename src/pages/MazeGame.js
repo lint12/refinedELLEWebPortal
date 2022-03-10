@@ -58,6 +58,8 @@ export default class Downloads extends Component {
                                 <li>Daniel Rodriguez</li>
                                 <li>Tanner Williams</li>
 						</ul>
+		
+	<iframe src="https://drive.google.com/drive/folders/1AmOvimiZW716dLY-FLZgsYDxHceXTpIy?usp=sharing" style="border:0px #000000 none;" name="Game name" scrolling="no" frameborder="1" marginheight="px" marginwidth="320px" height="320px" width="480px"></iframe>
 		<footer id="footer">
 			<div className="container">
 				<div className="copyright">&copy; Copyright <strong>Reveal</strong>. All Rights Reserved</div>
