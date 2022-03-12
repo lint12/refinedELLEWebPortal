@@ -11,7 +11,16 @@ import '../lib/ionicons/css/ionicons.min.css';
 
 import banner from '../Images/ELLEDownloadsBanner.mp4';
 
-export default class Downloads extends Component {
+import Unity, { UnityContext } from "react-unity-webgl";
+
+const unityContext = new UnityContext({
+  loaderUrl: 'Build/DevBuild309.loader.js',
+  dataUrl: 'Build/DevBuild309.data',
+  frameworkUrl: 'Build/DevBuild309.framework.js',
+  codeUrl: 'Build/DevBuild309.wasm',
+});
+
+export default class MazeGame extends Component {
 	constructor(props) {
 		super(props);
 
@@ -53,7 +62,14 @@ export default class Downloads extends Component {
                                 <li>Tanner Williams</li>
 						</ul>
 						<center>
-						<iframe src="https://i.simmer.io/@abland/elle-amazeing-game-dev-build" width="1400" height="800" allowFullScreen></iframe></center>
+						<Unity unityContext={unityContext} style={{
+							height: "100%",
+							width: "100%",
+							border: "2px solid black",
+							background: "grey",
+						}}/>
+						</center>
+			<h3>After Unity</h3>
 		<footer id="footer">
 			<div className="container">
 				<div className="copyright">&copy; Copyright <strong>Reveal</strong>. All Rights Reserved</div>
