@@ -115,44 +115,63 @@ export default class Downloads extends Component {
 					<Row>
 						<Col>
 							<img style={{width: "250px", height: "255px", marginLeft: "100px"}} src={require('../Images/ELLECardGameLogo.png')} />
+							<video width="450" height="280" controls>
+								<source src={ellePC} type="video/mp4" />
+							</video>
 						</Col>
 						<Col>
 							<h3 className="cta-title">ELLE Card Game</h3>
-							<p className="cta-text">Senior Design Team:</p>
+							<p className="cta-text">Original Senior Design Team:</p>
 							<ul style={{color: '#ffffff'}}>
 									<li>Noah Corlew</li>
 									<li>Kalvin Miller</li>
 									<li>Michael Santiago</li>
 							</ul>
+							<p className="cta-text">Version 2 Senior Design Team:</p>
+							<ul style={{color: '#ffffff'}}>
+									<li>Annabel Bland</li>
+									<li>Tyler Morejon</li>
+									<li>Nathan Otis</li>
+									<li>Daniel Rodriguez</li>
+									<li>Tanner Williams</li>
+							</ul>
 							<Row>
 								<Col>
 									<p className="cta-text">
 										Download here:
-										<a href="https://drive.google.com/file/d/1QEuztOPjE1_LfoZWZGrtaDIxPbZKcnOG/view">
+										<a href="https://drive.google.com/file/d/1V1ZBStOaue4ZGBM9MDqhJBQZFs7IaPei/view" target="blank">
 											<img 
 												style={{width: "25px", height: "25px", margin: "5px 5px 10px 5px"}} 
-												src={require('../Images/google-drive.png')}
+												src={require('../Images/windows.png')}
+											/>
+										</a>
+										<a href="https://drive.google.com/file/d/11Bx20KKgv0oNQ7XXj-Z6QGG4eyi4SBTt/view?usp=sharing" target="blnk">
+											<img 
+												style={{width: "25px", height: "25px", margin: "5px 5px 10px 5px"}} 
+												src={require('../Images/apple.png')}
 											/>
 										</a>
 									</p>
 								</Col>
 								<Col>
 									<p className="cta-text">
-										Compatible with: 
-										<img 
-											style={{width: "25px", height: "25px", margin: "5px 5px 10px 5px"}} 
-											src={require('../Images/apple.png')}
-										/>
+										Download Instructions:
+										<a href="https://vimeo.com/452605256" target="blank">
 										<img 
 											style={{width: "25px", height: "25px", margin: "5px 5px 10px 5px"}} 
 											src={require('../Images/windows.png')}
 										/>
+										</a>
+										<a href="https://drive.google.com/file/d/1jxcq8s3JdOlZIU9zFUr8npFRNfvVygY1/view?usp=sharing" target="blank">
+										<img 
+											style={{width: "25px", height: "25px", margin: "5px 5px 10px 5px"}} 
+											src={require('../Images/apple.png')}
+										/>
+										</a>
 									</p>
 								</Col>
 							</Row>
-							<video width="450" height="280" controls>
-								<source src={ellePC} type="video/mp4" />
-							</video>
+							
 						</Col>
 					</Row>
 				</div>
