@@ -14,10 +14,10 @@ import banner from '../Images/ELLEDownloadsBanner.mp4';
 import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
-  loaderUrl: 'Build/DevBuild309.loader.js',
-  dataUrl: 'Build/DevBuild309.data',
-  frameworkUrl: 'Build/DevBuild309.framework.js',
-  codeUrl: 'Build/DevBuild309.wasm',
+  loaderUrl: 'Build/DevBuild330.loader.js',
+  dataUrl: 'Build/DevBuild330.data',
+  frameworkUrl: 'Build/DevBuild330.framework.js',
+  codeUrl: 'Build/DevBuild330.wasm',
 });
 
 export default class MazeGame extends Component {
@@ -63,13 +63,12 @@ export default class MazeGame extends Component {
 						</ul>
 						<center>
 						<Unity unityContext={unityContext} style={{
-							height: "100%",
-							width: "100%",
+							height: "75%",
+							width: "75%",
 							border: "2px solid black",
 							background: "grey",
 						}}/>
 						</center>
-			<h3>After Unity</h3>
 		<footer id="footer">
 			<div className="container">
 				<div className="copyright">&copy; Copyright <strong>Reveal</strong>. All Rights Reserved</div>
