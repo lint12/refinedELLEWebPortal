@@ -14,10 +14,10 @@ import banner from '../Images/ELLEDownloadsBanner.mp4';
 import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
-  loaderUrl: 'Build/DevBuild330_2.loader.js',
-  dataUrl: 'Build/DevBuild330_2.data',
-  frameworkUrl: 'Build/DevBuild330_2.framework.js',
-  codeUrl: 'Build/DevBuild330_2.wasm',
+  loaderUrl: 'Build/DevBuild331.loader.js',
+  dataUrl: 'Build/DevBuild331.data',
+  frameworkUrl: 'Build/DevBuild331.framework.js',
+  codeUrl: 'Build/DevBuild331.wasm',
 });
 
 export default class MazeGame extends Component {
