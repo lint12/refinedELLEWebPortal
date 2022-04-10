@@ -41,8 +41,7 @@ class App extends Component {
         <div>
           <Switch>
             <Route exact path="/home" render={(props)=><Home {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
-            <Route path="/downloads" render={(props)=><Downloads {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
-            <Route path="/mazegame" render={(props)=><MazeGame {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
+            <Route path="/downloads" render={(props)=><Downloads {...props} serviceIP={flaskIP} user={this.state.user}/>}/>        
             <Route path="/logout" render={(props)=><Logout {...props} serviceIP={flaskIP}/>}/>
             <Route path="/login" render={(props)=><Login {...props} serviceIP={flaskIP} updateUserInfo={this.updateUserInfo}/>}/>
             <Route path="/register" render={(props)=><Signup {...props} serviceIP={flaskIP}/>}/>
@@ -51,6 +50,7 @@ class App extends Component {
             <Route path="/resetpassword" render={(props)=><ResetPassword {...props} serviceIP={flaskIP}/>}/>
             <AuthUser>   
               <Route path="/profile" render={(props)=><Profile {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
+              <Route path="/mazegame" render={(props)=><MazeGame {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <Route path="/modules" render={(props)=><Modules {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <Route path="/sessions" render={(props)=><Sessions {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <Route path="/gamecode" render={(props)=><GameCode {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
