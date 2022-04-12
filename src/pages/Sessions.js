@@ -35,12 +35,14 @@ export default class Sessions extends Component {
     const jwt = localStorage.getItem('jwt');
     if (!jwt) {
       this.props.history.push('/home');
+      console.log("no jwt");
     }
     else {
       var jwtDecode = require('jwt-decode');
 
       var decoded = jwtDecode(jwt);
-
+      console.log("decoded is:");
+		  console.log(decoded);
       this.setState({ permission: decoded.user_claims.permission }); 
     }
   }

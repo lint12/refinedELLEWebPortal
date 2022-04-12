@@ -40,7 +40,7 @@ export default class Downloads extends Component {
 		  var jwtDecode = require('jwt-decode');
 	
 		  var decoded = jwtDecode(jwt);
-	
+		  
 		  this.setState({ permission: decoded.user_claims.permission }); 
 		}
 	}   
