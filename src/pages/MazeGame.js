@@ -14,10 +14,12 @@ import '../lib/ionicons/css/ionicons.min.css';
 import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
-  loaderUrl: 'Build/DevBuild410v3.loader.js',
-  dataUrl: 'Build/DevBuild410v3.data',
-  frameworkUrl: 'Build/DevBuild410v3.framework.js',
-  codeUrl: 'Build/DevBuild410v3.wasm',
+
+  loaderUrl: 'Build/DevBuild411_4.loader.js',
+  dataUrl: 'Build/DevBuild411_4.data',
+  frameworkUrl: 'Build/DevBuild411_4.framework.js',
+  codeUrl: 'Build/DevBuild411_4.wasm',
+
 });
 
 
