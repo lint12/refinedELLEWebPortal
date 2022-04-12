@@ -24,6 +24,7 @@ export default class Sessions extends Component {
       loading: false,
       searched: false,
     }
+    console.log(this.state);
   }
 
   componentDidMount() {

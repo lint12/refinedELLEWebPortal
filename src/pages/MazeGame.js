@@ -32,6 +32,7 @@ export default class MazeGame extends Component {
 			username: this.props.user.username,
 			password: this.props.user.password,
 		}
+		console.log(this.state);
 	
 	}  
 
@@ -54,7 +55,7 @@ export default class MazeGame extends Component {
 	}   
 	sendLogin() {
 		// can only send one parameter, so either do this or an array with [username, password]
-		console.log("sending login");
+		//console.log(this.state.username);
 		// errors below
 		unityContext.send("WebsiteLogin", "loginAttempt", [this.props.user.username, this.props.user.password]);
 		console.log("login sent");
