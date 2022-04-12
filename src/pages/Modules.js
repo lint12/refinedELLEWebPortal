@@ -43,6 +43,7 @@ export default class Modules extends Component {
       groupPermissionLevels: [], 
       currentPermissionLevel: this.props.user.permission
     };
+    console.log(this.state);
   }
 
   componentDidMount() {
