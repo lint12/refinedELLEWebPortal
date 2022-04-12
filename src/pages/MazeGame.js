@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Card } from 'reactstrap';
+import { Button } from 'reactstrap';
 import MainTemplate from '../pages/MainTemplate'; 
 import Template from '../pages/Template';
 
@@ -9,23 +9,26 @@ import '../lib/font-awesome/css/font-awesome.min.css';
 import '../lib/owlcarousel/assets/owl.carousel.min.css';
 import '../lib/ionicons/css/ionicons.min.css';
 
-import banner from '../Images/ELLEDownloadsBanner.mp4';
+// import banner from '../Images/ELLEDownloadsBanner.mp4';
 
 import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
-  loaderUrl: 'Build/DevBuild41.loader.js',
-  dataUrl: 'Build/DevBuild41.data',
-  frameworkUrl: 'Build/DevBuild41.framework.js',
-  codeUrl: 'Build/DevBuild41.wasm',
+  loaderUrl: 'Build/DevBuild410v3.loader.js',
+  dataUrl: 'Build/DevBuild410v3.data',
+  frameworkUrl: 'Build/DevBuild410v3.framework.js',
+  codeUrl: 'Build/DevBuild410v3.wasm',
 });
+
 
 export default class MazeGame extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			permission: this.props.user.permission
+			permission: this.props.user.permission,
+			username: this.props.user.username,
+			password: this.props.user.password,
 		}
 	
 	}  
@@ -47,11 +50,22 @@ export default class MazeGame extends Component {
 		  this.setState({ permission: decoded.user_claims.permission }); 
 		}
 	}   
-
+	sendLogin() {
+		// can only send one parameter, so either do this or an array with [username, password]
+		console.log("sending login");
+		// errors below
+		unityContext.send("WebsiteLogin", "loginAttempt", [this.props.user.username, this.props.user.password]);
+		console.log("login sent");
+		// unityContext.send("WebsiteLogin", "loginAttempt", this.state.user);
+	  }
+	handleOnClickFullscreen() {
+		  unityContext.setFullscreen(true);
+	}
 	render() {
 	return (  
 	<div className="downloadsBg">
 		{localStorage.getItem('jwt') === null ? <MainTemplate /> : <Template permission={this.state.permission}/>}
+		{this.sendLogin}
 		<h3 style={{color: '#ffffff'}}>ELLE aMAZEing Game</h3>
 						<p style={{color: '#ffffff'}}className="cta-text">Senior Design Team:</p>
 						<ul style={{color: '#ffffff'}}>
@@ -61,6 +75,7 @@ export default class MazeGame extends Component {
                                 <li>Daniel Rodriguez</li>
                                 <li>Tanner Williams</li>
 						</ul>
+
 						<center>
 						<Unity unityContext={unityContext} style={{
 							height: "75%",
@@ -68,10 +83,15 @@ export default class MazeGame extends Component {
 							border: "2px solid black",
 							background: "grey",
 						}}/>
+						<br />
+						<br />
+						<Button onClick={this.handleOnClickFullscreen}>Fullscreen</Button>
+						<p></p>
+						<br />
 						</center>
 		<footer id="footer">
 			<div className="container">
-				<div className="copyright">&copy; Copyright <strong>Reveal</strong>. All Rights Reserved</div>
+				<div className="copyright">&copy; Copyright 2022 <strong>Reveal</strong>. All Rights Reserved</div>
 				<div className="credits">
 				{/*
 				All the links in the footer should remain intact.

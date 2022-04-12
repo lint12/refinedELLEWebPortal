@@ -171,7 +171,7 @@ export default class Home extends Component {
 				<footer id="footer">
 					<div className="container">
 
-						<div className="copyright">&copy; Copyright <script>document.write( new Date().getFullYear() );</script> <strong>Reveal</strong>. All Rights Reserved</div>
+						<div className="copyright">&copy; Copyright 2022 <strong>Reveal</strong>. All Rights Reserved</div>
 
 						<div className="credits">
 							{/*

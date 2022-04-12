@@ -224,7 +224,7 @@ export default class Downloads extends Component {
 		
 		<footer id="footer">
 			<div className="container">
-				<div className="copyright">&copy; Copyright <strong>Reveal</strong>. All Rights Reserved</div>
+				<div className="copyright">&copy; Copyright 2022 <strong>Reveal</strong>. All Rights Reserved</div>
 				<div className="credits">
 				{/*
 				All the links in the footer should remain intact.
