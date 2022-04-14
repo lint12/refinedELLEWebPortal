@@ -76,7 +76,7 @@ export default class MazeGame extends Component {
 	render() {
 	return (  
 	<div className="downloadsBg">
-		{this.sendLogin()}
+		
 		{localStorage.getItem('jwt') === null ? <MainTemplate /> : <Template permission={this.state.permission}/>}
 		<h3 style={{color: '#ffffff'}}>ELLE aMAZEing Game</h3>
 						<p style={{color: '#ffffff'}}className="cta-text">Senior Design Team:</p>
@@ -97,7 +97,7 @@ export default class MazeGame extends Component {
 						}}/>
 						<br />
 						<br />
-						<Button onClick={this.handleOnClickFullscreen}>Fullscreen</Button>
+						<Button onClick={this.sendLogin}>Fullscreen</Button>
 						<p></p>
 						<br />
 						</center>
