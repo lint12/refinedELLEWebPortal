@@ -15,10 +15,10 @@ import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
 
-  loaderUrl: 'Build/DevBuild414v6.loader.js',
-  dataUrl: 'Build/DevBuild414v6.data',
-  frameworkUrl: 'Build/DevBuild414v6.framework.js',
-  codeUrl: 'Build/DevBuild414v6.wasm',
+  loaderUrl: 'Build/DevBuild414v7.loader.js',
+  dataUrl: 'Build/DevBuild414v7.data',
+  frameworkUrl: 'Build/DevBuild414v7.framework.js',
+  codeUrl: 'Build/DevBuild414v7.wasm',
 
 });
 
