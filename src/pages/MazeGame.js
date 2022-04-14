@@ -15,10 +15,10 @@ import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
 
-  loaderUrl: 'Build/DevBuild413v5.loader.js',
-  dataUrl: 'Build/DevBuild413v5.data',
-  frameworkUrl: 'Build/DevBuild413v5.framework.js',
-  codeUrl: 'Build/DevBuild413v5.wasm',
+  loaderUrl: 'Build/DJBuild414v3.loader.js',
+  dataUrl: 'Build/DJBuild414v3.data',
+  frameworkUrl: 'Build/DJBuild414v3.framework.js',
+  codeUrl: 'Build/DJBuild414v3.wasm',
 
 });
 
@@ -32,7 +32,7 @@ export default class MazeGame extends Component {
 			username: this.props.user.username,
 			password: this.props.user.password,
 		}
-		console.log(this.state);
+		//console.log(this.state);
 	
 	}  
 
@@ -60,7 +60,7 @@ export default class MazeGame extends Component {
 		
 		//this.sendLogin(jwt, decoded);
 	}   
-	
+	/*
 	sendLogin() {
 		const jwt = localStorage.getItem('jwt');
 		var jwtDecode = require('jwt-decode');	
@@ -69,7 +69,7 @@ export default class MazeGame extends Component {
 		unityContext.send("ContinueButton", "loginAttempt", jwt);
 		console.log("login sent");
 	  }
-	  
+	  */
 	handleOnClickFullscreen() {
 		  unityContext.setFullscreen(true);
 	}
@@ -97,7 +97,7 @@ export default class MazeGame extends Component {
 						}}/>
 						<br />
 						<br />
-						<Button onClick={this.sendLogin}>Fullscreen</Button>
+						<Button onClick={this.handleOnClickFullscreen}>Fullscreen</Button>
 						<p></p>
 						<br />
 						</center>
