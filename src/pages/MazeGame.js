@@ -15,10 +15,10 @@ import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
 
-  loaderUrl: 'Build/DevBuild412.loader.js',
-  dataUrl: 'Build/DevBuild412.data',
-  frameworkUrl: 'Build/DevBuild412.framework.js',
-  codeUrl: 'Build/DevBuild412.wasm',
+  loaderUrl: 'Build/DevBuild413.loader.js',
+  dataUrl: 'Build/DevBuild413.data',
+  frameworkUrl: 'Build/DevBuild413.framework.js',
+  codeUrl: 'Build/DevBuild413.wasm',
 
 });
 
@@ -57,7 +57,7 @@ export default class MazeGame extends Component {
 		// can only send one parameter, so either do this or an array with [username, password]
 		//console.log(this.state.username);
 		// errors below
-		unityContext.send("WebsiteLogin", "loginAttempt", [this.props.user.username, this.props.user.password]);
+		unityContext.send("WebsiteLogin", "loginAttempt", jwt);
 		console.log("login sent");
 		// unityContext.send("WebsiteLogin", "loginAttempt", this.state.user);
 	  }
