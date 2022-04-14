@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import Downloads from './pages/Downloads';
 import MazeGame from './pages/MazeGame';
+import MazeGameFinal from './pages/MazeGameFinal';
 import Modules from './pages/Modules';
 import Profile from './pages/Profile';
 import Sessions from './pages/Sessions';
@@ -51,7 +52,7 @@ class App extends Component {
             <Route path="/resetpassword" render={(props)=><ResetPassword {...props} serviceIP={flaskIP}/>}/>
             <AuthUser>   
               <Route path="/profile" render={(props)=><Profile {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
-              
+              <Route path="/mazegamefinal" render={(props)=><MazeGameFinal {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <Route path="/modules" render={(props)=><Modules {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <Route path="/sessions" render={(props)=><Sessions {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <Route path="/gamecode" render={(props)=><GameCode {...props} serviceIP={flaskIP} user={this.state.user}/>}/>

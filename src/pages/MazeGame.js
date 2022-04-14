@@ -54,6 +54,7 @@ export default class MazeGame extends Component {
 			this.setState({ permission: decoded.user_claims.permission }); 
 			//console.log("sending following jwt to sendLogin: " + jwt + " decoded: " + decoded)
 			//console.log("identity test: " + decoded.identity);
+			
 			//unityContext.send("ContinueButton", "loginAttempt", {"access_token": jwt, "id": decoded.identity});
 			//console.log("login sent");
 		}
