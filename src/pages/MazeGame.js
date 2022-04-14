@@ -15,10 +15,10 @@ import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
 
-  loaderUrl: 'Build/DevBuild413v3.loader.js',
-  dataUrl: 'Build/DevBuild413v3.data',
-  frameworkUrl: 'Build/DevBuild413v3.framework.js',
-  codeUrl: 'Build/DevBuild413v3.wasm',
+  loaderUrl: 'Build/DevBuild413v4.loader.js',
+  dataUrl: 'Build/DevBuild413v4.data',
+  frameworkUrl: 'Build/DevBuild413v4.framework.js',
+  codeUrl: 'Build/DevBuild413v4.wasm',
 
 });
 
@@ -42,30 +42,31 @@ export default class MazeGame extends Component {
 
 	verifyPermission = () => {
 		const jwt = localStorage.getItem('jwt');
-		console.log("jwt as retrieved from localStorage: " + jwt);
+		//console.log("jwt as retrieved from localStorage: " + jwt);
 		if (!jwt) {
 		  this.props.history.push(this.props.location.pathname);
 		}
 		else {
-		  var jwtDecode = require('jwt-decode');
-	
-		  var decoded = jwtDecode(jwt);
-	
-		  this.setState({ permission: decoded.user_claims.permission }); 
+			var jwtDecode = require('jwt-decode');
+		
+			var decoded = jwtDecode(jwt);
+		
+			this.setState({ permission: decoded.user_claims.permission }); 
+			console.log("sending following jwt to sendLogin: " + jwt + " decoded: " + decoded)
+			console.log("identity test: " + decoded.identity);
+			unityContext.send("ContinueButton", "loginAttempt", {"access_token": jwt, "id": decoded.identity});
+			console.log("login sent");
 		}
-		console.log("sending following jwt to sendLogin: " + jwt + " decoded: " + decoded)
-		console.log("identity test: " + decoded.identity);
-		this.sendLogin(jwt, decoded);
+		
+		//this.sendLogin(jwt, decoded);
 	}   
-	sendLogin(jwt, decoded) {
-		// can only send one parameter, so either do this or an array with [username, password]
-		//console.log(this.state.username);
-		// errors below
+	/*
+	sendLogin() {
 		console.log("jwt received: " + jwt)
 		unityContext.send("ContinueButton", "loginAttempt", {"access_token": jwt, "id": decoded.identity});
 		console.log("login sent");
-		// unityContext.send("WebsiteLogin", "loginAttempt", this.state.user);
 	  }
+	  */
 	handleOnClickFullscreen() {
 		  unityContext.setFullscreen(true);
 	}
