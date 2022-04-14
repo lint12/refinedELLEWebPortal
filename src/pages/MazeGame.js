@@ -53,15 +53,16 @@ export default class MazeGame extends Component {
 	
 		  this.setState({ permission: decoded.user_claims.permission }); 
 		}
-		console.log("sending following jwt to sendLogin: " + jwt)
-		this.sendLogin(jwt);
+		console.log("sending following jwt to sendLogin: " + jwt + " decoded: " + decoded)
+		console.log("identity test: " + decoded.identity);
+		this.sendLogin(jwt, decoded);
 	}   
-	sendLogin(jwt) {
+	sendLogin(jwt, decoded) {
 		// can only send one parameter, so either do this or an array with [username, password]
 		//console.log(this.state.username);
 		// errors below
 		console.log("jwt received: " + jwt)
-		unityContext.send("WebsiteLogin", "loginAttempt", jwt);
+		unityContext.send("WebsiteLogin", "loginAttempt", {"access_token": jwt, "id": decoded.identity});
 		console.log("login sent");
 		// unityContext.send("WebsiteLogin", "loginAttempt", this.state.user);
 	  }
