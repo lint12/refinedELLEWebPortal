@@ -52,25 +52,21 @@ export default class MazeGameFinal extends Component {
 			var decoded = jwtDecode(jwt);
 		
 			this.setState({ permission: decoded.user_claims.permission }); 
-			//console.log("sending following jwt to sendLogin: " + jwt + " decoded: " + decoded)
-			//console.log("identity test: " + decoded.identity);
-			const toSend = "{'access_token': " + jwt + ", 'id': " + decoded.identity + "}";
-			unityContext.send("ContinueButton", "loginAttempt", toSend);
-			//console.log("login sent");
+
 		}
-		
-		//this.sendLogin(jwt, decoded);
+
 	}   
-	/*
+	
 	sendLogin() {
 		const jwt = localStorage.getItem('jwt');
 		var jwtDecode = require('jwt-decode');	
 		var decoded = jwtDecode(jwt);
-		console.log("jwt received: " + jwt)
-		unityContext.send("ContinueButton", "loginAttempt", jwt);
+		const toSend = "{'access_token': " + jwt + ", 'id': " + decoded.identity + "}";
+        console.log(toSend);
+		unityContext.send("ContinueButton", "loginAttempt", toSend);
 		console.log("login sent");
 	  }
-	  */
+	  
 	handleOnClickFullscreen() {
 		  unityContext.setFullscreen(true);
 	}
@@ -98,7 +94,7 @@ export default class MazeGameFinal extends Component {
 						}}/>
 						<br />
 						<br />
-						<Button onClick={this.handleOnClickFullscreen}>Fullscreen</Button>
+						<Button onClick={this.sendLogin}>Fullscreen</Button>
 						<p></p>
 						<br />
 						</center>
