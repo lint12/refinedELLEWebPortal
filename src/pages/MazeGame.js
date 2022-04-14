@@ -52,8 +52,9 @@ export default class MazeGame extends Component {
 	
 		  this.setState({ permission: decoded.user_claims.permission }); 
 		}
+		this.sendLogin(jwt);
 	}   
-	sendLogin() {
+	sendLogin(jwt) {
 		// can only send one parameter, so either do this or an array with [username, password]
 		//console.log(this.state.username);
 		// errors below
@@ -87,7 +88,7 @@ export default class MazeGame extends Component {
 						}}/>
 						<br />
 						<br />
-						<Button onClick={this.sendLogin}>Fullscreen</Button>
+						<Button onClick={this.handleOnClickFullscreen}>Fullscreen</Button>
 						<p></p>
 						<br />
 						</center>
