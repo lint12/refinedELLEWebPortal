@@ -62,7 +62,7 @@ export default class MazeGame extends Component {
 		//console.log(this.state.username);
 		// errors below
 		console.log("jwt received: " + jwt)
-		unityContext.send("WebsiteLogin", "loginAttempt", {"access_token": jwt, "id": decoded.identity});
+		unityContext.send("ContinueButton", "loginAttempt", {"access_token": jwt, "id": decoded.identity});
 		console.log("login sent");
 		// unityContext.send("WebsiteLogin", "loginAttempt", this.state.user);
 	  }
