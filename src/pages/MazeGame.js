@@ -15,10 +15,10 @@ import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
 
-  loaderUrl: 'Build/DevBuild413.loader.js',
-  dataUrl: 'Build/DevBuild413.data',
-  frameworkUrl: 'Build/DevBuild413.framework.js',
-  codeUrl: 'Build/DevBuild413.wasm',
+  loaderUrl: 'Build/DevBuild413v2.loader.js',
+  dataUrl: 'Build/DevBuild413v2.data',
+  frameworkUrl: 'Build/DevBuild413v2.framework.js',
+  codeUrl: 'Build/DevBuild413v2.wasm',
 
 });
 
@@ -42,6 +42,7 @@ export default class MazeGame extends Component {
 
 	verifyPermission = () => {
 		const jwt = localStorage.getItem('jwt');
+		console.log("jwt as retrieved from localStorage: " + jwt);
 		if (!jwt) {
 		  this.props.history.push(this.props.location.pathname);
 		}
@@ -52,12 +53,14 @@ export default class MazeGame extends Component {
 	
 		  this.setState({ permission: decoded.user_claims.permission }); 
 		}
+		console.log("sending following jwt to sendLogin: " + jwt)
 		this.sendLogin(jwt);
 	}   
 	sendLogin(jwt) {
 		// can only send one parameter, so either do this or an array with [username, password]
 		//console.log(this.state.username);
 		// errors below
+		console.log("jwt received: " + jwt)
 		unityContext.send("WebsiteLogin", "loginAttempt", jwt);
 		console.log("login sent");
 		// unityContext.send("WebsiteLogin", "loginAttempt", this.state.user);
