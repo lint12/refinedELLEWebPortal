@@ -27,7 +27,7 @@ export default class Profile extends React.Component {
         displayChart: 0, 
         emptySession: false,  
     };
-
+    console.log(this.state);
     this.change = this.change.bind(this);
   }
 
@@ -38,6 +38,7 @@ export default class Profile extends React.Component {
 
   verifyPermission = () => {
     const jwt = localStorage.getItem('jwt');
+    console.log(jwt);
     if (!jwt) {
       this.props.history.push('/home');
     }

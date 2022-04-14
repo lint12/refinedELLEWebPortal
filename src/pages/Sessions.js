@@ -33,6 +33,7 @@ export default class Sessions extends Component {
 
   verifyPermission = () => {
     const jwt = localStorage.getItem('jwt');
+    console.log(jwt);
     if (!jwt) {
       this.props.history.push('/home');
       console.log("no jwt");
