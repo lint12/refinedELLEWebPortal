@@ -52,27 +52,31 @@ export default class MazeGame extends Component {
 			var decoded = jwtDecode(jwt);
 		
 			this.setState({ permission: decoded.user_claims.permission }); 
-			console.log("sending following jwt to sendLogin: " + jwt + " decoded: " + decoded)
-			console.log("identity test: " + decoded.identity);
-			unityContext.send("ContinueButton", "loginAttempt", {"access_token": jwt, "id": decoded.identity});
-			console.log("login sent");
+			//console.log("sending following jwt to sendLogin: " + jwt + " decoded: " + decoded)
+			//console.log("identity test: " + decoded.identity);
+			//unityContext.send("ContinueButton", "loginAttempt", {"access_token": jwt, "id": decoded.identity});
+			//console.log("login sent");
 		}
 		
 		//this.sendLogin(jwt, decoded);
 	}   
-	/*
+	
 	sendLogin() {
+		const jwt = localStorage.getItem('jwt');
+		var jwtDecode = require('jwt-decode');	
+		var decoded = jwtDecode(jwt);
 		console.log("jwt received: " + jwt)
 		unityContext.send("ContinueButton", "loginAttempt", {"access_token": jwt, "id": decoded.identity});
 		console.log("login sent");
 	  }
-	  */
+	  
 	handleOnClickFullscreen() {
 		  unityContext.setFullscreen(true);
 	}
 	render() {
 	return (  
 	<div className="downloadsBg">
+		{this.sendLogin()}
 		{localStorage.getItem('jwt') === null ? <MainTemplate /> : <Template permission={this.state.permission}/>}
 		<h3 style={{color: '#ffffff'}}>ELLE aMAZEing Game</h3>
 						<p style={{color: '#ffffff'}}className="cta-text">Senior Design Team:</p>
