@@ -61,7 +61,7 @@ export default class MazeGameFinal extends Component {
 		const jwt = localStorage.getItem('jwt');
 		var jwtDecode = require('jwt-decode');	
 		var decoded = jwtDecode(jwt);
-		const toSend = "{'access_token': " + jwt + ", 'id': " + decoded.identity + "}";
+		const toSend = "{\"access_token\": " + jwt + ", \"id\": " + decoded.identity + "}";
         console.log(toSend);
 		unityContext.send("ContinueButton", "loginAttempt", toSend);
 		console.log("login sent");
