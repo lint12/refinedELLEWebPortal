@@ -15,10 +15,10 @@ import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
 
-  loaderUrl: 'Build/DevBuild414.loader.js',
-  dataUrl: 'Build/DevBuild414.data',
-  frameworkUrl: 'Build/DevBuild414.framework.js',
-  codeUrl: 'Build/DevBuild414.wasm',
+  loaderUrl: 'Build/DevBuild414v2.loader.js',
+  dataUrl: 'Build/DevBuild414v2.data',
+  frameworkUrl: 'Build/DevBuild414v2.framework.js',
+  codeUrl: 'Build/DevBuild414v2.wasm',
 
 });
 
@@ -63,7 +63,7 @@ export default class MazeGameFinal extends Component {
 		var decoded = jwtDecode(jwt);
 		const toSend = "{'access_token': " + jwt + ", 'id': " + decoded.identity + "}";
         console.log(toSend);
-		unityContext.send("Continue Button", "loginAttempt", toSend);
+		unityContext.send("ContinueButton", "loginAttempt", toSend);
 		console.log("login sent");
 	  }
 	  
