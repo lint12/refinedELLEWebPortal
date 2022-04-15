@@ -17,10 +17,10 @@ import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
 
-  loaderUrl: 'Build/DevBuild415v2.loader.js',
-  dataUrl: 'Build/DevBuild415v2.data',
-  frameworkUrl: 'Build/DevBuild415v2.framework.js',
-  codeUrl: 'Build/DevBuild415v2.wasm',
+  loaderUrl: 'Build/DevBuild415v3.loader.js',
+  dataUrl: 'Build/DevBuild415v3.data',
+  frameworkUrl: 'Build/DevBuild415v3.framework.js',
+  codeUrl: 'Build/DevBuild415v3.wasm',
 });
 
 export default class MazeGameFinal extends Component {
