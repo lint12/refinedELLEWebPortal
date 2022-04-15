@@ -1,4 +1,6 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component, useEffect, useState } from 'react';
+import ReactDOM from "react-dom";
+
 import { Button } from 'reactstrap';
 import MainTemplate from '../pages/MainTemplate'; 
 import Template from '../pages/Template';
@@ -30,7 +32,20 @@ export default class MazeGameFinal extends Component {
 		}
         this.sendLogin = this.sendLogin.bind(this) 
 	}  
-
+	LoadingGame() {
+		console.log("in loadingGame function");
+		const [confirm, setConfirmation] = useState(0);	  
+		useEffect(() => {
+			console.log("in useeffect");
+		  	unityContext.on("GameLoaded", (confirmation) => {
+				console.log("updating confirmation from: " + confirm + " to " + confirmation);
+				setConfirmation((confirm) => confirmation);
+				if (confirm == 1)
+					console.log("calling sendLogin");
+					this.sendLogin();
+		  });
+		}, [confirm]);
+	}
 	componentDidMount() {
 		this.verifyPermission(); 
 	}
@@ -57,7 +72,6 @@ export default class MazeGameFinal extends Component {
 	handleOnClickFullscreen() {
 		  unityContext.setFullscreen(true);
 	}
-	
 
 	render() {
 	return (  
@@ -75,6 +89,7 @@ export default class MazeGameFinal extends Component {
 						</ul>
 
 						<center>
+                        {!this.state.showGame && <Button onClick={this.sendLogin}>Load Game</Button>}
 						{this.state.showGame && <Unity unityContext={unityContext} style={{
 							height: "75%",
 							width: "75%",
