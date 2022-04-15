@@ -15,11 +15,10 @@ import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
 
-  loaderUrl: 'Build/DevBuild414v7.loader.js',
-  dataUrl: 'Build/DevBuild414v7.data',
-  frameworkUrl: 'Build/DevBuild414v7.framework.js',
-  codeUrl: 'Build/DevBuild414v7.wasm',
-
+  loaderUrl: 'Build/DevBuild414v8.loader.js',
+  dataUrl: 'Build/DevBuild414v8.data',
+  frameworkUrl: 'Build/DevBuild414v8.framework.js',
+  codeUrl: 'Build/DevBuild414v8.wasm',
 });
 
 
@@ -31,7 +30,7 @@ export default class MazeGameFinal extends Component {
 			permission: this.props.user.permission,
             showGame: false
 		}
-        this.handleShow = this.handleShow.bind(this) 
+        this.sendLogin = this.sendLogin.bind(this) 
 	}  
 
 	componentDidMount() {
@@ -52,16 +51,12 @@ export default class MazeGameFinal extends Component {
 	
 	sendLogin() {
 		const jwt = localStorage.getItem('jwt');
-		var jwtDecode = require('jwt-decode');	
 		unityContext.send("ContinueButton", "loginAttempt", jwt);
+        this.setState({showGame: true});
 	  }
 	  
 	handleOnClickFullscreen() {
 		  unityContext.setFullscreen(true);
-	}
-    handleShow() {
-		this.setState({showGame: true});
-		this.sendLogin();
 	}
 
 	render() {
@@ -80,7 +75,7 @@ export default class MazeGameFinal extends Component {
 						</ul>
 
 						<center>
-                        {!this.state.showGame && <Button onClick={this.handleShow}>Load Game</Button>}
+                        {!this.state.showGame && <Button onClick={this.sendLogin}>Load Game</Button>}
 						{this.state.showGame && <Unity unityContext={unityContext} style={{
 							height: "75%",
 							width: "75%",
@@ -89,7 +84,7 @@ export default class MazeGameFinal extends Component {
 						}}/>}
 						<br />
 						<br />
-						<Button onClick={this.sendLogin}>Fullscreen</Button>
+						<Button onClick={this.handleOnClickFullscreen}>Fullscreen</Button>
 						<p></p>
 						<br />
 						</center>
