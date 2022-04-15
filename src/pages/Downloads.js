@@ -24,7 +24,6 @@ export default class Downloads extends Component {
 		this.state = {
 			permission: this.props.user.permission
 		}
-		console.log(this.state)
 	}  
 
 	componentDidMount() {

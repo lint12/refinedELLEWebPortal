@@ -29,11 +29,9 @@ export default class MazeGameFinal extends Component {
 
 		this.state = {
 			permission: this.props.user.permission,
-			username: this.props.user.username,
-			password: this.props.user.password,
+            showGame: false
 		}
-		//console.log(this.state);
-	
+        this.handleShow = this.handleShow.bind(this) 
 	}  
 
 	componentDidMount() {
@@ -42,34 +40,30 @@ export default class MazeGameFinal extends Component {
 
 	verifyPermission = () => {
 		const jwt = localStorage.getItem('jwt');
-		//console.log("jwt as retrieved from localStorage: " + jwt);
 		if (!jwt) {
 		  this.props.history.push(this.props.location.pathname);
 		}
 		else {
-			var jwtDecode = require('jwt-decode');
-		
+			var jwtDecode = require('jwt-decode');	
 			var decoded = jwtDecode(jwt);
-		
 			this.setState({ permission: decoded.user_claims.permission }); 
-
 		}
-
 	}   
 	
 	sendLogin() {
 		const jwt = localStorage.getItem('jwt');
 		var jwtDecode = require('jwt-decode');	
-		var decoded = jwtDecode(jwt);
-		//const toSend = "{\"access_token\": " + jwt + ", \"id\": " + decoded.identity + "}";
-        //console.log(toSend);
 		unityContext.send("ContinueButton", "loginAttempt", jwt);
-		console.log("login sent");
 	  }
 	  
 	handleOnClickFullscreen() {
 		  unityContext.setFullscreen(true);
 	}
+    handleShow() {
+		this.setState({showGame: true});
+		this.sendLogin();
+	}
+
 	render() {
 	return (  
 	<div className="downloadsBg">
@@ -86,12 +80,13 @@ export default class MazeGameFinal extends Component {
 						</ul>
 
 						<center>
-						<Unity unityContext={unityContext} style={{
+                        {!this.state.showGame && <Button onClick={this.handleShow}>Load Game</Button>}
+						{this.state.showGame && <Unity unityContext={unityContext} style={{
 							height: "75%",
 							width: "75%",
 							border: "2px solid black",
 							background: "grey",
-						}}/>
+						}}/>}
 						<br />
 						<br />
 						<Button onClick={this.sendLogin}>Fullscreen</Button>

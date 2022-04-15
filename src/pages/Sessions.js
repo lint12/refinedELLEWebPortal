@@ -24,7 +24,7 @@ export default class Sessions extends Component {
       loading: false,
       searched: false,
     }
-    console.log(this.state);
+
   }
 
   componentDidMount() {
@@ -33,17 +33,12 @@ export default class Sessions extends Component {
 
   verifyPermission = () => {
     const jwt = localStorage.getItem('jwt');
-    console.log(jwt);
     if (!jwt) {
       this.props.history.push('/home');
-      console.log("no jwt");
     }
     else {
       var jwtDecode = require('jwt-decode');
-
       var decoded = jwtDecode(jwt);
-      console.log("decoded is:");
-		  console.log(decoded);
       this.setState({ permission: decoded.user_claims.permission }); 
     }
   }
