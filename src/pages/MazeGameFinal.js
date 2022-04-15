@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import MainTemplate from '../pages/MainTemplate'; 
 import Template from '../pages/Template';
@@ -23,7 +23,7 @@ const unityContext = new UnityContext({
 useEffect(function () {
     unityContext.on("GameLoaded", function (confirmation) {
 		if (confirmation == 1)
-			sendLogin();
+			this.sendLogin();
     });
   }, []);
 export default class MazeGameFinal extends Component {
