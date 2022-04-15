@@ -15,20 +15,23 @@ import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
 
-  loaderUrl: 'Build/DevBuild414v8.loader.js',
-  dataUrl: 'Build/DevBuild414v8.data',
-  frameworkUrl: 'Build/DevBuild414v8.framework.js',
-  codeUrl: 'Build/DevBuild414v8.wasm',
+  loaderUrl: 'Build/DevBuild415.loader.js',
+  dataUrl: 'Build/DevBuild415.data',
+  frameworkUrl: 'Build/DevBuild415.framework.js',
+  codeUrl: 'Build/DevBuild415.wasm',
 });
-
-
+useEffect(function () {
+    unityContext.on("GameLoaded", function (confirmation) {
+		if (confirmation == 1)
+			sendLogin();
+    });
+  }, []);
 export default class MazeGameFinal extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			permission: this.props.user.permission,
-            showGame: false
 		}
         this.sendLogin = this.sendLogin.bind(this) 
 	}  
@@ -50,14 +53,16 @@ export default class MazeGameFinal extends Component {
 	}   
 	
 	sendLogin() {
+        // continuebutton isn't on the screen right after the game is shown
+        // maybe have listener in unity call to react that then sends to unity
 		const jwt = localStorage.getItem('jwt');
 		unityContext.send("ContinueButton", "loginAttempt", jwt);
-        this.setState({showGame: true});
 	  }
 	  
 	handleOnClickFullscreen() {
 		  unityContext.setFullscreen(true);
 	}
+	
 
 	render() {
 	return (  
@@ -75,7 +80,6 @@ export default class MazeGameFinal extends Component {
 						</ul>
 
 						<center>
-                        {!this.state.showGame && <Button onClick={this.sendLogin}>Load Game</Button>}
 						{this.state.showGame && <Unity unityContext={unityContext} style={{
 							height: "75%",
 							width: "75%",
