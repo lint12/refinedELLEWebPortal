@@ -44,7 +44,7 @@ export default class MazeGameFinal extends Component {
 					console.log("calling sendLogin");
 					this.sendLogin();
 		  });
-		}, [confirm]);
+		},);
 	}
 	componentDidMount() {
 		this.verifyPermission(); 
