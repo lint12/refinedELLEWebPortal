@@ -89,8 +89,7 @@ export default class MazeGameFinal extends Component {
 						</ul>
 
 						<center>
-                        {!this.state.showGame && <Button onClick={this.sendLogin}>Load Game</Button>}
-						{this.state.showGame && <Unity unityContext={unityContext} style={{
+						{<Unity unityContext={unityContext} style={{
 							height: "75%",
 							width: "75%",
 							border: "2px solid black",
