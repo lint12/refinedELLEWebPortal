@@ -17,10 +17,10 @@ import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
 
-  loaderUrl: 'Build/DevBuild415.loader.js',
-  dataUrl: 'Build/DevBuild415.data',
-  frameworkUrl: 'Build/DevBuild415.framework.js',
-  codeUrl: 'Build/DevBuild415.wasm',
+  loaderUrl: 'Build/DevBuild415v2.loader.js',
+  dataUrl: 'Build/DevBuild415v2.data',
+  frameworkUrl: 'Build/DevBuild415v2.framework.js',
+  codeUrl: 'Build/DevBuild415v2.wasm',
 });
 
 export default class MazeGameFinal extends Component {
@@ -65,8 +65,10 @@ export default class MazeGameFinal extends Component {
 	sendLogin() {
         // continuebutton isn't on the screen right after the game is shown
         // maybe have listener in unity call to react that then sends to unity
+		console.log("in sendLogin");
 		const jwt = localStorage.getItem('jwt');
 		unityContext.send("ContinueButton", "loginAttempt", jwt);
+		console.log("finished calling login method");
 	  }
 	  
 	handleOnClickFullscreen() {
