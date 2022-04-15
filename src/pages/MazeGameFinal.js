@@ -20,12 +20,7 @@ const unityContext = new UnityContext({
   frameworkUrl: 'Build/DevBuild415.framework.js',
   codeUrl: 'Build/DevBuild415.wasm',
 });
-useEffect(function () {
-    unityContext.on("GameLoaded", function (confirmation) {
-		if (confirmation == 1)
-			this.sendLogin();
-    });
-  }, []);
+
 export default class MazeGameFinal extends Component {
 	constructor(props) {
 		super(props);
