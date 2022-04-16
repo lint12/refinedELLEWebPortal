@@ -52,7 +52,7 @@ export default class MazeGame extends Component {
 
 	sendLogin() {
 		const jwt = localStorage.getItem('jwt');
-		unityContext.send("ContinueButton", "websiteButtonLoginAttempt", jwt);
+		unityContext.send("ContinueButton", "loginAttempt", jwt);
 
 	  }
 	  
