@@ -15,10 +15,10 @@ import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
 
-  loaderUrl: 'Build/DJBuild414v3.loader.js',
-  dataUrl: 'Build/DJBuild414v3.data',
-  frameworkUrl: 'Build/DJBuild414v3.framework.js',
-  codeUrl: 'Build/DJBuild414v3.wasm',
+  loaderUrl: 'Build/BackupBuild416.loader.js',
+  dataUrl: 'Build/BackupBuild416.data',
+  frameworkUrl: 'Build/BackupBuild416.framework.js',
+  codeUrl: 'Build/BackupBuild416.wasm',
 
 });
 
@@ -29,9 +29,9 @@ export default class MazeGame extends Component {
 
 		this.state = {
 			permission: this.props.user.permission,
-			showGame: false
+
 		}
-		this.handleShow = this.handleShow.bind(this) 
+		this.sendLogin = this.sendLogin.bind(this) 
 	}  
 
 	componentDidMount() {
@@ -59,10 +59,7 @@ export default class MazeGame extends Component {
 	handleOnClickFullscreen() {
 		  unityContext.setFullscreen(true);
 	}
-	handleShow() {
-		this.setState({showGame: true});
-		this.sendLogin();
-	}
+
 	render() {
 	return (  
 	<div className="downloadsBg">
@@ -79,13 +76,13 @@ export default class MazeGame extends Component {
 						</ul>
 
 						<center>
-						{!this.state.showGame && <Button onClick={this.handleShow}>Load Game</Button>}
-						{this.state.showGame && <Unity unityContext={unityContext} style={{
+						<Button onClick={this.sendLogin}>Load Modules</Button><br /><br />
+						<Unity unityContext={unityContext} style={{
 							height: "75%",
 							width: "75%",
 							border: "2px solid black",
 							background: "grey",
-						}}/>}
+						}}/>
 						<br />
 						<br />
 						<Button onClick={this.handleOnClickFullscreen}>Fullscreen</Button>
