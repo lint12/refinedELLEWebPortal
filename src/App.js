@@ -45,13 +45,13 @@ class App extends Component {
             <Route path="/downloads" render={(props)=><Downloads {...props} serviceIP={flaskIP} user={this.state.user}/>}/>        
             <Route path="/logout" render={(props)=><Logout {...props} serviceIP={flaskIP}/>}/>
             <Route path="/login" render={(props)=><Login {...props} serviceIP={flaskIP} updateUserInfo={this.updateUserInfo}/>}/>
-            <Route path="/mazegame" render={(props)=><MazeGame {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
             <Route path="/register" render={(props)=><Signup {...props} serviceIP={flaskIP}/>}/>
             <Route path="/forgotusername" render={(props)=><ForgotUsername {...props} serviceIP={flaskIP}/>}/>
             <Route path="/forgotpassword" render={(props)=><ForgotPassword {...props} serviceIP={flaskIP}/>}/>
             <Route path="/resetpassword" render={(props)=><ResetPassword {...props} serviceIP={flaskIP}/>}/>
             <AuthUser>   
               <Route path="/profile" render={(props)=><Profile {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
+              <Route path="/mazegame" render={(props)=><MazeGame {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <Route path="/mazegamefinal" render={(props)=><MazeGameFinal {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <Route path="/modules" render={(props)=><Modules {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
               <Route path="/sessions" render={(props)=><Sessions {...props} serviceIP={flaskIP} user={this.state.user}/>}/>
