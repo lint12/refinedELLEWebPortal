@@ -17,10 +17,10 @@ import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
 
-  loaderUrl: 'Build/DevBuild416v3.loader.js',
-  dataUrl: 'Build/DevBuild416v3.data',
-  frameworkUrl: 'Build/DevBuild416v3.framework.js',
-  codeUrl: 'Build/DevBuild416v3.wasm',
+  loaderUrl: 'Build/Build416v3.loader.js',
+  dataUrl: 'Build/Build416v3.data',
+  frameworkUrl: 'Build/Build416v3.framework.js',
+  codeUrl: 'Build/Build416v3.wasm',
 });
 
 unityContext.on("GameLoaded", () => {
