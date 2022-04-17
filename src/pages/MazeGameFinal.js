@@ -22,7 +22,20 @@ const unityContext = new UnityContext({
   frameworkUrl: 'Build/DevBuild416v2.framework.js',
   codeUrl: 'Build/DevBuild416v2.wasm',
 });
-
+function LoadingGame() {
+	console.log("in loadingGame function");
+	const [confirm, setConfirmation] = useState(0);	  
+	useEffect(() => {
+		console.log("in useeffect");
+		  unityContext.on("GameLoaded", (confirmation) => {
+			console.log("updating confirmation from: " + confirm + " to " + confirmation);
+			setConfirmation((confirm) => confirmation);
+			if (confirm == 1)
+				console.log("calling sendLogin");
+				this.sendLogin();
+	  });
+	},);
+}
 export default class MazeGameFinal extends Component {
 	constructor(props) {
 		super(props);
@@ -31,22 +44,8 @@ export default class MazeGameFinal extends Component {
 			permission: this.props.user.permission,
 		}
         this.sendLogin = this.sendLogin.bind(this)
-		this.LoadingGame = this.LoadingGame.bind(this)
 	}  
-	LoadingGame() {
-		console.log("in loadingGame function");
-		const [confirm, setConfirmation] = useState(0);	  
-		useEffect(() => {
-			console.log("in useeffect");
-		  	unityContext.on("GameLoaded", (confirmation) => {
-				console.log("updating confirmation from: " + confirm + " to " + confirmation);
-				setConfirmation((confirm) => confirmation);
-				if (confirm == 1)
-					console.log("calling sendLogin");
-					this.sendLogin();
-		  });
-		},);
-	}
+	
 	componentDidMount() {
 		this.verifyPermission(); 
 	}
@@ -98,7 +97,7 @@ export default class MazeGameFinal extends Component {
 						}}/>}
 						<br />
 						<br />
-						<Button onClick={this.LoadingGame}>Fullscreen</Button>
+						<Button onClick={LoadingGame}>Fullscreen</Button>
 						<p></p>
 						<br />
 						</center>
