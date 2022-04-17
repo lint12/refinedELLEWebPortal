@@ -17,25 +17,20 @@ import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
 
-  loaderUrl: 'Build/DevBuild416v2.loader.js',
-  dataUrl: 'Build/DevBuild416v2.data',
-  frameworkUrl: 'Build/DevBuild416v2.framework.js',
-  codeUrl: 'Build/DevBuild416v2.wasm',
+  loaderUrl: 'Build/DevBuild416v3.loader.js',
+  dataUrl: 'Build/DevBuild416v3.data',
+  frameworkUrl: 'Build/DevBuild416v3.framework.js',
+  codeUrl: 'Build/DevBuild416v3.wasm',
 });
-function LoadingGame() {
-	console.log("in loadingGame function");
-	const [confirm, setConfirmation] = useState(0);	  
-	useEffect(() => {
-		console.log("in useeffect");
-		  unityContext.on("GameLoaded", (confirmation) => {
-			console.log("updating confirmation from: " + confirm + " to " + confirmation);
-			setConfirmation((confirm) => confirmation);
-			if (confirm == 1)
-				console.log("calling sendLogin");
-				this.sendLogin();
-	  });
-	},);
-}
+
+unityContext.on("GameLoaded", () => {
+	sendLogin();
+});
+function sendLogin() {
+	const jwt = localStorage.getItem('jwt');
+	unityContext.send("ContinueButton", "loginAttempt", jwt);
+	console.log("finished calling login method");
+  }
 export default class MazeGameFinal extends Component {
 	constructor(props) {
 		super(props);
@@ -43,7 +38,7 @@ export default class MazeGameFinal extends Component {
 		this.state = {
 			permission: this.props.user.permission,
 		}
-        this.sendLogin = this.sendLogin.bind(this)
+        
 	}  
 	
 	componentDidMount() {
@@ -61,13 +56,6 @@ export default class MazeGameFinal extends Component {
 			this.setState({ permission: decoded.user_claims.permission }); 
 		}
 	}   
-	
-	sendLogin() {
-		console.log("in sendLogin");
-		const jwt = localStorage.getItem('jwt');
-		unityContext.send("ContinueButton", "loginAttempt", jwt);
-		console.log("finished calling login method");
-	  }
 	  
 	handleOnClickFullscreen() {
 		  unityContext.setFullscreen(true);
@@ -97,7 +85,7 @@ export default class MazeGameFinal extends Component {
 						}}/>}
 						<br />
 						<br />
-						<Button onClick={LoadingGame}>Fullscreen</Button>
+						<Button onClick={this.handleOnClickFullscreen}>Fullscreen</Button>
 						<p></p>
 						<br />
 						</center>
