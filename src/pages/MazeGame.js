@@ -16,10 +16,10 @@ import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
 
-  loaderUrl: 'Build/Build418.loader.js',
-  dataUrl: 'Build/Build418.data',
-  frameworkUrl: 'Build/Build418.framework.js',
-  codeUrl: 'Build/Build418.wasm',
+  loaderUrl: 'Build/Build419.loader.js',
+  dataUrl: 'Build/Build419.data',
+  frameworkUrl: 'Build/Build419.framework.js',
+  codeUrl: 'Build/Build419.wasm',
 });
 
 unityContext.on("GameLoaded", () => {
@@ -28,7 +28,6 @@ unityContext.on("GameLoaded", () => {
 function sendLogin() {
 	const jwt = localStorage.getItem('jwt');
 	unityContext.send("ContinueButton", "loginAttempt", jwt);
-	console.log("finished calling login method");
   }
 export default class MazeGameFinal extends Component {
 	constructor(props) {
