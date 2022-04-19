@@ -144,6 +144,8 @@ export default class Home extends Component {
 								<h4>Dr. Don Merritt</h4>
 								<p>Director, Division of Digital Learning</p>
 							</div>
+						</div>
+						<div className="row" style={{ textAlign: 'center' }}>
 							<div className="col-lg-4">
 								<h4>Dr. Sandra Sousa</h4>
 								<p>Associate Professor, Portuguese</p>

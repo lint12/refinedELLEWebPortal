@@ -1218,3 +1218,11 @@ table.statsTable.table tbody td {
   overflow: hidden;
   backdrop-filter: blur(30px);
 }
+
+/*--------------------------------------------------------------
+# Maze Game Styles
+--------------------------------------------------------------*/
+.mazeGame {
+  color: #fff;
+  margin: 5px 30px 5px 30px;
+}

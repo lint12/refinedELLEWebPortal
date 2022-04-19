@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import { Button } from 'reactstrap';
 import MainTemplate from '../pages/MainTemplate'; 
 import Template from '../pages/Template';
@@ -15,25 +16,30 @@ import Unity, { UnityContext } from "react-unity-webgl";
 
 const unityContext = new UnityContext({
 
-  loaderUrl: 'Build/DevBuild416v2.loader.js',
-  dataUrl: 'Build/DevBuild416v2.data',
-  frameworkUrl: 'Build/DevBuild416v2.framework.js',
-  codeUrl: 'Build/DevBuild416v2.wasm',
-
+  loaderUrl: 'Build/Build418.loader.js',
+  dataUrl: 'Build/Build418.data',
+  frameworkUrl: 'Build/Build418.framework.js',
+  codeUrl: 'Build/Build418.wasm',
 });
 
-
-export default class MazeGame extends Component {
+unityContext.on("GameLoaded", () => {
+	sendLogin();
+});
+function sendLogin() {
+	const jwt = localStorage.getItem('jwt');
+	unityContext.send("ContinueButton", "loginAttempt", jwt);
+	console.log("finished calling login method");
+  }
+export default class MazeGameFinal extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			permission: this.props.user.permission,
-
 		}
-		this.sendLogin = this.sendLogin.bind(this) 
+        
 	}  
-
+	
 	componentDidMount() {
 		this.verifyPermission(); 
 	}
@@ -44,17 +50,11 @@ export default class MazeGame extends Component {
 		  this.props.history.push(this.props.location.pathname);
 		}
 		else {
-			var jwtDecode = require('jwt-decode');		
+			var jwtDecode = require('jwt-decode');	
 			var decoded = jwtDecode(jwt);
 			this.setState({ permission: decoded.user_claims.permission }); 
 		}
 	}   
-
-	sendLogin() {
-		const jwt = localStorage.getItem('jwt');
-		unityContext.send("ContinueButton", "websiteButtonLoginAttempt", jwt);
-
-	  }
 	  
 	handleOnClickFullscreen() {
 		  unityContext.setFullscreen(true);
@@ -65,30 +65,32 @@ export default class MazeGame extends Component {
 	<div className="downloadsBg">
 		
 		{localStorage.getItem('jwt') === null ? <MainTemplate /> : <Template permission={this.state.permission}/>}
-		<h3 style={{color: '#ffffff'}}>ELLE aMAZEing Game</h3>
-						<p style={{color: '#ffffff'}}className="cta-text">Senior Design Team:</p>
-						<ul style={{color: '#ffffff'}}>
-								<li>Annabel Bland</li>
-								<li>Tyler Morejon</li>
-								<li>Nathan Otis</li>
-                                <li>Daniel Rodriguez</li>
-                                <li>Tanner Williams</li>
-						</ul>
-
+						<br />
 						<center>
-						<Button onClick={this.sendLogin}>Load Modules</Button><br /><br />
-						<Unity unityContext={unityContext} style={{
+						{<Unity unityContext={unityContext} style={{
 							height: "75%",
 							width: "75%",
 							border: "2px solid black",
 							background: "grey",
-						}}/>
+						}}/>}
 						<br />
 						<br />
 						<Button onClick={this.handleOnClickFullscreen}>Fullscreen</Button>
 						<p></p>
 						<br />
 						</center>
+						<h3 className="mazeGame" >ELLE aMAZEing Game</h3>
+						<p className="mazeGame">Senior Design Team:</p>
+						<ul className="mazeGame">
+								<li>Annabel Bland</li>
+								<li>Tyler Morejon</li>
+								<li>Nathan Otis</li>
+                                <li>Daniel Rodriguez</li>
+                                <li>Tanner Williams</li>
+						</ul>
+						<p className="mazeGame">If there are no available modules for you to select, try logging out and logging back in. Also, make sure you are on the secure version of the site - if you look at the URL bar, to the left you should see the word "Secure" or a closed lock. If you do not see that, click <a href="https://endlesslearner.com/mazegame">here</a> to be redirected to the secure version of this page.</p>
+						<br />
+						<p></p>
 		<footer id="footer">
 			<div className="container">
 				<div className="copyright">&copy; Copyright 2022 <strong>Reveal</strong>. All Rights Reserved</div>
